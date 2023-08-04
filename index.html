@@ -681,11 +681,12 @@ button {
 
       // Fetch the CSV file
       fetch('teams.csv')
-        .then((response) => response.text())
-        .then((csvData) => {
-          parseCSV(csvData);
-        });
-      console.log(clubs.length);
+      .then((response) => response.text())
+      .then((csvData) => {
+        parseCSV(csvData);
+        console.log(clubs.length); // This will now print the correct length
+        // Any additional processing on the 'clubs' array can be done here
+      });
 
 function updateVisitedClubs() {
   const visitedSearchInput = document.getElementById('visited-search-input');
