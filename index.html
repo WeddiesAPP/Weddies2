@@ -635,14 +635,15 @@ button {
         searchContainer.style.display = "flex";
     });
     const clubs = [];
-
+   clubs.push('test');
+   console.log(clubs.length + " hoeveelheid clubs");
 
         function parseCSV(csvData) {
   console.log(csvData); // Log the raw CSV data to check its format
   const lines = csvData.split('\n');
   console.log(lines); // Log the parsed lines to see individual rows
 
-      
+
 
         const headers = lines[0].split(',');
 
@@ -651,7 +652,7 @@ button {
 
           const club = {
             name: fields[2],
-            league: fields[1],
+            eague: fields[1],
             city: fields[3],
             location: [parseFloat(fields[15]), parseFloat(fields[16])],
             color: fields[14],
