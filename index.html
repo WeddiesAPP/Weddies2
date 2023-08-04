@@ -638,6 +638,7 @@ button {
 
        function parseCSV(csvData) {
          const lines = csvData.split('\n');
+         console.log(lines);
          const headers = lines[0].split(',');
 
          for (let i = 1; i < lines.length; i++) {
