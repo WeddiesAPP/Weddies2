@@ -652,7 +652,7 @@ button {
 
           const club = {
             name: fields[2],
-          
+
             league: fields[1],
             city: fields[3],
             location: [parseFloat(fields[15]), parseFloat(fields[16])],
@@ -688,8 +688,8 @@ button {
         console.log(clubs.length); // This will now print the correct length
         // Any additional processing on the 'clubs' array can be done here
       });
-      function printClubs(clubsArray) {
-        for (let club of clubsArray) {
+      function printClubs(clubs) {
+        for (let club of clubs) {
           console.log('Name:', club.name);
           console.log('Members:', club.members);
           console.log('Founded:', club.founded);
