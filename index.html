@@ -716,9 +716,9 @@ function updateVisitedClubs() {
 
       // Add logo
       const logo = document.createElement('img');
-      logo.src = getLogoPath(club.name);
-      logo.classList.add('club-logo-2');  // Add this line
-      suggestion.appendChild(logo);
+          logo.src = club.clubImageName; // Use the club's clubImageName property as the image source
+          logo.classList.add('club-logo-2');
+          suggestion.appendChild(logo);
 
       // Add club info container
       const clubInfo = document.createElement('div');
@@ -856,9 +856,9 @@ function showVisitedClubs() {
 
   // Add logo
   const logo = document.createElement('img');
-  logo.src = getLogoPath(club.name);
-  logo.classList.add('club-logo-2'); // Add a class for styling
-  clubItem.appendChild(logo);
+            logo.src = club.clubImageName; // Use the club's clubImageName property as the image source
+            logo.classList.add('club-logo-2');
+            suggestion.appendChild(logo);
 
   // Add club name
   const clubName = document.createElement('span');
@@ -904,8 +904,8 @@ clubs.forEach((club,index) => {
     className: 'custom-div-icon',
     html: `
       <div style='background-color:${club.color};' class='marker-pin'></div>
-      <img src="${getLogoPath(club.name)}" alt="${club.name}" class="club-logo">
-    `,
+      <img src="${club.clubImageName}" alt="${club.name}" class="club-logo">
+              `,
     iconSize: [40, 40], // reduced by 20%
     iconAnchor: [20, 40] // reduced by 20%
   });
