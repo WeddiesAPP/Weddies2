@@ -915,9 +915,9 @@ clubs.forEach((club) => {
 
   const marker = L.marker(clubLatLng, { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
     .addTo(map)
-    .bindPopup(`
+    /*.bindPopup(`
       <div style="display: flex; align-items: center;">
-        <img src="${getLogoPath(club.name)}" alt="${club.name}" style="width: 40px; height: 40px; margin-right: 10px;">
+        <img src="${(club.name)}" alt="${club.name}" style="width: 40px; height: 40px; margin-right: 10px;">
         <div>
           <b>${club.name}</b><br>
           ${club.league}<br>
@@ -936,7 +936,7 @@ clubs.forEach((club) => {
           </div>
         </div>
       </div>
-    `);
+    `)*/;
 
 
   clubMarkers[club.name] = marker;
