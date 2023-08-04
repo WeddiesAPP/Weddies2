@@ -697,8 +697,9 @@ button {
         printClubs(clubs);
         // Any additional processing on the 'clubs' array can be done here
       });
-
-
+}
+console.log('Loading and parsing CSV...');
+  await sleep(10000); //
 function updateVisitedClubs() {
   const visitedSearchInput = document.getElementById('visited-search-input');
   const visitedSuggestions = document.getElementById('visited-suggestions'); // create this new element
@@ -1423,7 +1424,7 @@ document.getElementById("registrationForm").addEventListener("submit", function(
   document.getElementById("registerPopup").style.display = "none";
 });
 
-}
+
 </script>
 </body>
 </html>
