@@ -640,9 +640,9 @@ button {
       const lines = csvData.split('\n');
       const headers = lines[0].split(',');
 
-      for (let i = 1; i < lines.length; i++) {
+      for (let i = 1; i < lines.length - 1; i++) {
         const fields = lines[i].split(',');
-    
+
         const club = {
           name: fields[2],
           league: fields[1],
