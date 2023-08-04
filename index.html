@@ -986,7 +986,7 @@ searchInput.addEventListener('input', (e) => {
     // Create logo element
     const logo = document.createElement('img');
     logo.classList.add('club-logo-2');
-    logo.src = getLogoPath(club.name);
+    logo.src = club.clubImageName;
     suggestion.appendChild(logo);
 
     // Create club info container
