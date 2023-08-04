@@ -676,7 +676,7 @@ button {
         }
 
         // Do something with the clubs array, like logging or further processing
-        console.log(clubs);
+      //  console.log(clubs);
       }
 
       // Fetch the CSV file
@@ -685,6 +685,7 @@ button {
         .then((csvData) => {
           parseCSV(csvData);
         });
+      console.log(clubs.length);
 
 function updateVisitedClubs() {
   const visitedSearchInput = document.getElementById('visited-search-input');
