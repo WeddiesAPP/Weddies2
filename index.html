@@ -634,56 +634,49 @@ button {
         filtersContainer.style.display = "none";
         searchContainer.style.display = "flex";
     });
+    const clubs = [];
 
+       function parseCSV(csvData) {
+         const lines = csvData.split('\n');
+         const headers = lines[0].split(',');
 
+         for (let i = 1; i < lines.length; i++) {
+           const fields = lines[i].split(',');
+           const club = {
+             name: fields[0],
+             league: fields[1],
+             city: fields[2],
+             location: [parseFloat(fields[17]), parseFloat(fields[18])],
+             color: fields[16],
+             link: `https://en.wikipedia.org/wiki/${encodeURIComponent(fields[0])}`,
+             stadiumName: fields[9],
+             clubColor2: fields[19],
+             description: `${fields[0]} is a football club based in ${fields[2]}. It currently competes in the ${fields[1]}, the second-highest tier of football in ${fields[4]}.`,
+             clubID: fields[1],
+             clubCode: fields[3],
+             country: fields[4],
+             founded: fields[5],
+             national: fields[6],
+             clubImageName: fields[7],
+             stadiumID: fields[8],
+             stadiumAddress: fields[10],
+             capacity: fields[11],
+             surface: fields[12],
+             stadiumImageName: fields[14],
+           };
+           clubs.push(club);
+         }
 
+         // Do something with the clubs array, like logging or further processing
+         console.log(clubs);
+       }
 
-
-          const clubs = [];
-
-          // Fetch the CSV file
-          fetch('teams.csv')
-            .then((response) => response.text())
-            .then((csvData) => {
-              // Parse the CSV data using PapaParse
-              Papa.parse(csvData, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function (results) {
-                  const rows = results.data;
-
-                  rows.forEach((row) => {
-                    console.log(row);
-                    const club = {
-                      name: row.clubName,
-                      league: row.leagueID,
-                      city: row.cityName,
-                      location: [parseFloat(row.latitude), parseFloat(row.longitude)],
-                      color: row.firstColor,
-                      link: `https://en.wikipedia.org/wiki/${encodeURIComponent(row.clubName)}`,
-                      stadiumName: row.stadiumName,
-                      clubColor2: row.secondColor,
-                      description: `${row.clubName} is a football club based in ${row.cityName}. It currently competes in the ${row.leagueID}, the second-highest tier of football in ${row.country}.`,
-                      clubID: row.clubID,
-                      clubCode: row.clubCode,
-                      country: row.country,
-                      founded: row.founded,
-                      national: row.national,
-                      clubImageName: row.clubImageName,
-                      stadiumID: row.stadiumID,
-                      stadiumAddress: row.stadiumAddress,
-                      capacity: row.capacity,
-                      surface: row.surface,
-                      stadiumImageName: row.stadiumImageName,
-                    };
-                    clubs.push(club);
-                  });
-
-                  // Do something with the clubs array, like logging or further processing
-                  console.log(clubs);
-                },
-              });
-            });
+       // Fetch the CSV file
+       fetch('teams.csv')
+         .then((response) => response.text())
+         .then((csvData) => {
+           parseCSV(csvData);
+         });
 
 
 function updateVisitedClubs() {
