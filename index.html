@@ -674,7 +674,7 @@ button {
         console.log('Name:', club.name);
         console.log('Members:', club.members);
         console.log('Founded:', club.founded);
-        console.log('-------------------------');
+        console.log('Img Link:', club.clubImageName);
       }
     }
 
@@ -900,7 +900,7 @@ function getLogoPath(clubName) {
 
     return `${clubName}.png`;
   }
-clubs.forEach((club,index) => {
+clubs.forEach((club) => {
   const clubLatLng = club.location;
 
   const markerIcon = L.divIcon({
