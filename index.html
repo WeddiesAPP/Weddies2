@@ -901,7 +901,7 @@ function getLogoPath(clubName) {
     return `${clubName}.png`;
   }
 clubs.forEach((club) => {
-  const clubLatLng = club.location;
+  const clubLatLng = L.latLng(club.location[0], club.location[1]);
 
   const markerIcon = L.divIcon({
     className: 'custom-div-icon',
@@ -912,6 +912,7 @@ clubs.forEach((club) => {
     iconSize: [40, 40], // reduced by 20%
     iconAnchor: [20, 40] // reduced by 20%
   });
+
   const marker = L.marker(clubLatLng, { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
     .addTo(map)
     .bindPopup(`
