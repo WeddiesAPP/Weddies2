@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weddies - Your Club Search Engine</title>
+    <meta name="description" content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
+    <link rel="icon" href="Weddies-bg.png" type="image/x-icon">
+    <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .loading-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #32951e; /* Change to desired background color, e.g., green */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .loading-animation .logo-weddies-bg {
+        animation: zoom 2s ease-in-out;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        height: 50%;
+        max-width: 300px; /* Adjust the maximum width as desired */
+        max-height: 300px; /* Adjust the maximum height as desired */
+        object-fit: contain;
+      }
+
+      @keyframes zoom {
+        0% {
+          transform: translate(-50%, -50%) scale(1.3);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+
+
+
+
+      .profile-icon {
+           position: fixed;
+           top: 10px;
+           right: 10px;
+           width: 40px;
+           height:40px;
+           background-color: transparent;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: #fff;
+           font-size: 24px;
+           cursor: pointer;
+           z-index: 9999;
+         }
+         .popup-profile {
+             position: absolute;
+             z-index: 1001; /* Ensures the popup appears above the map */
+             background: white;
+             border: 1px solid #ccc;
+
+             width: 300px;
+             height: 400px;
+             left: 40%;
+             top: 40%;
+
+             overflow: auto; /* Enables scrolling if the content exceeds the popup's size */
+         }
+         .club-div {
+   display: flex;
+   align-items: center;
+   margin-bottom: 10px;
+ }
+
+ .club-div img {
+   margin-right: 10px;
+   padding: 5px; /* Add padding to the logo */
+ }
+
+ .club-div span {
+   margin-right: 5px;
+   padding: 5px; /* Add padding to the text */
+ }
+
+
+#closePopup {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+
+
+        .leaflet-control-attribution {
+            display: none;
+        }
+        .container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: transparent;
+        }
+
+        .club-logo-2 {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .search-container {
+            position: absolute;
+            top: 20px;
+            left: 50px;
+            background-color: rgba(50, 149, 30, 0.5);
+            padding: 20px;
+            z-index: 999;
+            display: none;
+        }
+
+        .search-container input[type="text"],
+        .search-container select,
+        .search-container input[type="range"] {
+            font-size: 18px;
+            padding: 10px;
+            width: 250px;
+        }
+
+        .search-container input[type="text"],
+        .search-container select {
+            height: 40px;
+        }
+
+        .search-container input[type="range"] {
+            height: 20px;
+        }
+
+        .search-container #date-section label,
+        .search-container #date-input {
+            font-size: 18px;
+
+            height: 40px;
+            width: 200px;
+            align-self: center;
+        }
+
+        .search-container #search-section > * {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #mapid {
+            width: 100%;
+            height: calc(100vh - 40px);
+            background-color: transparent;
+        }
+
+
+  #filters-button {
+    color: white;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+  }
+  #close-button {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    color: white;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+  }
+
+        #search-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #mapid {
+            width: 100%;
+            flex-grow: 1;
+            background-color: transparent;
+        }
+
+        #search-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f9fa00;
+        }
+
+        #search-bar {
+            position: relative;
+        }
+
+        #search-input {
+            width: 200px;
+            padding: 5px;
+        }
+
+        #search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-top: none;
+            display: none;
+        }
+
+        #search-suggestions ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #search-suggestions li {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        #search-suggestions li:hover {
+            background-color: #f8f9fa00;
+        }
+
+        #search-suggestions .club-logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        #search-suggestions .suggestion {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        #search-suggestions span {
+            margin-left: 5px;
+        }
+
+        #visited-search-input {
+            width: 200px;
+            padding: 5px;
+        }
+        #visited-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-top: none;
+    display: none;
+}
+
+#visited-suggestions ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#visited-suggestions li {
+    padding: 5px;
+    cursor: pointer;
+}
+
+#visited-suggestions li:hover {
+    background-color: #f8f9fa00;
+}
+
+#visited-suggestions .club-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+#visited-suggestions .suggestion {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#visited-suggestions span {
+    margin-left: 5px;
+}
+
+
+        #mapid {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .custom-div-icon {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .club-logo {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .marker-pin {
+            width: 50px;
+            height: 50px;
+            border-radius: 50% 50% 50% 0;
+            position: absolute;
+            transform: rotate(-45deg);
+            left: 50%;
+            top: 50%;
+            margin: -25px 0 0 -25px;
+            z-index: 1;
+        }
+
+        .marker-pin::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            margin: 5px 0 0 5px;
+            background: club.color;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .logo-weddies {
+            width: 128px;
+            height: 128px;
+            margin-right: 10px;
+        }
+        .filters-container {
+
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    z-index: 999;
+  background-color: rgba(50, 149, 30, 0.5);
+    padding: 20px;
+  }
+  .logo-weddies-bg {
+    position: absolute;
+bottom: 20px;
+left: 20px;
+z-index: 999;
+width: 64px;
+height: 64px;
+}
+
+
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 200px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+
+left: 50%;
+transform: translate(-50%, 0%);
+}
+
+.dropdown-content div {
+  color: black;
+  padding: 12px 10px; /* Adjust the padding as desired */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+
+.dropdown-content div.selected {
+  background-color: lightgreen;
+}
+
+.dropdown-content div:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.dropbtn {
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Adjust the maximum width as desired */
+}
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 1000; /* Update the z-index value to a higher value */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  position: relative;
+  z-index: 1001; /* Update the z-index value to a higher value */
+}
+
+/* Rest of the CSS code remains the same */
+
+
+.close {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Rest of the CSS code remains the same */
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+button {
+  padding: 10px;
+}
+
+.separator {
+  margin: 10px 0;
+  text-align: center;
+}
+
+#loginBtn {
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+}
+
+#registerBtn {
+  background-color: #dd4b39;
+  color: white;
+  left: 50%;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+#registerBtn:hover {
+  background-color: #c23321;
+}
+
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+
+</head>
+<body>
+
+  <div class="loading-animation">
+    <img src="Weddies.png" alt="Loading..." class="logo-weddies-bg" />
+  </div>
+  <div class="container">
+    <div class="search-container">
+<button id="close-button">Close</button>
+    <div id="search-section">
+        <div id="search-bar">
+            <input type="text" id="search-input" placeholder="Search for a club">
+            <div id="search-suggestions"></div>
+        </div>
+        <div id="visited-search-bar">
+       <input type="text" id="visited-search-input" placeholder="Visited Clubs: 0">
+       <div id="visited-suggestions"></div>
+     </div>
+        <div id="date-section">
+    <label for="date-input"></label>
+    <input type="date" id="date-input">
+</div>
+<div class="dropdown">
+<button class="dropbtn" id="dropdown-button">Select League</button>
+<div class="dropdown-content" id="dropdown-content"></div>
+</div>
+
+<input type="range" id="radius-slider" min="1" max="1500" value="1" step="1">
+    <label for="radius-slider" style="color: white; font-weight: bold;">Search Radius (Km)</label>
+    <span id="radius-value" style="color: white; font-weight: bold;">All</span>
+    </div>
+  </div>
+
+    <div id="mapid">
+      <div class="profile-icon" id="profileIcon">
+         <img src="profile.png" alt="Profile Image" width="40" height="40">
+       </div>
+       <div id="profilePopup" class="popup-profile" style="display:none">
+   <h2>Visited Clubs</h2>
+   <div id="visitedClubContainer"></div>
+   <button id="closePopup">Close</button>
+ </div>
+
+</div>
+      <button id="loginBtn">Login</button>
+
+     <div id="loginPopup" class="popup">
+       <div class="popup-content">
+         <span class="close">&times;</span>
+         <h2>Login</h2>
+         <form id="registerForm" action="connect.php" method="POST">
+
+           <input type="email" placeholder="Email" name="email" required>
+           <input type="password" placeholder="Password" name="password" required>
+           <button type="submit">Sign In</button>
+         </form>
+         <div class="separator">or</div>
+         <button id="registerBtn">Register here</button>
+       </div>
+     </div>
+     <div id="registerPopup" class="popup">
+  <div class="popup-content">
+    <span class="close">&times;</span>
+    <h2>Register</h2>
+    <form id="registrationForm" action="register.php" method="POST">
+      <input type="text" placeholder="Username" name="username" required>
+      <input type="email" placeholder="Email" name="email" required>
+      <input type="password" placeholder="Password" name="password" required>
+      <input type="password" placeholder="Confirm Password" name="confirmPassword" required>
+      <button type="submit">Finish Registration</button>
+    </form>
+  </div>
+</div>
+     <img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
+    <div class="filters-container">
+       <button id="filters-button">Filters</button>
+   </div>
+  </div>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+    window.addEventListener("load", function() {
+  var loadingAnimation = document.querySelector(".loading-animation");
+  loadingAnimation.style.opacity = "0";
+  setTimeout(function() {
+    loadingAnimation.style.display = "none";
+  }, 300); // Adjust the timeout value to match the transition duration in CSS
+});
+
+    var searchContainer = document.querySelector(".search-container");
+    var filtersContainer = document.querySelector(".filters-container");
+    var closeButton = document.getElementById("close-button");
+    var filtersButton = document.getElementById("filters-button");
+
+    closeButton.addEventListener("click", function() {
+        searchContainer.style.display = "none";
+        filtersContainer.style.display = "flex";
+    });
+
+    filtersButton.addEventListener("click", function() {
+        filtersContainer.style.display = "none";
+        searchContainer.style.display = "flex";
+    });
+
+
+
+
+
+          const clubs = [];
+
+          // Fetch the CSV file
+          fetch('teams.csv')
+            .then((response) => response.text())
+            .then((csvData) => {
+              // Parse the CSV data using PapaParse
+              Papa.parse(csvData, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                  const rows = results.data;
+
+                  rows.forEach((row) => {
+                    const club = {
+                      name: row.clubName,
+                      league: row.leagueID,
+                      city: row.cityName,
+                      location: [parseFloat(row.latitude), parseFloat(row.longitude)],
+                      color: row.firstColor,
+                      link: `https://en.wikipedia.org/wiki/${encodeURIComponent(row.clubName)}`,
+                      stadiumName: row.stadiumName,
+                      clubColor2: row.secondColor,
+                      description: `${row.clubName} is a football club based in ${row.cityName}. It currently competes in the ${row.leagueID}, the second-highest tier of football in ${row.country}.`,
+                      clubID: row.clubID,
+                      clubCode: row.clubCode,
+                      country: row.country,
+                      founded: row.founded,
+                      national: row.national,
+                      clubImageName: row.clubImageName,
+                      stadiumID: row.stadiumID,
+                      stadiumAddress: row.stadiumAddress,
+                      capacity: row.capacity,
+                      surface: row.surface,
+                      stadiumImageName: row.stadiumImageName,
+                    };
+                    clubs.push(club);
+                  });
+
+                  // Do something with the clubs array, like logging or further processing
+                  console.log(clubs);
+                },
+              });
+            });
+
+
+function updateVisitedClubs() {
+  const visitedSearchInput = document.getElementById('visited-search-input');
+  const visitedSuggestions = document.getElementById('visited-suggestions'); // create this new element
+
+  // Get all visited clubs
+  const visitedClubs = clubs.filter(club => getCookie(club.name) === 'visited');
+
+  // Update visited club search bar placeholder
+  visitedSearchInput.placeholder = `Visited Clubs: ${visitedClubs.length}`;
+
+  // Clear previous visited club list
+  visitedSuggestions.innerHTML = '';
+
+  visitedSearchInput.addEventListener('input', (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    if (searchValue === '') {
+    visitedSuggestions.style.display = 'none';
+    return; // If the input is empty, don't show any suggestions and stop here.
+  }
+    const filteredClubs = visitedClubs.filter(club => club.name.toLowerCase().includes(searchValue));
+
+    // Clear previous suggestions
+    visitedSuggestions.innerHTML = '';
+
+    // Add new suggestions
+    filteredClubs.forEach(club => {
+      const suggestion = document.createElement('div');
+      suggestion.classList.add('suggestion');  // Add this line
+
+      // Add logo
+      const logo = document.createElement('img');
+      logo.src = getLogoPath(club.name);
+      logo.classList.add('club-logo-2');  // Add this line
+      suggestion.appendChild(logo);
+
+      // Add club info container
+      const clubInfo = document.createElement('div');
+      clubInfo.classList.add('club-info');  // Add this line
+
+      // Add club name
+      const clubName = document.createElement('span');
+      clubName.textContent = club.name;
+      clubName.style.display = 'block';  // Add this line
+      clubInfo.appendChild(clubName);
+
+      // Add stadium name
+      const stadiumName = document.createElement('span');
+      stadiumName.textContent = club.stadiumName;
+      stadiumName.style.display = 'block';  // Add this line
+      stadiumName.style.fontSize = '0.6em';  // Add this line
+      stadiumName.classList.add('stadium-name');  // Add this line
+      clubInfo.appendChild(stadiumName);
+
+      // Append club info to suggestion
+      suggestion.appendChild(clubInfo);
+
+      visitedSuggestions.appendChild(suggestion);
+    });
+
+    // Show/hide suggestions based on input value
+    if (filteredClubs.length > 0) {
+      visitedSuggestions.style.display = 'block';
+    } else {
+      visitedSuggestions.style.display = 'none';
+    }
+  });
+}
+
+
+function toggleVisited(clubName) {
+  const visitedBtn = document.getElementById(`visitedBtn${clubName}`);
+  const visitedText = document.getElementById(`visitedText${clubName}`);
+  const visitedIcon = document.getElementById(`visitedIcon${clubName}`);
+
+
+
+
+  const isVisited = getCookie(clubName) === 'visited';
+
+  if (isVisited) {
+    // Change to "Not visited"
+    visitedText.textContent = 'Not visited';
+    visitedText.style.color = 'red';
+    visitedIcon.innerHTML = getVisitedIcon(clubName, 'red');
+    setCookie(clubName, 'not_visited');
+  } else {
+    // Change to "Visited"
+    visitedText.textContent = 'Visited';
+    visitedText.style.color = 'green';
+    visitedIcon.innerHTML = getVisitedIcon(clubName, 'green');
+    setCookie(clubName, 'visited');
+  }
+  updateVisitedClubs();
+}
+
+// Function to get the text for "Visited/Not visited" based on the cookie value
+function getVisitedText(clubName) {
+  const isVisited = getCookie(clubName) === 'visited';
+  return isVisited ? 'Visited' : 'Not visited';
+}
+
+// Function to get the HTML for the visited icon based on the cookie value and color
+function getVisitedIcon(clubName, color = 'red') {
+  const isVisited = getCookie(clubName) === 'visited';
+  const iconStyle = `width: 12px; height: 12px; margin-right: 5px; background-color: ${color}; display: inline-block; border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 2px;`;
+  return isVisited ? `<span style="${iconStyle}"></span>&#x2714;` : `<span style="${iconStyle}"></span>&#x2716;`;
+}
+
+// Function to set a cookie with the specified name and value
+// Function to set a cookie with the specified name and value
+function setCookie(name, value, days = 365) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days*24*60*60*1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = `${name}=${value}${expires}`;
+}
+
+// Function to get the value of a cookie by name
+function getCookie(name) {
+  const cookieName = `${name}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookieArray = decodedCookie.split(';');
+
+  for (let i = 0; i < cookieArray.length; i++) {
+    let cookie = cookieArray[i];
+    while (cookie.charAt(0) === ' ') {
+      cookie = cookie.substring(1);
+    }
+    if (cookie.indexOf(cookieName) === 0) {
+      return cookie.substring(cookieName.length, cookie.length);
+    }
+  }
+
+  return '';
+}
+updateVisitedClubs();
+var length = clubs.length;
+  console.log("Length of 'clubs' array:", length);
+
+const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
+const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19
+});
+const baseMaps = {
+  "Dark Map": darkLayer,
+  "Light Map": lightLayer
+};
+
+const map = L.map('mapid', {
+  center: [52.1326, 5.2913],
+  zoom: 7,
+  layers: [lightLayer] // Dark Layer by default
+});
+// Get the profile icon element and add a click event listener
+
+function showVisitedClubs() {
+    const visitedClubs = clubs.filter(club => getCookie(club.name) === 'visited');
+    const visitedClubContainer = document.getElementById('visitedClubContainer');
+
+    // Clear previous content
+    visitedClubContainer.innerHTML = '';
+
+    visitedClubs.forEach(club => {
+  const clubItem = document.createElement('div');
+  clubItem.classList.add('club-div'); // Add a class for styling
+
+  // Add logo
+  const logo = document.createElement('img');
+  logo.src = getLogoPath(club.name);
+  logo.classList.add('club-logo-2'); // Add a class for styling
+  clubItem.appendChild(logo);
+
+  // Add club name
+  const clubName = document.createElement('span');
+  clubName.textContent = club.name;
+  clubItem.appendChild(clubName);
+
+  // Add stadium name
+  const stadiumName = document.createElement('span');
+  stadiumName.textContent = club.stadiumName;
+  clubItem.appendChild(stadiumName);
+
+  visitedClubContainer.appendChild(clubItem);
+});
+
+}
+
+
+profileIcon.addEventListener('click', function() {
+    profilePopup.style.display = 'block';
+    showVisitedClubs();
+});
+
+document.getElementById('closePopup').addEventListener('click', function() {
+  document.getElementById('profilePopup').style.display = 'none';
+});
+
+var layerControl = L.control.layers(baseMaps, null, {
+  position: 'bottomright' // Set the position to 'bottomright'
+}).addTo(map);
+
+const clubMarkers = {};
+function getLogoPath(clubName) {
+    if (clubName.startsWith('Jong ')) {
+      clubName = clubName.substring(5); // Remove "Jong " prefix
+    }
+
+    return `${clubName}.png`;
+  }
+clubs.forEach((club,index) => {
+  const clubLatLng = club.location;
+
+  const markerIcon = L.divIcon({
+    className: 'custom-div-icon',
+    html: `
+      <div style='background-color:${club.color};' class='marker-pin'></div>
+      <img src="${getLogoPath(club.name)}" alt="${club.name}" class="club-logo">
+    `,
+    iconSize: [40, 40], // reduced by 20%
+    iconAnchor: [20, 40] // reduced by 20%
+  });
+  const marker = L.marker(clubLatLng, { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
+    .addTo(map)
+    .bindPopup(`
+      <div style="display: flex; align-items: center;">
+        <img src="${getLogoPath(club.name)}" alt="${club.name}" style="width: 40px; height: 40px; margin-right: 10px;">
+        <div>
+          <b>${club.name}</b><br>
+          ${club.league}<br>
+
+          <button id="visitedBtn${club.name}" onclick="toggleVisited('${club.name}')">
+    <span id="visitedText${club.name}">${getVisitedText(club.name)}</span>
+    <span id="visitedIcon${club.name}">${getVisitedIcon(club.name)}</span>
+  </button>
+
+
+          <button onclick="window.open('${club.link}', '_blank')">Learn more</button>
+          <button onclick="window.open('${club.ticketLink}', '_blank')">Buy Tickets</button>
+
+          <div style="display: flex; justify-content: center; margin-top: 10px;">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=${clubLatLng[0]},${clubLatLng[1]}" target="_blank" style="background-color: blue; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Navigate To</a>
+          </div>
+        </div>
+      </div>
+    `);
+
+
+  clubMarkers[club.name] = marker;
+});
+
+
+
+
+map.on('popupopen', function(e) {
+  const clubName = e.popup._source.options.clubName;
+  const visitedBtn = document.getElementById(`visitedBtn${clubName}`);
+  const visitedText = document.getElementById(`visitedText${clubName}`);
+  const visitedIcon = document.getElementById(`visitedIcon${clubName}`);
+
+  const isVisited = getCookie(clubName) === 'visited';
+  if (isVisited) {
+    visitedText.textContent = 'Visited';
+    visitedText.style.color = 'green';
+    visitedIcon.innerHTML = getVisitedIcon(clubName, 'green');
+  } else {
+    visitedText.textContent = 'Not visited';
+    visitedText.style.color = 'red';
+    visitedIcon.innerHTML = getVisitedIcon(clubName, 'red');
+  }
+});
+
+
+const searchInput = document.getElementById('search-input');
+const searchSuggestions = document.getElementById('search-suggestions');
+searchSuggestions.style.zIndex = '1'; // Set a lower z-index value for the search suggestions
+
+searchInput.addEventListener('input', (e) => {
+  const searchValue = e.target.value.toLowerCase();
+  if (searchValue === '') {
+    searchSuggestions.style.display = 'none';
+    return; // If the input is empty, don't show any suggestions and stop here.
+  }
+  const filteredClubs = clubs.filter(club => club.name.toLowerCase().includes(searchValue));
+
+  // Clear previous suggestions
+  searchSuggestions.innerHTML = '';
+
+  // Add new suggestions
+  filteredClubs.forEach(club => {
+    const suggestion = document.createElement('div');
+    suggestion.classList.add('suggestion');
+
+    // Create logo element
+    const logo = document.createElement('img');
+    logo.classList.add('club-logo-2');
+    logo.src = getLogoPath(club.name);
+    suggestion.appendChild(logo);
+
+    // Create club info container
+    const clubInfo = document.createElement('div');
+    clubInfo.classList.add('club-info');
+
+    // Create club name element
+    const clubName = document.createElement('span');
+    clubName.textContent = club.name;
+    clubName.style.display = 'block'; // Set display to "block"
+    clubInfo.appendChild(clubName);
+
+    // Create stadium name element
+    const stadiumName = document.createElement('span');
+    stadiumName.classList.add('stadium-name');
+    stadiumName.textContent = club.stadiumName;
+    stadiumName.style.display = 'block'; // Set display to "block"
+    stadiumName.style.fontSize = '0.6em'; // Set smaller font size
+    clubInfo.appendChild(stadiumName);
+
+    suggestion.appendChild(clubInfo);
+
+    suggestion.addEventListener('click', () => {
+      searchInput.value = club.name;
+      searchSuggestions.innerHTML = '';
+      map.setView(clubMarkers[club.name].getLatLng(), 12);
+      // Update map markers based on selected club
+      // ...
+    });
+
+    searchSuggestions.appendChild(suggestion);
+  });
+
+  // Show/hide suggestions based on input value
+  if (filteredClubs.length > 0) {
+    searchSuggestions.style.display = 'block';
+  } else {
+    searchSuggestions.style.display = 'none';
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (!searchInput.contains(e.target)) {
+    searchSuggestions.style.display = 'none';
+  }
+});
+
+// Function to create the custom dropdown component
+const leagueLogos = {
+  'Premier League': 'Premier League.png',
+  'Bundesliga': 'Bundesliga.png',
+  'Ligue 1': 'Ligue 1.png',
+  'Serie A': 'Serie A.png',
+  'Eredivisie': 'Eredivisie.png',
+  'La Liga': 'La Liga.png',
+  'Liga NOS': 'Liga NOS.png',
+  'MLS': 'MLS.png',
+  'Championship': 'Championship.png',
+  'Jupiler Pro League': 'Jupiler Pro League.png',
+  'Keuken Kampioen Divisie': 'Keuken Kampioen Divisie.png',
+  'Tweede Divisie': 'Tweede Divisie.png',
+  'Derde Divisie Zaterdag': 'Derde Divisie Zaterdag.png',
+  'Derde Divisie Zondag': 'Derde Divisie Zondag.png',
+
+};
+
+const dropdownButton = document.getElementById('dropdown-button');
+const dropdownContent = document.getElementById('dropdown-content');
+
+let selectedLeagues = [];
+
+function filterClubsByLeague() {
+  for (const club of clubs) {
+    if (selectedLeagues.includes(club.league) || selectedLeagues.length === 0) {
+      clubMarkers[club.name].addTo(map);
+    } else {
+      clubMarkers[club.name].remove();
+    }
+  }
+}
+
+function createLeagueFilter() {
+  const allLeaguesDiv = document.createElement('div');
+  allLeaguesDiv.textContent = 'All Leagues';
+  allLeaguesDiv.onclick = function () {
+    selectedLeagues = [];
+    dropdownButton.innerHTML = this.innerHTML;
+    filterClubsByLeague();
+  };
+  dropdownContent.appendChild(allLeaguesDiv);
+
+  dropdownContent.appendChild(document.createElement('hr'));
+
+  for (const [league, logo] of Object.entries(leagueLogos)) {
+    const div = document.createElement('div');
+    const img = document.createElement('img');
+    img.src = logo;
+    img.style.height = '20px';
+    img.style.marginRight = '10px';
+    img.style.pointerEvents = 'none';
+    div.appendChild(img);
+
+    const textNode = document.createTextNode(league);
+    div.appendChild(textNode);
+    div.onclick = function () {
+      const selectedLeague = this.textContent.trim();
+      const index = selectedLeagues.indexOf(selectedLeague);
+      if (index === -1) {
+        selectedLeagues.push(selectedLeague);
+        dropdownButton.innerHTML = selectedLeagues.join(', ');
+      } else {
+        selectedLeagues.splice(index, 1);
+        dropdownButton.innerHTML = selectedLeagues.join(', ');
+      }
+      updateSelectedLeagues();
+      filterClubsByLeague();
+    };
+    dropdownContent.appendChild(div);
+  }
+}
+function updateSelectedLeagues() {
+  for (const div of dropdownContent.children) {
+    if (selectedLeagues.includes(div.textContent.trim())) {
+      div.classList.add('selected');
+    } else {
+      div.classList.remove('selected');
+    }
+  }
+}
+
+createLeagueFilter();
+
+
+const dropdownContainer = document.getElementById('dropdown-button');
+dropdownContainer.style.zIndex = '0'; // Set a higher z-index value for the dropdown
+
+
+
+
+
+const radiusSlider = document.getElementById('radius-slider');
+const radiusValue = document.getElementById('radius-value');
+let userLocation;
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      userLocation = L.latLng(latitude, longitude);
+
+      // Set the initial radius circle based on the user's location
+      const initialRadius = parseInt(radiusSlider.value);
+      setRadiusCircle(initialRadius);
+
+      // Update radius circle and filtered markers when the slider value changes
+      radiusSlider.addEventListener('input', (e) => {
+        const searchRadius = parseInt(e.target.value);
+        setRadiusCircle(searchRadius);
+        filterMarkers(searchRadius);
+      });
+
+      // Function to set the radius circle on the map
+      function setRadiusCircle(radius) {
+        // Update radius value display
+        if (radius === parseInt(radiusSlider.max)) {
+          radiusValue.textContent = 'ALL';
+        } else {
+          radiusValue.textContent = radius;
+        }
+
+        // Clear previous radius circle
+        if (window.radius) map.removeLayer(window.radius);
+
+        // Set new radius circle
+        window.radius = L.circle(userLocation, {
+          radius: radius * 1000, // Convert to meters
+          color: 'rgba(0, 0, 0, 0.0)', // Light gray with transparency
+          fillOpacity: 0.2,
+        }).addTo(map);
+      }
+
+      // Function to filter markers based on the search radius and league filter
+      function filterMarkers(searchRadius) {
+        const leagueFilter = dropdownButton.innerText;
+
+        for (const club of clubs) {
+          const clubLatLng = L.latLng(clubMarkers[club.name].getLatLng());
+          if (
+            clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
+            (leagueFilter === 'All Leagues' || club.league === leagueFilter)
+          ) {
+            clubMarkers[club.name].addTo(map);
+          } else {
+            clubMarkers[club.name].remove();
+          }
+        }
+      }
+
+    },
+    (error) => {
+      console.error('Error retrieving location:', error);
+    }
+  );
+} else {
+  console.error('Geolocation is not supported by this browser.');
+}
+
+
+// Fetch the XLSX file
+fetch('matches.xlsx')
+  .then(response => response.arrayBuffer())
+  .then(arrayBuffer => {
+    // Convert the data to a binary string
+    const data = new Uint8Array(arrayBuffer);
+    let binary = '';
+    data.forEach(byte => {
+      binary += String.fromCharCode(byte);
+    });
+
+    // Read the XLSX file
+    const workbook = XLSX.read(binary, { type: 'binary' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    // Parse the XLSX file
+    const matches = XLSX.utils.sheet_to_json(worksheet);
+
+    function getMatchesOnDate(matches, date) {
+      // Make sure the date is in the 'YYYY-MM-DD' format
+      const selectedDate = new Date(date);
+
+      const matchesOnDate = matches.filter(match => {
+        const matchDate = new Date(match.Date);
+        return matchDate.getTime() === selectedDate.getTime();
+      });
+
+      return matchesOnDate;
+    }
+
+    function displayMatchesOnDate(matchesOnDate) {
+  // First, remove all markers
+  for (const club of clubs) {
+    clubMarkers[club.name].remove();
+  }
+
+  // Then add markers for clubs that have matches on the selected date
+  const clubsWithMatches = new Set();
+  matchesOnDate.forEach(match => {
+    clubsWithMatches.add(match.HomeTeam);
+    clubsWithMatches.add(match.AwayTeam);
+  });
+
+  for (const club of clubs) {
+    if (clubsWithMatches.has(club.name)) {
+      const markerLatLng = clubMarkers[club.name].getLatLng();
+      const markerOffset = L.latLng(markerLatLng.lat + 0.02, markerLatLng.lng); // Adjust the latitude offset for readability
+      const marker = L.marker(markerOffset, { icon: clubMarkers[club.name].options.icon })
+        .addTo(map)
+        .bindPopup(`
+    <b>${club.name}</b><br>
+    ${club.league}<br>
+    ${club.description}<br>
+    <button onclick="window.open('${club.link}', '_blank')">Learn more</button>
+    <button onclick="window.open('${club.ticketLink}', '_blank')">Buy Tickets</button>
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+      <a href="https://www.google.com/maps/dir/?api=1&destination=${markerLatLng.lat},${markerLatLng.lng}" target="_blank" style="background-color: blue; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Navigate To</a>
+    </div>
+  `);
+
+      clubMarkers[club.name] = marker;
+    }
+  }
+}
+
+
+
+    // Function to handle date change
+    function handleDateChange(e) {
+      const selectedDate = e.target.value;
+
+      if (selectedDate) {
+        const matchesOnDate = getMatchesOnDate(matches, selectedDate);
+        displayMatchesOnDate(matchesOnDate);
+      } else {
+        // No date selected, show all clubs
+        for (const club of clubs) {
+          clubMarkers[club.name].addTo(map);
+        }
+      }
+    }
+
+    // Get the matches on the selected date and display them
+    const dateInput = document.getElementById('date-input');
+    dateInput.addEventListener('change', handleDateChange);
+
+    // Call the function initially with the current date
+    const currentDate = new Date().toISOString().slice(0, 10);
+    handleDateChange({ target: { value: currentDate } });
+  });
+
+  function displayAllMarkers() {
+  for (const club of clubs) {
+    clubMarkers[club.name].addTo(map);
+  }
+}
+
+window.addEventListener('load', () => {
+  displayAllMarkers();
+});
+
+window.addEventListener('load', () => {
+  displayAllMarkers();
+});
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const userLocation = L.latLng(latitude, longitude);
+        map.setView(userLocation, 12); // Set the map center to the user's location
+
+        // Create the outer circle with more opacity
+        const outerCircle = L.circle(userLocation, {
+          color: 'blue',
+          fillColor: 'blue',
+          fillOpacity: 0.2,
+          radius: 15,
+        }).addTo(map);
+
+        // Create the inner circle
+        const innerCircle = L.circle(userLocation, {
+          color: 'blue',
+          fillColor: 'blue',
+          fillOpacity: 0.5,
+          radius: 30,
+        }).addTo(map);
+
+
+      },
+      (error) => {
+        console.error('Error retrieving location:', error);
+      }
+    );
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+  }
+}
+/*var loginButton = L.Control.extend({
+    options: {
+      position: 'topright', // Change the position as needed
+    },
+
+    onAdd: function () {
+      var button = L.DomUtil.create('button', 'leaflet-control-button');
+      button.innerHTML = 'Login';
+      button.id = 'loginBtn';
+
+      L.DomEvent.on(button, 'click', function () {
+        document.getElementById('loginPopup').style.display = 'block';
+      });
+
+      return button;
+    },
+  });
+
+  // Add the button control to the map
+  map.addControl(new loginButton());
+*/
+window.addEventListener('load', () => {
+  getUserLocation();
+});
+document.getElementById("loginBtn").addEventListener("click", function() {
+  document.getElementById("loginPopup").style.display = "block";
+});
+
+document.getElementsByClassName("close")[0].addEventListener("click", function() {
+  document.getElementById("loginPopup").style.display = "none";
+});
+
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  var email = document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+
+  // Perform login validation and authentication here
+  // You can make an AJAX request to the server
+
+  // Clear the form fields
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+
+  // Close the login popup
+  document.getElementById("loginPopup").style.display = "none";
+});
+
+document.getElementById("registerBtn").addEventListener("click", function() {
+  document.getElementById("registerPopup").style.display = "block";
+});
+
+document.getElementsByClassName("close")[1].addEventListener("click", function() {
+  document.getElementById("registerPopup").style.display = "none";
+});
+
+document.getElementById("registrationForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  var username = document.getElementById("username").value;
+  var email = document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+  var confirmPassword = document.getElementById("confirmPassword").value;
+
+  // Perform registration validation and authentication here
+  // You can make an AJAX request to the server
+
+  // Clear the form fields
+  document.getElementById("username").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("confirmPassword").value = "";
+
+  // Close the registration popup
+  document.getElementById("registerPopup").style.display = "none";
+});
+
+
+</script>
+</body>
+</html>
