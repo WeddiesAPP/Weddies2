@@ -636,8 +636,13 @@ button {
     });
     const clubs = [];
 
-      function parseCSV(csvData) {
-        const lines = csvData.split('\n');
+
+        function parseCSV(csvData) {
+  console.log(csvData); // Log the raw CSV data to check its format
+  const lines = csvData.split('\n');
+  console.log(lines); // Log the parsed lines to see individual rows
+
+      
 
         const headers = lines[0].split(',');
 
