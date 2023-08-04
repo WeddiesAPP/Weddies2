@@ -635,71 +635,59 @@ button {
         searchContainer.style.display = "flex";
     });
     const clubs = [];
-  // clubs.push('test');
-  // console.log(clubs.length + " hoeveelheid clubs");
 
-        function parseCSV(csvData) {
-  //console.log(csvData); // Log the raw CSV data to check its format
-  const lines = csvData.split('\n');
-  //console.log(lines); // Log the parsed lines to see individual rows
-  console.log(lines.length);
+    function parseCSV(csvData) {
+      const lines = csvData.split('\n');
+      const headers = lines[0].split(',');
 
+      for (let i = 1; i < lines.length; i++) {
+        const fields = lines[i].split(',');
+    
+        const club = {
+          name: fields[2],
+          league: fields[1],
+          city: fields[3],
+          location: [parseFloat(fields[15]), parseFloat(fields[16])],
+          color: fields[14],
+          link: `https://en.wikipedia.org/wiki/${encodeURIComponent(fields[2])}`,
+          stadiumName: fields[8],
+          clubColor2: fields[17],
+          description: `${fields[2]} is a football club based in ${fields[3]}. It currently competes in the ${fields[1]}, the second-highest tier of football in ${fields[4]}.`,
+          clubID: fields[0],
+          clubCode: fields[3],
+          country: fields[4],
+          founded: fields[5],
+          national: fields[6],
+          clubImageName: fields[7],
+          stadiumID: fields[8],
+          stadiumAddress: fields[9],
+          capacity: fields[11],
+          surface: fields[12],
+          stadiumImageName: fields[13],
+        };
+        clubs.push(club);
+      }
+    }
 
-        const headers = lines[0].split(',');
+    function printClubs(clubs) {
+      for (let club of clubs) {
+        console.log('Name:', club.name);
+        console.log('Members:', club.members);
+        console.log('Founded:', club.founded);
+        console.log('-------------------------');
+      }
+    }
 
-        for (let i = 1; i < lines.length; i++) {
-          const fields = lines[i].split(',');
-
-          const club = {
-            name: fields[2],
-
-            league: fields[1],
-            city: fields[3],
-            location: [parseFloat(fields[15]), parseFloat(fields[16])],
-            color: fields[14],
-            link: `https://en.wikipedia.org/wiki/${encodeURIComponent(fields[2])}`,
-            stadiumName: fields[8],
-            clubColor2: fields[17],
-            description: `${fields[2]} is a football club based in ${fields[3]}. It currently competes in the ${fields[1]}, the second-highest tier of football in ${fields[4]}.`,
-            clubID: fields[0],
-            clubCode: fields[3],
-            country: fields[4],
-            founded: fields[5],
-            national: fields[6],
-            clubImageName: fields[7],
-            stadiumID: fields[8],
-            stadiumAddress: fields[9],
-            capacity: fields[11],
-            surface: fields[12],
-            stadiumImageName: fields[13],
-          };
-          clubs.push(club);
-        }
-
-        // Do something with the clubs array, like logging or further processing
-      //  console.log(clubs);
-
-
-      // Fetch the CSV file
-      fetch('teams.csv')
+    // Fetch the CSV file
+    fetch('teams.csv')
       .then((response) => response.text())
       .then((csvData) => {
         parseCSV(csvData);
         console.log(clubs.length); // This will now print the correct length
-        function printClubs(clubs) {
-          for (let club of clubs) {
-            console.log('Name:', club.name);
-            console.log('Members:', club.members);
-            console.log('Founded:', club.founded);
-            console.log('-------------------------');
-          }
-        }
         printClubs(clubs);
         // Any additional processing on the 'clubs' array can be done here
       });
-}
-console.log('Loading and parsing CSV...');
-  await sleep(10000); //
+
 function updateVisitedClubs() {
   const visitedSearchInput = document.getElementById('visited-search-input');
   const visitedSuggestions = document.getElementById('visited-suggestions'); // create this new element
