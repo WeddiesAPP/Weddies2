@@ -902,7 +902,7 @@ function getLogoPath(clubName) {
   }
 clubs.forEach((club) => {
   const clubLatLng = L.latLng(club.location[0], club.location[1]);
-
+ Console.Log(club.location[0], club.location[1]);
   const markerIcon = L.divIcon({
     className: 'custom-div-icon',
     html: `
