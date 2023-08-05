@@ -625,7 +625,7 @@ map.on('click', hideCustomPopup);
 customPopup.style.position = 'fixed';
 customPopup.style.width = '300px';
 customPopup.style.height = '200px';
-customPopup.style.top = '80%'; // position it lower on the screen
+customPopup.style.top = '50%'; // position it lower on the screen
 customPopup.style.left = '50%';
 customPopup.style.marginLeft = '-150px'; // centering the popup
 customPopup.style.background = 'white';
@@ -636,6 +636,21 @@ document.body.appendChild(customPopup);
 function showCustomPopup(content) {
   customPopup.innerHTML = content;
   customPopup.style.display = 'block';
+  const closeButton = document.createElement('div');
+closeButton.innerHTML = 'X'; // Or you can use an icon/image
+closeButton.style.position = 'absolute';
+closeButton.style.right = '10px';
+closeButton.style.top = '10px';
+closeButton.style.cursor = 'pointer';
+closeButton.style.fontSize = '18px';
+closeButton.style.fontWeight = 'bold';
+
+// Add click event listener to close button
+closeButton.addEventListener('click', hideCustomPopup);
+
+// Append close button to the popup
+customPopup.appendChild(closeButton);
+}
 }
 
 // Function to hide the custom popup
