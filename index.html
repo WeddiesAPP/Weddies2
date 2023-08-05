@@ -647,7 +647,8 @@ button {
           name: fields[2],
           league: fields[1],
           city: fields[3],
-          location: [parseFloat(fields[15]), parseFloat(fields[16])],
+          locationLat: parseFloat(fields[15]),
+          locationLon:  parseFloat(fields[16]),
           color: fields[14],
           link: `https://en.wikipedia.org/wiki/${encodeURIComponent(fields[2])}`,
           stadiumName: fields[9],
@@ -675,6 +676,7 @@ button {
         console.log('Members:', club.members);
         console.log('Founded:', club.founded);
         console.log('Img Link:', club.clubImageName);
+        Console.Log(club.locationLat, club.locationLon);
       }
     }
 
@@ -687,8 +689,8 @@ button {
         printClubs(clubs);
         for (let club of clubs) {
           const clubMarkers = {};
-            const clubLatLng = L.latLng(club.location[0], club.location[1]);
-           Console.Log(club.location[0], club.location[1]);
+            //const clubLatLng = L.latLng(club.location[0], club.location[1]);
+           Console.Log([locationLat, locationLon]);
             const markerIcon = L.divIcon({
               className: 'custom-div-icon',
               html: `
@@ -699,7 +701,7 @@ button {
               iconAnchor: [20, 40] // reduced by 20%
             });
 
-            const marker = L.marker(clubLatLng, { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
+            const marker = L.marker([locationLat, locationLon], { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
               .addTo(map)
               /*.bindPopup(`
                 <div style="display: flex; align-items: center;">
