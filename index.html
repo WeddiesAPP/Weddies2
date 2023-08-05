@@ -853,7 +853,7 @@ function displayClubLogo(location, imageUrl) {
     [location[0] - 0.05, location[1] - 0.05],
     [location[0] + 0.05, location[1] + 0.05]
   ]; // You may need to adjust these values depending on the desired size of the logo
-  L.imageOverlay(imageUrl, bounds).addTo(map);
+  L.imageOverlay(imageUrl, location).addTo(map);
 }
 // Get the profile icon element and add a click event listener
 
