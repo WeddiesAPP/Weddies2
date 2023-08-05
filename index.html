@@ -620,10 +620,25 @@ button {
 
 
   }
+
+  function stylePopup() {
+  const popupContainer = document.querySelector('.leaflet-popup-content-wrapper');
+  if (popupContainer) {
+    popupContainer.style.backgroundColor = 'white'; // set the background color to white
+    popupContainer.style.opacity = '1'; // make sure the popup is fully opaque
+    popupContainer.style.maxWidth = '80%'; // set max width to 80% of the viewport
+    popupContainer.style.maxHeight = '80%'; // set max height to 80% of the viewport
+    popupContainer.style.overflowY = 'auto'; // allow vertical scrolling
+    popupContainer.style.position = 'fixed';
+    popupContainer.style.top = '50%';
+    popupContainer.style.left = '50%';
+    popupContainer.style.transform = 'translate(-50%, -50%)';
+  }
+}
   // Function to show a fixed popup in the center of the screen
   function createAndOpenPopup(content) {
     const popup = L.popup({
-        closeButton: false, // hide the default close button
+        closeButton: true, // hide the default close button
         autoClose: false, // disable auto close on map click
         closeOnClick: false, // disable close on popup click
       })
@@ -643,6 +658,7 @@ button {
       popupContainer.style.left = '50%';
       popupContainer.style.transform = 'translate(-50%, -50%)';
     }
+    stylePopup();
 
     // Store the popup globally, so you can close it when another marker is clicked
     window.currentPopup = popup;
