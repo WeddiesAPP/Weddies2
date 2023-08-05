@@ -605,7 +605,7 @@ button {
     iconAnchor: [25, 50]
   });
 
-  L.marker([club.latitude, club.longitude], { icon: markerIcon })
+ const marker =   L.marker([club.latitude, club.longitude], { icon: markerIcon })
     .bindPopup(createPopupContent(club))
     .addTo(map);
 });
