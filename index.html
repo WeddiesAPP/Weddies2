@@ -612,7 +612,7 @@ button {
    const offset = map.getSize().y * 0.1;
    map.setView(e.latlng, map.getZoom(), {
     pan: { offset: [0, -offset] }, // Center the map on the clicked marker
- });
+ })
       .addTo(map);
 
        clubMarkers[club.clubName] = marker;
