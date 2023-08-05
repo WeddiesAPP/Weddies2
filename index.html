@@ -504,26 +504,6 @@ button {
   text-align: center;
 }
 
-#loginBtn {
-  position: fixed;
-  top: 0%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 10px 20px;
-}
-
-#registerBtn {
-  background-color: #dd4b39;
-  color: white;
-  left: 50%;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-#registerBtn:hover {
-  background-color: #c23321;
-}
 
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
@@ -576,35 +556,9 @@ button {
  </div>
 
 </div>
-      <button id="loginBtn">Login</button>
 
-     <div id="loginPopup" class="popup">
-       <div class="popup-content">
-         <span class="close">&times;</span>
-         <h2>Login</h2>
-         <form id="registerForm" action="connect.php" method="POST">
 
-           <input type="email" placeholder="Email" name="email" required>
-           <input type="password" placeholder="Password" name="password" required>
-           <button type="submit">Sign In</button>
-         </form>
-         <div class="separator">or</div>
-         <button id="registerBtn">Register here</button>
-       </div>
-     </div>
-     <div id="registerPopup" class="popup">
-  <div class="popup-content">
-    <span class="close">&times;</span>
-    <h2>Register</h2>
-    <form id="registrationForm" action="register.php" method="POST">
-      <input type="text" placeholder="Username" name="username" required>
-      <input type="email" placeholder="Email" name="email" required>
-      <input type="password" placeholder="Password" name="password" required>
-      <input type="password" placeholder="Confirm Password" name="confirmPassword" required>
-      <button type="submit">Finish Registration</button>
-    </form>
-  </div>
-</div>
+
      <img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
     <div class="filters-container">
        <button id="filters-button">Filters</button>
@@ -717,6 +671,24 @@ button {
 
 
 
+        function createPopupContent(club) {
+          return `
+            <div class="popup-container">
+              <img class="popup-stadium-image" src="${club.stadiumImageName}" alt="${club.stadiumName}">
+              <div class="popup-club-info">
+                <img class="popup-club-logo" src="${club.clubImageName}" alt="${club.clubName}">
+                <h3>${club.clubName}</h3>
+                <p><strong>Country:</strong> ${club.country}</p>
+                <p><strong>Founded:</strong> ${club.founded}</p>
+                <p><strong>Stadium:</strong> ${club.stadiumName}</p>
+                <p><strong>Address:</strong> ${club.stadiumAddress}</p>
+                <p><strong>City:</strong> ${club.cityName}</p>
+                <p><strong>Capacity:</strong> ${club.capacity}</p>
+                <p><strong>Surface:</strong> ${club.surface}</p>
+              </div>
+            </div>
+          `;
+        }
 
 
 
