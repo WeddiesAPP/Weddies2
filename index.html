@@ -639,7 +639,7 @@ button {
     function addClubLogosToMap(clubs) {
       clubs.forEach((club) => {
         const icon = L.divIcon({
-          html: `<div style="background-image: url(${club.clubImageName}); width: 32px; height: 32px; background-size: cover;"></div>`,
+        html: `<div class="marker-pin" style="background-image: url(${club.clubImageName}); background-size: cover;"></div>`,
           iconSize: [32, 32],
         });
 
