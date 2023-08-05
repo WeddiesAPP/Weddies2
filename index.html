@@ -609,6 +609,17 @@ button {
     .bindPopup(createPopupContent(club))
     .addTo(map);
 });
+marker.on('popupopen', function(e) {
+     // Get the position of the popup
+     const px = map.project(e.popup._latlng);
+     // Get the size of the map container
+     const size = map.getSize();
+     // Calculate the new center of the map, based on the position of the popup
+     const newCenter = map.unproject([size.x / 2, px.y]);
+     // Set the new center of the map
+     map.setView(newCenter);
+   });
+
   }
 
 
