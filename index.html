@@ -703,6 +703,7 @@ button {
               };
             });
              addClubLogosToMap(clubs);
+             initializeSearch(clubs);
             // Now you have an array of club objects, you can use it as you wish
             console.log(clubs);
           },
@@ -760,10 +761,12 @@ function filterClubsByLeague() {
 
 
 //
-const searchInput = document.getElementById('search-input');
-const searchSuggestions = document.getElementById('search-suggestions');
-searchSuggestions.style.zIndex = '1'; // Set a lower z-index value for the search suggestions
-searchInput.addEventListener('input', (e) => {
+function initializeSearch(clubs) {
+  const searchInput = document.getElementById('search-input');
+  const searchSuggestions = document.getElementById('search-suggestions');
+  searchSuggestions.style.zIndex = '1'; // Set a lower z-index value for the search suggestions
+
+  searchInput.addEventListener('input', (e) => {
   const searchValue = e.target.value.toLowerCase();
   if (searchValue === '') {
     searchSuggestions.style.display = 'none';
@@ -823,6 +826,14 @@ searchInput.addEventListener('input', (e) => {
     searchSuggestions.style.display = 'none';
   }
 });
+
+
+  document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target)) {
+      searchSuggestions.style.display = 'none';
+    }
+  });
+}
 
 
 function createLeagueFilter() {
