@@ -637,18 +637,17 @@ button {
     });
 
     function addClubLogosToMap(clubs) {
-      clubs.forEach((club) => {
-        const icon = L.divIcon({
-        html: `<div class="marker-pin" style="background-image: url(${club.clubImageName}); background-size: cover;"></div>`,
-          iconSize: [32, 32],
-        });
-
-        L.marker([club.latitude, club.longitude], { icon: icon })
-          .bindPopup(`<strong>${club.clubName}</strong><br>${club.stadiumName}`)
-          .addTo(map);
+    clubs.forEach((club) => {
+      const icon = L.divIcon({
+        html: `<div class="marker-pin"><div style="background-image: url(${club.clubImageName}); width: 50px; height: 50px; background-size: cover;"></div></div>`,
+        iconSize: [50, 50],
       });
-    }
 
+      L.marker([club.latitude, club.longitude], { icon: icon })
+        .bindPopup(`<strong>${club.clubName}</strong><br>${club.stadiumName}`)
+        .addTo(map);
+    });
+  }
 
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
     const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
