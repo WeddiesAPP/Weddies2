@@ -930,20 +930,21 @@ if (navigator.geolocation) {
 
       // Function to filter markers based on the search radius and league filter
       function filterMarkers(searchRadius) {
-        const leagueFilter = dropdownButton.innerText;
+    const leagueFilter = dropdownButton.innerText;
 
-        for (const club of clubs) {
-          const clubLatLng = L.latLng(club.latitude,club.longitude);
-          if (
-            clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
-            (leagueFilter === 'All Leagues' || club.league === leagueFilter)
-          ) {
-            clubMarkers[club.clubName].addTo(map);
-          } else {
-            clubMarkers[club.clubName].remove();
-          }
-        }
+    for (const club of clubs) {
+      const clubLatLng = L.latLng(club.latitude, club.longitude);
+      if (
+        clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 //&&
+        //(leagueFilter === 'All Leagues' || club.league === leagueFilter)
+      ) {
+        clubMarkers[club.clubName].addTo(map);
+      } else {
+        clubMarkers[club.clubName].removeFrom(map); // Corrected line
       }
+    }
+  }
+
 
     },
     (error) => {
