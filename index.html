@@ -693,6 +693,9 @@ button {
       zoom: 7,
       layers: [lightLayer] // Dark Layer by default
     });
+    var layerControl = L.control.layers(baseMaps, null, {
+      position: 'bottomright' // Set the position to 'bottomright'
+    }).addTo(map);
     // Fetch the CSV file
     fetch('teams.csv')
       .then((response) => response.text())
@@ -727,9 +730,7 @@ button {
 
 
 
-var layerControl = L.control.layers(baseMaps, null, {
-  position: 'bottomright' // Set the position to 'bottomright'
-}).addTo(map);
+
 
 
 // Function to create the custom dropdown component
