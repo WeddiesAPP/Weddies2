@@ -686,10 +686,50 @@ button {
         console.log(clubs.length); // This will now print the correct length
         printClubs(clubs);
         for (let club of clubs) {
-      displayClubLogo(club.location, club.clubImageName);
+          const clubMarkers = {};
+            const clubLatLng = L.latLng(club.location[0], club.location[1]);
+           Console.Log(club.location[0], club.location[1]);
+            const markerIcon = L.divIcon({
+              className: 'custom-div-icon',
+              html: `
+                <div style='background-color:white;' class='marker-pin'></div>
+                <img src="${club.clubImageName}" alt="${club.name}" class="club-logo">
+                        `,
+              iconSize: [40, 40], // reduced by 20%
+              iconAnchor: [20, 40] // reduced by 20%
+            });
+
+            const marker = L.marker(clubLatLng, { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
+              .addTo(map)
+              /*.bindPopup(`
+                <div style="display: flex; align-items: center;">
+                  <img src="${(club.name)}" alt="${club.name}" style="width: 40px; height: 40px; margin-right: 10px;">
+                  <div>
+                    <b>${club.name}</b><br>
+                    ${club.league}<br>
+
+                    <button id="visitedBtn${club.name}" onclick="toggleVisited('${club.name}')">
+              <span id="visitedText${club.name}">${getVisitedText(club.name)}</span>
+              <span id="visitedIcon${club.name}">${getVisitedIcon(club.name)}</span>
+            </button>
+
+
+                    <button onclick="window.open('${club.link}', '_blank')">Learn more</button>
+                    <button onclick="window.open('${club.ticketLink}', '_blank')">Buy Tickets</button>
+
+                    <div style="display: flex; justify-content: center; margin-top: 10px;">
+                      <a href="https://www.google.com/maps/dir/?api=1&destination=${clubLatLng[0]},${clubLatLng[1]}" target="_blank" style="background-color: blue; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Navigate To</a>
+                    </div>
+                  </div>
+                </div>
+              `)*/;
+
+
+            clubMarkers[club.name] = marker;
+          });
     }
         // Any additional processing on the 'clubs' array can be done here
-      });
+
 
 function updateVisitedClubs() {
   const visitedSearchInput = document.getElementById('visited-search-input');
@@ -903,49 +943,7 @@ var layerControl = L.control.layers(baseMaps, null, {
   position: 'bottomright' // Set the position to 'bottomright'
 }).addTo(map);
 
-const clubMarkers = {};
 
-clubs.forEach((club) => {
-  const clubLatLng = L.latLng(club.location[0], club.location[1]);
- Console.Log(club.location[0], club.location[1]);
-  const markerIcon = L.divIcon({
-    className: 'custom-div-icon',
-    html: `
-      <div style='background-color:white;' class='marker-pin'></div>
-      <img src="${club.clubImageName}" alt="${club.name}" class="club-logo">
-              `,
-    iconSize: [40, 40], // reduced by 20%
-    iconAnchor: [20, 40] // reduced by 20%
-  });
-
-  const marker = L.marker(clubLatLng, { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
-    .addTo(map)
-    /*.bindPopup(`
-      <div style="display: flex; align-items: center;">
-        <img src="${(club.name)}" alt="${club.name}" style="width: 40px; height: 40px; margin-right: 10px;">
-        <div>
-          <b>${club.name}</b><br>
-          ${club.league}<br>
-
-          <button id="visitedBtn${club.name}" onclick="toggleVisited('${club.name}')">
-    <span id="visitedText${club.name}">${getVisitedText(club.name)}</span>
-    <span id="visitedIcon${club.name}">${getVisitedIcon(club.name)}</span>
-  </button>
-
-
-          <button onclick="window.open('${club.link}', '_blank')">Learn more</button>
-          <button onclick="window.open('${club.ticketLink}', '_blank')">Buy Tickets</button>
-
-          <div style="display: flex; justify-content: center; margin-top: 10px;">
-            <a href="https://www.google.com/maps/dir/?api=1&destination=${clubLatLng[0]},${clubLatLng[1]}" target="_blank" style="background-color: blue; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Navigate To</a>
-          </div>
-        </div>
-      </div>
-    `)*/;
-
-
-  clubMarkers[club.name] = marker;
-});
 
 
 
