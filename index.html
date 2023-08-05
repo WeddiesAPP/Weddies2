@@ -679,6 +679,20 @@ button {
       }
     }
 
+    const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
+    const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19
+    });
+    const baseMaps = {
+      "Dark Map": darkLayer,
+      "Light Map": lightLayer
+    };
+
+    const map = L.map('mapid', {
+      center: [52.1326, 5.2913],
+      zoom: 7,
+      layers: [lightLayer] // Dark Layer by default
+    });
     // Fetch the CSV file
     fetch('teams.csv')
       .then((response) => response.text())
