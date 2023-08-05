@@ -610,6 +610,7 @@ button {
           // Close the existing popup if there is one
           const content = createPopupContent(club);
       showCustomPopup(content);
+      map.setView(e.latlng, map.getZoom());
       })
       .addTo(map);
 
@@ -620,6 +621,7 @@ map.on('click', hideCustomPopup);
   }
 
   const customPopup = document.createElement('div');
+  customPopup.style.zIndex = '1000';
 customPopup.style.position = 'fixed';
 customPopup.style.width = '300px';
 customPopup.style.height = '200px';
