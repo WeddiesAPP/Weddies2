@@ -600,7 +600,7 @@ button {
     className: 'custom-div-icon',
     html: `
       <div class='marker-pin'></div>
-      <img src="${club.clubImageName}" alt="${club.name}" style="width: 32px; height: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;" />`,
+      <img src="${club.clubImageName}" alt="${club.clubName}" style="width: 32px; height: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;" />`,
     iconSize: [50, 50], // Adjust this size as needed to match the pin
     iconAnchor: [25, 50]
   });
@@ -938,9 +938,9 @@ if (navigator.geolocation) {
             clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
             (leagueFilter === 'All Leagues' || club.league === leagueFilter)
           ) {
-            clubMarkers[club.name].addTo(map);
+            clubMarkers[club.clubName].addTo(map);
           } else {
-            clubMarkers[club.name].remove();
+            clubMarkers[club.clubName].remove();
           }
         }
       }
