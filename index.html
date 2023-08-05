@@ -685,6 +685,9 @@ button {
         parseCSV(csvData);
         console.log(clubs.length); // This will now print the correct length
         printClubs(clubs);
+        for (let club of clubs) {
+      displayClubLogo(club.location, club.clubImageName);
+    }
         // Any additional processing on the 'clubs' array can be done here
       });
 
@@ -844,6 +847,14 @@ const map = L.map('mapid', {
   zoom: 7,
   layers: [lightLayer] // Dark Layer by default
 });
+
+function displayClubLogo(location, imageUrl) {
+  const bounds = [
+    [location[0] - 0.05, location[1] - 0.05],
+    [location[0] + 0.05, location[1] + 0.05]
+  ]; // You may need to adjust these values depending on the desired size of the logo
+  L.imageOverlay(imageUrl, bounds).addTo(map);
+}
 // Get the profile icon element and add a click event listener
 
 function showVisitedClubs() {
@@ -893,14 +904,8 @@ var layerControl = L.control.layers(baseMaps, null, {
 }).addTo(map);
 
 const clubMarkers = {};
-function getLogoPath(clubName) {
-    if (clubName.startsWith('Jong ')) {
-      clubName = clubName.substring(5); // Remove "Jong " prefix
-    }
 
-    return `${clubName}.png`;
-  }
-clubs.forEach(club) => {
+clubs.forEach((club) => {
   const clubLatLng = L.latLng(club.location[0], club.location[1]);
  Console.Log(club.location[0], club.location[1]);
   const markerIcon = L.divIcon({
