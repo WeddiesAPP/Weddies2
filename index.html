@@ -616,37 +616,47 @@ button {
 
 
   }
+  // Function to show a fixed popup in the center of the screen
   function showFixedPopup(content) {
-    // Create a container for the popup
-    const popupContainer = document.createElement('div');
-    popupContainer.id = 'fixed-popup';
-    popupContainer.innerHTML = content;
+      // Check if a popup already exists and remove it
+      const existingPopup = document.getElementById('fixed-popup');
+      if (existingPopup) {
+          document.body.removeChild(existingPopup);
+      }
 
-    // Append the container to the body
-    document.body.appendChild(popupContainer);
+      // Create a container for the popup
+      const popupContainer = document.createElement('div');
+      popupContainer.id = 'fixed-popup';
+      popupContainer.innerHTML = content;
 
-    // Add some basic CSS to center the popup on the screen
-    const css = `
-        #fixed-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px; // Adjust as needed
-            height: 200px; // Adjust as needed
-            background: white;
-            padding: 10px;
-            border: 1px solid #000;
-            z-index: 1000; // Ensures it appears above other elements
-        }
-    `;
+      // Append the container to the body
+      document.body.appendChild(popupContainer);
 
-    // Add the CSS to the head of the document
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.appendChild(document.createTextNode(css));
-    document.head.appendChild(style);
-}
+      // Add some basic CSS to center the popup on the screen
+      const css = `
+          #fixed-popup {
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 300px; // Adjust as needed
+              height: 200px; // Adjust as needed
+              background: white; // Background is now white
+              padding: 10px;
+              border: 1px solid #000;
+              z-index: 1000; // Ensures it appears above other elements
+          }
+      `;
+
+      // Add the CSS to the head of the document
+      const style = document.createElement('style');
+      if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+      } else {
+          style.appendChild(document.createTextNode(css));
+      }
+      document.head.appendChild(style);
+  }
 
 
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
