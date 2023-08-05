@@ -760,7 +760,9 @@ function filterClubsByLeague() {
 
 
 //
-
+const searchInput = document.getElementById('search-input');
+const searchSuggestions = document.getElementById('search-suggestions');
+searchSuggestions.style.zIndex = '1'; // Set a lower z-index value for the search suggestions
 searchInput.addEventListener('input', (e) => {
   const searchValue = e.target.value.toLowerCase();
   if (searchValue === '') {
