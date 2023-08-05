@@ -610,8 +610,7 @@ button {
    const content = createPopupContent(club);
    showCustomPopup(content);
    const offset = map.getSize().y * 0.1;
-   map.setView(e.latlng, map.getZoom(), {
-    pan: { offset: [0, -offset] }, // Center the map on the clicked marker
+   map.setView(e.latlng, map.getZoom();// Center the map on the clicked marker
  })
       .addTo(map);
 
