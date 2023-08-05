@@ -615,6 +615,7 @@ button {
          // Optionally, you can open the popup manually after centering the map
          e.target.openPopup();
        });
+       clubMarkers[club.clubName] = marker;
 });
 
 
@@ -675,6 +676,7 @@ button {
             });
              addClubLogosToMap(clubs);
              initializeSearch(clubs);
+             RadiusSlider(clubs);
             // Now you have an array of club objects, you can use it as you wish
             console.log(clubs);
           },
@@ -735,7 +737,7 @@ const dropdownButton = document.getElementById('dropdown-button');
 const dropdownContent = document.getElementById('dropdown-content');
 
 let selectedLeagues = [];
-
+let clubMarkers = [];
 function filterClubsByLeague() {
   for (const club of clubs) {
     if (selectedLeagues.includes(club.league) || selectedLeagues.length === 0) {
@@ -884,7 +886,7 @@ dropdownContainer.style.zIndex = '0'; // Set a higher z-index value for the drop
 
 
 
-
+function RadiusSlider(clubs) {
 const radiusSlider = document.getElementById('radius-slider');
 const radiusValue = document.getElementById('radius-value');
 let userLocation;
@@ -931,7 +933,7 @@ if (navigator.geolocation) {
         const leagueFilter = dropdownButton.innerText;
 
         for (const club of clubs) {
-          const clubLatLng = L.latLng(clubMarkers[club.name].getLatLng());
+          const clubLatLng = L.latLng(club.latitude,club.longitude);
           if (
             clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
             (leagueFilter === 'All Leagues' || club.league === leagueFilter)
@@ -952,7 +954,7 @@ if (navigator.geolocation) {
   console.error('Geolocation is not supported by this browser.');
 }
 
-
+}
 
 
 
