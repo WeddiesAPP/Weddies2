@@ -530,6 +530,7 @@ button {
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 
 </head>
@@ -634,41 +635,7 @@ button {
         filtersContainer.style.display = "none";
         searchContainer.style.display = "flex";
     });
-    const clubs = [];
 
-    function parseCSV(csvData) {
-      const lines = csvData.split('\n');
-      const headers = lines[0].split(',');
-
-      for (let i = 1; i < lines.length - 1; i++) {
-        const fields = lines[i].split(',');
-
-        const club = {
-          name: fields[2],
-          league: fields[1],
-          city: fields[3],
-          locationLat:fields[15],
-          locationLon: fields[16],
-          color: fields[14],
-          link: `https://en.wikipedia.org/wiki/${encodeURIComponent(fields[2])}`,
-          stadiumName: fields[9],
-          clubColor2: fields[17],
-          description: `${fields[2]} is a football club based in ${fields[3]}. It currently competes in the ${fields[1]}, the second-highest tier of football in ${fields[4]}.`,
-          clubID: fields[0],
-          clubCode: fields[3],
-          country: fields[4],
-          founded: fields[5],
-          national: fields[6],
-          clubImageName: fields[7],
-          stadiumID: fields[8],
-          stadiumAddress: fields[10],
-          capacity: fields[11],
-          surface: fields[12],
-          stadiumImageName: fields[13],
-        };
-        clubs.push(club);
-      }
-    }
     function printClubs(clubs) {
       for (let club of clubs) {
         console.log('Name:', club.name);
@@ -697,33 +664,46 @@ button {
       position: 'bottomright' // Set the position to 'bottomright'
     }).addTo(map);
     // Fetch the CSV file
-    fetch('teams.csv')
-      .then((response) => response.text())
-      .then((csvData) => {
-        parseCSV(csvData);
-        console.log(clubs.length); // This will now print the correct length
-        printClubs(clubs);
-        for (let club of clubs) {
-          const clubMarkers = {};
-          //const clubLatLng = L.latLng(club.location[0], club.location[1]);
-          console.log(club.locationLat, club.locationLon);
-          const markerIcon = L.divIcon({
-            className: 'custom-div-icon',
-            html: `
-              <div style='background-color:white;' class='marker-pin'></div>
-              <img src="${club.clubImageName}" alt="${club.name}" class="club-logo">
-            `,
-            iconSize: [40, 40], // reduced by 20%
-            iconAnchor: [20, 40] // reduced by 20%
-          });
+    const fs = require('fs');
+const Papa = require('papaparse');
 
-          const marker = L.marker([club.locationLat, club.locationLon], { icon: markerIcon, clubName: club.name }) // Add clubName as a custom option
-            .addTo(map);
+// Read the CSV file
+const file = fs.readFileSync('teams.csv', 'utf8');
 
+// Parse the CSV file
+Papa.parse(file, {
+  header: true,
+  dynamicTyping: true,
+  skipEmptyLines: true,
+  complete: function (results) {
+    const clubs = results.data.map((row) => {
+      return {
+        leagueID: row.leagueID,
+        clubID: row.clubID,
+        clubName: row.clubName,
+        clubCode: row.clubCode,
+        country: row.country,
+        founded: row.founded,
+        national: row.national,
+        clubImageName: row.clubImageName,
+        stadiumID: row.stadiumID,
+        stadiumName: row.stadiumName,
+        stadiumAddress: row.stadiumAddress,
+        cityName: row.cityName,
+        capacity: row.capacity,
+        surface: row.surface,
+        stadiumImageName: row.stadiumImageName,
+        latitude: row.latitude,
+        longitude: row.longitude,
+        firstColor: row.firstColor,
+        secondColor: row.secondColor,
+      };
+    });
 
-          clubMarkers[club.name] = marker;
-        }
-      });
+    // Now you have an array of club objects, you can use it as you wish
+    console.log(clubs);
+  },
+});
 
         // Any additional processing on the 'clubs' array can be done here
 
