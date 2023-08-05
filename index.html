@@ -610,7 +610,7 @@ button {
     .addTo(map);
     marker.on('click', (e) => {
          // Centering the map on the clicked marker's coordinates
-         map.setView(e.target.getLatLng(), map.getZoom());
+         map.setView([club.latitude, club.longitude], map.getZoom());
 
          // Optionally, you can open the popup manually after centering the map
          e.target.openPopup();
