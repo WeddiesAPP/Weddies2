@@ -591,17 +591,20 @@ button {
     });
 
     function addClubLogosToMap(clubs) {
-      clubs.forEach((club) => {
-        const icon = L.divIcon({
-          html: `<div style="background-image: url(${club.clubImageName}); width: 32px; height: 32px; background-size: cover;"></div>`,
-          iconSize: [32, 32],
-        });
+  clubs.forEach((club) => {
+    const icon = L.divIcon({
+      html: `
+        <div class="marker-pin"></div>
+        <div style="background-image: url(${club.clubImageName}); width: 32px; height: 32px; background-size: cover; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);"></div>`,
+      iconSize: [50, 50], // You can adjust this based on your styling
+      iconAnchor: [25, 50], // Center the pin tip on the marker coordinates
+    });
 
-        L.marker([club.latitude, club.longitude], { icon: icon })
-          .bindPopup(createPopupContent(club))
-          .addTo(map);
-      });
-    }
+    L.marker([club.latitude, club.longitude], { icon: icon })
+      .bindPopup(createPopupContent(club))
+      .addTo(map);
+  });
+}
 
 
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
