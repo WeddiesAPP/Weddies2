@@ -608,62 +608,38 @@ button {
   const marker = L.marker([club.latitude, club.longitude], { icon: markerIcon })
       .on('click', () => {
           // Close the existing popup if there is one
-          if (window.currentPopup) {
-            map.closePopup(window.currentPopup);
-          }
-          createAndOpenPopup(createPopupContent(club));
+          const content = createPopupContent(club);
+      showCustomPopup(content);
       })
       .addTo(map);
 
        clubMarkers[club.clubName] = marker;
 });
-
+map.on('click', hideCustomPopup);
 
   }
 
-  function stylePopup() {
-  const popupContainer = document.querySelector('.leaflet-popup-content-wrapper');
-  if (popupContainer) {
-    popupContainer.style.backgroundColor = 'white'; // set the background color to white
-    popupContainer.style.opacity = '1'; // make sure the popup is fully opaque
-    popupContainer.style.maxWidth = '80%'; // set max width to 80% of the viewport
-    popupContainer.style.maxHeight = '80%'; // set max height to 80% of the viewport
-    popupContainer.style.overflowY = 'auto'; // allow vertical scrolling
-    popupContainer.style.position = 'fixed';
-    popupContainer.style.top = '50%';
-    popupContainer.style.left = '50%';
-    popupContainer.style.transform = 'translate(-50%, -50%)';
-  }
+  const customPopup = document.createElement('div');
+customPopup.style.position = 'fixed';
+customPopup.style.width = '300px';
+customPopup.style.height = '200px';
+customPopup.style.top = '80%'; // position it lower on the screen
+customPopup.style.left = '50%';
+customPopup.style.marginLeft = '-150px'; // centering the popup
+customPopup.style.background = 'white';
+customPopup.style.display = 'none'; // hidden by default
+document.body.appendChild(customPopup);
+
+// Function to show the custom popup
+function showCustomPopup(content) {
+  customPopup.innerHTML = content;
+  customPopup.style.display = 'block';
 }
-  // Function to show a fixed popup in the center of the screen
-  function createAndOpenPopup(content) {
-    const popup = L.popup({
-        closeButton: true, // hide the default close button
-        autoClose: false, // disable auto close on map click
-        closeOnClick: false, // disable close on popup click
-      })
-      .setLatLng(map.getCenter()) // set popup position to center of the map
-      .setContent(content)
-      .openOn(map);
 
-    // Adjust the styles of the popup container
-    const popupContainer = document.querySelector('.leaflet-popup-content-wrapper');
-    if (popupContainer) {
-      popupContainer.style.backgroundColor = 'white'; // set the background color to white
-      popupContainer.style.opacity = '1'; // make sure the popup is fully opaque
-      popupContainer.style.width = '300px'; // adjust width as needed
-      popupContainer.style.height = '200px'; // adjust height as needed
-      popupContainer.style.position = 'fixed';
-      popupContainer.style.top = '50%';
-      popupContainer.style.left = '50%';
-      popupContainer.style.transform = 'translate(-50%, -50%)';
-    }
-    stylePopup();
-
-    // Store the popup globally, so you can close it when another marker is clicked
-    window.currentPopup = popup;
-  }
-
+// Function to hide the custom popup
+function hideCustomPopup() {
+  customPopup.style.display = 'none';
+}
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
     const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
