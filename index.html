@@ -609,8 +609,10 @@ button {
   .on('click', (e) => {
    const content = createPopupContent(club);
    showCustomPopup(content);
-   map.setView(e.latlng, map.getZoom()); // Center the map on the clicked marker
- })
+   const offset = map.getSize().y * 0.1;
+   map.setView(e.latlng, map.getZoom(), {
+    pan: { offset: [0, -offset] }, // Center the map on the clicked marker
+ });
       .addTo(map);
 
        clubMarkers[club.clubName] = marker;
@@ -629,6 +631,7 @@ customPopup.style.left = '50%';
 customPopup.style.marginLeft = '-150px'; // centering the popup
 customPopup.style.background = 'white';
 customPopup.style.display = 'none'; // hidden by default
+customPopup.overflow = 'auto';
 document.body.appendChild(customPopup);
 
 // Function to show the custom popup
