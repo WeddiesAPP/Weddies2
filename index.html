@@ -637,17 +637,18 @@ button {
     });
 
     function addClubLogosToMap(clubs) {
-    clubs.forEach((club) => {
-      const icon = L.divIcon({
-        html: `<div class="marker-pin"><div style="background-image: url(${club.clubImageName}); width: 50px; height: 50px; background-size: cover;"></div></div>`,
-        iconSize: [50, 50],
-      });
+      clubs.forEach((club) => {
+        const icon = L.divIcon({
+          html: `<div style="background-image: url(${club.clubImageName}); width: 32px; height: 32px; background-size: cover;"></div>`,
+          iconSize: [32, 32],
+        });
 
-      L.marker([club.latitude, club.longitude], { icon: icon })
-        .bindPopup(`<strong>${club.clubName}</strong><br>${club.stadiumName}`)
-        .addTo(map);
-    });
-  }
+        L.marker([club.latitude, club.longitude], { icon: icon })
+          .bindPopup(`<strong>${club.clubName}</strong><br>${club.stadiumName}`)
+          .addTo(map);
+      });
+    }
+
 
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
     const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -753,6 +754,74 @@ function filterClubsByLeague() {
     }
   }
 }
+//
+
+//SEARCH SEARCH Search
+
+
+//
+
+searchInput.addEventListener('input', (e) => {
+  const searchValue = e.target.value.toLowerCase();
+  if (searchValue === '') {
+    searchSuggestions.style.display = 'none';
+    return;
+  }
+  const filteredClubs = clubs.filter(club => club.clubName.toLowerCase().includes(searchValue));
+
+  // Clear previous suggestions
+  searchSuggestions.innerHTML = '';
+
+  // Add new suggestions
+  filteredClubs.forEach(club => {
+    const suggestion = document.createElement('div');
+    suggestion.classList.add('suggestion');
+
+    // Create logo element
+    const logo = document.createElement('img');
+    logo.classList.add('club-logo-2');
+    logo.src = club.clubImageName; // Changed to the new club property
+    suggestion.appendChild(logo);
+
+    // Create club info container
+    const clubInfo = document.createElement('div');
+    clubInfo.classList.add('club-info');
+
+    // Create club name element
+    const clubName = document.createElement('span');
+    clubName.textContent = club.clubName; // Changed to the new club property
+    clubName.style.display = 'block';
+    clubInfo.appendChild(clubName);
+
+    // Create stadium name element
+    const stadiumName = document.createElement('span');
+    stadiumName.classList.add('stadium-name');
+    stadiumName.textContent = club.stadiumName; // Changed to the new club property
+    stadiumName.style.display = 'block';
+    stadiumName.style.fontSize = '0.6em';
+    clubInfo.appendChild(stadiumName);
+
+    suggestion.appendChild(clubInfo);
+
+    suggestion.addEventListener('click', () => {
+      searchInput.value = club.clubName; // Changed to the new club property
+      searchSuggestions.innerHTML = '';
+      map.setView([club.latitude, club.longitude], 12); // Updated to use the new club properties
+      // Update map markers based on selected club
+      // ...
+    });
+
+    searchSuggestions.appendChild(suggestion);
+  });
+
+  // Show/hide suggestions based on input value
+  if (filteredClubs.length > 0) {
+    searchSuggestions.style.display = 'block';
+  } else {
+    searchSuggestions.style.display = 'none';
+  }
+});
+
 
 function createLeagueFilter() {
   const allLeaguesDiv = document.createElement('div');
