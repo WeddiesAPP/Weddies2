@@ -636,15 +636,19 @@ button {
         searchContainer.style.display = "flex";
     });
 
-    function printClubs(clubs) {
-      for (let club of clubs) {
-        console.log('Name:', club.name);
-        console.log('Members:', club.members);
-        console.log('Founded:', club.founded);
-        console.log('Img Link:', club.clubImageName);
-        console.log(club.locationLat, club.locationLon);
-      }
+    function addClubLogosToMap(clubs) {
+      clubs.forEach((club) => {
+        const icon = L.divIcon({
+          html: `<div style="background-image: url(${club.clubImageName}); width: 32px; height: 32px; background-size: cover;"></div>`,
+          iconSize: [32, 32],
+        });
+
+        L.marker([club.latitude, club.longitude], { icon: icon })
+          .bindPopup(`<strong>${club.clubName}</strong><br>${club.stadiumName}`)
+          .addTo(map);
+      });
     }
+
 
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
     const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -698,7 +702,7 @@ button {
                 secondColor: row.secondColor,
               };
             });
-
+             addClubLogosToMap(clubs);
             // Now you have an array of club objects, you can use it as you wish
             console.log(clubs);
           },
