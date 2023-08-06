@@ -452,6 +452,14 @@ transform: translate(-50%, 0%);
   flex-direction: column;
   align-items: center;
 }
+.popup-container::-webkit-scrollbar {
+    display: none;
+}
+
+.popup-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
 
 .popup-stadium-image {
   width: 100%;
@@ -680,7 +688,7 @@ let selectedLeagues = [];
   customPopup.style.zIndex = '1000';
   customPopup.style.position = 'fixed';
   customPopup.style.width = '450px';
-  customPopup.style.maxHeight = '80vh'; // Set a maximum height to the popup to avoid excessive scrolling
+  customPopup.style.maxHeight = '100vh'; // Set a maximum height to the popup to avoid excessive scrolling
   customPopup.style.overflow = 'auto'; // Enable scrolling when the content exceeds the height
 
   // Center the popup both horizontally and vertically
