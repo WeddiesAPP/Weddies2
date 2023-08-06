@@ -775,21 +775,31 @@ map.on('click', hideCustomPopup);
 function initializeSearch(clubs) {
   const searchInput = document.getElementById('search-input');
   const searchSuggestions = document.getElementById('search-suggestions');
-  searchSuggestions.style.zIndex = '1'; // Set a lower z-index value for the search suggestions
+  searchSuggestions.style.zIndex = '1';
 
   searchInput.addEventListener('input', (e) => {
-  const searchValue = e.target.value.toLowerCase();
-  if (searchValue === '') {
-    searchSuggestions.style.display = 'none';
-    return;
-  }
-  const filteredClubs = clubs.filter(club => club.clubName.toLowerCase().includes(searchValue));
+    const searchValue = e.target.value.toLowerCase();
+    if (searchValue === '') {
+      searchSuggestions.style.display = 'none';
+      return;
+    }
 
-  // Clear previous suggestions
-  searchSuggestions.innerHTML = '';
+    // Filter the clubs based on the input value and the selected leagues
+    let filteredClubs;
+    if (selectedLeagues.length > 0) {
+      filteredClubs = clubs.filter(club =>
+        club.clubName.toLowerCase().includes(searchValue) &&
+        selectedLeagues.includes(club.leagueName)
+      );
+    } else {
+      filteredClubs = clubs.filter(club => club.clubName.toLowerCase().includes(searchValue));
+    }
 
-  // Add new suggestions
-  filteredClubs.forEach(club => {
+    // Clear previous suggestions
+    searchSuggestions.innerHTML = '';
+
+    // Add new suggestions
+    filteredClubs.forEach(club => {
     const suggestion = document.createElement('div');
     suggestion.classList.add('suggestion');
 
@@ -832,19 +842,18 @@ function initializeSearch(clubs) {
 
   // Show/hide suggestions based on input value
   if (filteredClubs.length > 0) {
-    searchSuggestions.style.display = 'block';
-  } else {
-    searchSuggestions.style.display = 'none';
-  }
-});
+        searchSuggestions.style.display = 'block';
+      } else {
+        searchSuggestions.style.display = 'none';
+      }
+    });
 
-
-  document.addEventListener('click', (e) => {
-    if (!searchInput.contains(e.target)) {
-      searchSuggestions.style.display = 'none';
-    }
-  });
-}
+    if (filteredClubs.length > 0) {
+          searchSuggestions.style.display = 'block';
+        } else {
+          searchSuggestions.style.display = 'none';
+        }
+      });
 
 
 
