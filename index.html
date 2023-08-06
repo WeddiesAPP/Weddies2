@@ -850,11 +850,46 @@ function initializeSearch(clubs) {
 const dropdownContainer = document.getElementById('dropdown-button');
 dropdownContainer.style.zIndex = '0'; // Set a higher z-index value for the dropdown
 
-
 function initialize(clubs) {
     const radiusSlider = document.getElementById('radius-slider');
     const radiusValue = document.getElementById('radius-value');
     let userLocation;
+
+    function setRadiusCircle(radius) {
+        if (radius === parseInt(radiusSlider.max)) {
+            radiusValue.textContent = 'ALL';
+        } else {
+            radiusValue.textContent = radius;
+        }
+
+        if (window.radius) map.removeLayer(window.radius);
+
+        window.radius = L.circle(userLocation, {
+            radius: radius * 1000,
+            color: 'rgba(0, 0, 0, 0.0)',
+            fillOpacity: 0.2,
+        }).addTo(map);
+
+        for (const club of clubs) {
+            if (selectedLeagues.includes(club.leagueName)) {
+                clubMarkers[club.clubName].addTo(map);
+            }
+        }
+    }
+
+    function filterMarkers(searchRadius) {
+        for (const club of clubs) {
+            const clubLatLng = L.latLng(club.latitude, club.longitude);
+            if (
+                clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
+                (selectedLeagues.length === 0 || selectedLeagues.includes(club.leagueName))
+            ) {
+                clubMarkers[club.clubName].addTo(map);
+            } else {
+                clubMarkers[club.clubName].removeFrom(map);
+            }
+        }
+    }
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -870,42 +905,6 @@ function initialize(clubs) {
                     setRadiusCircle(searchRadius);
                     filterMarkers(searchRadius);
                 });
-
-                function setRadiusCircle(radius) {
-                    if (radius === parseInt(radiusSlider.max)) {
-                        radiusValue.textContent = 'ALL';
-                    } else {
-                        radiusValue.textContent = radius;
-                    }
-
-                    if (window.radius) map.removeLayer(window.radius);
-
-                    window.radius = L.circle(userLocation, {
-                        radius: radius * 1000,
-                        color: 'rgba(0, 0, 0, 0.0)',
-                        fillOpacity: 0.2,
-                    }).addTo(map);
-
-                    for (const club of clubs) {
-                        if (selectedLeagues.includes(club.leagueName)) {
-                            clubMarkers[club.clubName].addTo(map);
-                        }
-                    }
-                }
-
-                function filterMarkers(searchRadius) {
-                    for (const club of clubs) {
-                        const clubLatLng = L.latLng(club.latitude, club.longitude);
-                        if (
-                            clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
-                            (selectedLeagues.length === 0 || selectedLeagues.includes(club.leagueName))
-                        ) {
-                            clubMarkers[club.clubName].addTo(map);
-                        } else {
-                            clubMarkers[club.clubName].removeFrom(map);
-                        }
-                    }
-                }
             },
             (error) => {
                 console.error('Error retrieving location:', error);
@@ -959,7 +958,6 @@ function initialize(clubs) {
         createLeagueOption(leagueName);
     }
 }
-
 
 
 /*
