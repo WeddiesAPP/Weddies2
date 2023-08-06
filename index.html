@@ -136,7 +136,7 @@
             position: absolute;
             top: 20px;
             left: 50px;
-            background-color: rgba(50, 149, 30, 0.5);
+            background-color: white;
             padding: 20px;
             z-index: 999;
             display: none;
@@ -713,6 +713,7 @@ customPopup.appendChild(closeButton);
 function hideCustomPopup() {
   customPopup.style.display = 'none';
 }
+
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
     const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
