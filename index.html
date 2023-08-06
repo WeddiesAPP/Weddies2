@@ -622,16 +622,21 @@ map.on('click', hideCustomPopup);
 
   const customPopup = document.createElement('div');
   customPopup.style.zIndex = '1000';
-customPopup.style.position = 'fixed';
-customPopup.style.width = '300px';
-customPopup.style.height = '200px';
-customPopup.style.top = '50%'; // position it lower on the screen
-customPopup.style.left = '50%';
-customPopup.style.marginLeft = '-150px'; // centering the popup
-customPopup.style.background = 'white';
-customPopup.style.display = 'none'; // hidden by default
-customPopup.overflow = 'auto';
-document.body.appendChild(customPopup);
+  customPopup.style.position = 'fixed';
+  customPopup.style.width = '300px';
+  customPopup.style.maxHeight = '80vh'; // Set a maximum height to the popup to avoid excessive scrolling
+  customPopup.style.overflow = 'auto'; // Enable scrolling when the content exceeds the height
+
+  // Center the popup both horizontally and vertically
+  customPopup.style.top = '30%';
+  customPopup.style.left = '50%';
+  customPopup.style.transform = 'translate(-50%, -50%)';
+
+  customPopup.style.background = 'white';
+  customPopup.style.display = 'none'; // Hidden by default
+  document.body.appendChild(customPopup);
+
+  // Rest of your code for showCustomPopup and hideCustomPopup functions...
 
 // Function to show the custom popup
 function showCustomPopup(content) {
