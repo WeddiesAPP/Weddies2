@@ -758,7 +758,7 @@ function addClubLogosToMap(clubs) {
       .on('click', (e) => {
         const content = createPopupContent(club);
         showCustomPopup(content);
-        const offset = 0.05;
+        const offset = 0.1;
         // Adjust map's view to the marker's location with the offset applied to the latitude
         map.setView([e.latlng.lat - offset, e.latlng.lng], 12);
       })
