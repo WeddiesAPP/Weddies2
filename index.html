@@ -453,7 +453,7 @@ transform: translate(-50%, 0%);
 
 .popup-stadium-image {
   width: 100%;
-  max-height: 50px;
+  max-height: 100px;
   object-fit: cover;
   margin-bottom: 10px;
 }
@@ -625,10 +625,10 @@ map.on('click', hideCustomPopup);
   customPopup.style.position = 'fixed';
   customPopup.style.width = '300px';
   customPopup.style.maxHeight = '80vh'; // Set a maximum height to the popup to avoid excessive scrolling
-  customPopup.style.overflow = 'auto'; // Enable scrolling when the content exceeds the height
+  customPopup.style.overflow = 'hidden'; // Enable scrolling when the content exceeds the height
 
   // Center the popup both horizontally and vertically
-  customPopup.style.top = '30%';
+  customPopup.style.top = '50%';
   customPopup.style.left = '50%';
   customPopup.style.transform = 'translate(-50%, -50%)';
 
