@@ -686,8 +686,8 @@ let selectedLeagues = [];
   const customPopup = document.createElement('div');
   customPopup.style.zIndex = '1000';
   customPopup.style.position = 'fixed';
-  customPopup.style.width = '300px';
-  customPopup.style.maxHeight = '50vh'; // Set a maximum height to the popup to avoid excessive scrolling
+  customPopup.style.width = '450px';
+  customPopup.style.maxHeight = '60vh'; // Set a maximum height to the popup to avoid excessive scrolling
   customPopup.style.overflow = 'auto'; // Enable scrolling when the content exceeds the height
 
   // Center the popup both horizontally and vertically
@@ -707,21 +707,14 @@ function showCustomPopup(content) {
 
   customPopup.innerHTML = content;
   customPopup.style.display = 'block';
-  const closeButton = document.createElement('div');
-closeButton.innerHTML = 'X'; // Or you can use an icon/image
-closeButton.style.position = 'absolute';
-closeButton.style.right = '-10px';
-closeButton.style.top = '-10px';
-closeButton.style.cursor = 'pointer';
-closeButton.style.fontSize = '18px';
-closeButton.style.fontWeight = 'bold';
-closeButton.style.zIndex = '10000';
-// Add click event listener to close button
-closeButton.addEventListener('click', hideCustomPopup);
 
-// Append close button to the popup
-customPopup.appendChild(closeButton);
+  // Get the close button by its ID
+  const closeButton = document.getElementById('close-button');
+
+  // Add click event listener to close button
+  closeButton.addEventListener('click', hideCustomPopup);
 }
+
 
 
 // Function to hide the custom popup
@@ -744,7 +737,7 @@ function hideCustomPopup() {
       layers: [lightLayer] // Dark Layer by default
     });
     var layerControl = L.control.layers(baseMaps, null, {
-      position: 'bottomright' // Set the position to 'bottomright'
+      position: 'topright' // Set the position to 'bottomright'
     }).addTo(map);
 
 
