@@ -824,14 +824,20 @@ function hideCustomPopup() {
           }
 
           function filterClubsByLeague() {
-            for (const club of clubs) {
-              if (selectedLeagues.includes(club.leagueName) || selectedLeagues.length === 0) {
-                clubMarkers[club.clubName].addTo(map);
-              } else {
-                clubMarkers[club.clubName].removeFrom(map);
-              }
-            }
-          }
+  // First, remove all club markers from the map
+  for (const club of clubs) {
+    clubMarkers[club.clubName].removeFrom(map);
+  }
+
+  // Then, add back only those markers that belong to the selected leagues
+  for (const club of clubs) {
+    if (selectedLeagues.includes(club.leagueName)) {
+      clubMarkers[club.clubName].addTo(map);
+    }
+  }
+}
+
+          
         }
 
 //
