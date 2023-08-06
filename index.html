@@ -684,22 +684,47 @@ filter_list
     });
 const clubMarkers = {};
 let selectedLeagues = [];
+const customPopup = document.createElement('div');
+const contentContainer = document.createElement('div');
+const closeButton = document.createElement('button');
 
-  const customPopup = document.createElement('div');
-  customPopup.style.zIndex = '1000';
-  customPopup.style.position = 'fixed';
-  customPopup.style.width = '450px';
-  customPopup.style.maxHeight = '100vh'; // Set a maximum height to the popup to avoid excessive scrolling
-  customPopup.style.overflow = 'auto'; // Enable scrolling when the content exceeds the height
+// Styles for customPopup
+customPopup.style.zIndex = '1000';
+customPopup.style.position = 'fixed';
+customPopup.style.width = '450px';
+customPopup.style.maxHeight = '100vh';
+customPopup.style.overflow = 'auto';
+customPopup.style.top = '50%';
+customPopup.style.left = '50%';
+customPopup.style.transform = 'translate(-50%, -50%)';
+customPopup.style.background = 'white';
+customPopup.style.display = 'none';
+customPopup.style.padding = '10px'; // Provide padding to ensure the close button doesn't overlap with the content
 
-  // Center the popup both horizontally and vertically
-  customPopup.style.top = '50%';
-  customPopup.style.left = '50%';
-  customPopup.style.transform = 'translate(-50%, -50%)';
+// Styles for contentContainer
+contentContainer.style.width = '100%';
+contentContainer.style.height = 'auto';
+contentContainer.style.overflowY = 'auto'; // Only vertical scrolling
 
-  customPopup.style.background = 'white';
-  customPopup.style.display = 'none'; // Hidden by default
-  document.body.appendChild(customPopup);
+// Styles and attributes for closeButton
+closeButton.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
+closeButton.style.position = 'absolute';
+closeButton.style.right = '10px';
+closeButton.style.top = '10px';
+closeButton.style.border = 'none';
+closeButton.style.background = 'transparent';
+closeButton.style.cursor = 'pointer';
+closeButton.style.fontSize = '18px';
+closeButton.style.fontWeight = 'bold';
+
+closeButton.addEventListener('click', function() {
+    customPopup.style.display = 'none'; // Hide the popup on close button click
+});
+
+// Appending structures
+customPopup.appendChild(closeButton);
+customPopup.appendChild(contentContainer);
+document.body.appendChild(customPopup);
 
   // Rest of your code for showCustomPopup and hideCustomPopup functions...
 
@@ -707,8 +732,8 @@ let selectedLeagues = [];
 function showCustomPopup(content) {
   map.setZoom(12);
 
-  customPopup.innerHTML = content;
-  customPopup.style.display = 'block';
+  contentContainer.innerHTML = content; // Adjust this line to fill the contentContainer
+      customPopup.style.display = 'block';
 
   // Get the close button by its ID
   const closeButton = document.getElementById('close-button');
