@@ -885,56 +885,7 @@ function initializeSearch(clubs) {
 }
 
 
-function createLeagueFilter() {
-  const allLeaguesDiv = document.createElement('div');
-  allLeaguesDiv.textContent = 'All Leagues';
-  allLeaguesDiv.onclick = function () {
-    selectedLeagues = [];
-    dropdownButton.innerHTML = this.innerHTML;
-    filterClubsByLeague();
-  };
-  dropdownContent.appendChild(allLeaguesDiv);
 
-  dropdownContent.appendChild(document.createElement('hr'));
-
-  for (const [league, logo] of Object.entries(leagueLogos)) {
-    const div = document.createElement('div');
-    const img = document.createElement('img');
-    img.src = logo;
-    img.style.height = '20px';
-    img.style.marginRight = '10px';
-    img.style.pointerEvents = 'none';
-    div.appendChild(img);
-
-    const textNode = document.createTextNode(league);
-    div.appendChild(textNode);
-    div.onclick = function () {
-      const selectedLeague = this.textContent.trim();
-      const index = selectedLeagues.indexOf(selectedLeague);
-      if (index === -1) {
-        selectedLeagues.push(selectedLeague);
-        dropdownButton.innerHTML = selectedLeagues.join(', ');
-      } else {
-        selectedLeagues.splice(index, 1);
-        dropdownButton.innerHTML = selectedLeagues.join(', ');
-      }
-      updateSelectedLeagues();
-      filterClubsByLeague();
-    };
-    dropdownContent.appendChild(div);
-  }
-}
-function updateSelectedLeagues() {
-  for (const div of dropdownContent.children) {
-    if (selectedLeagues.includes(div.textContent.trim())) {
-      div.classList.add('selected');
-    } else {
-      div.classList.remove('selected');
-    }
-  }
-}
-
-createLeagueFilter();
 
 
 const dropdownContainer = document.getElementById('dropdown-button');
