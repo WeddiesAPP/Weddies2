@@ -743,36 +743,36 @@ function hideCustomPopup() {
 //SEARCH SEARCH Search
 function addClubLogosToMap(clubs) {
   clubs.forEach((club, index) => {
-const clubLatLng = club.location;
+    const clubLatLng = club.location;
 
-const markerIcon = L.divIcon({
-className: 'custom-div-icon',
-html: `
-  <div class='marker-pin'></div>
-  <img src="${club.clubImageName}" alt="${club.clubName}" style="width: 32px; height: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;" />`,
-iconSize: [50, 50], // Adjust this size as needed to match the pin
-iconAnchor: [25, 50]
-});
+    const markerIcon = L.divIcon({
+      className: 'custom-div-icon',
+      html: `
+        <div class='marker-pin'></div>
+        <img src="${club.clubImageName}" alt="${club.clubName}" style="width: 32px; height: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;" />`,
+      iconSize: [50, 50], // Adjust this size as needed to match the pin
+      iconAnchor: [25, 50]
+    });
 
-const marker = L.marker([club.latitude, club.longitude], { icon: markerIcon })
-  .on('click', (e) => {
-    const content = createPopupContent(club);
-    showCustomPopup(content);
-    const offset = 0.05;
-    // Adjust map's view to the marker's location with the offset applied to the latitude
-    map.setView([e.latlng.lat - offset, e.latlng.lng], 12);
-  })
-  .addTo(map);
+    const marker = L.marker([club.latitude, club.longitude], { icon: markerIcon })
+      .on('click', (e) => {
+        const content = createPopupContent(club);
+        showCustomPopup(content);
+        const offset = 0.05;
+        // Adjust map's view to the marker's location with the offset applied to the latitude
+        map.setView([e.latlng.lat - offset, e.latlng.lng], 12);
+      })
+      .addTo(map);
 
-if (!clubMarkers[club.clubName]) {
-  clubMarkers[club.clubName] = [];
+    if (!clubMarkers[club.clubName]) {
+      clubMarkers[club.clubName] = [];
+    }
+    clubMarkers[club.clubName].push(marker);
+  });
+
+  // The event listener for map click should be outside of the loop
+  map.on('click', hideCustomPopup);
 }
-clubMarkers[club.clubName].push(marker);
-}
-map.on('click', hideCustomPopup);
-
-}
-
 
 //
 function initializeSearch(clubs) {
