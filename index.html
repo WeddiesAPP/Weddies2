@@ -133,14 +133,15 @@
         }
 
         .search-container {
-            position: absolute;
-            bottom: 200px;
-            left: 50%;
-            background-color: black;
-            padding: 20px;
-            z-index: 999;
-            display: none;
-        }
+      position: fixed;
+      bottom: 10vh; /* Adjust this value to set the distance from the bottom */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: black;
+      padding: 20px;
+      z-index: 999;
+      display: none;
+  }
 
         .search-container input[type="text"],
         .search-container select,
