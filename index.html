@@ -764,46 +764,51 @@ function initliazeLeagues (clubs) {
   let selectedLeagues = [];
   let clubMarkers = [];
 
-  // Function to create an option for a league
-  function createLeagueOption(leagueName) {
-    const option = document.createElement('div');
-    option.className = 'dropdown-option';
+  // Construct leagueLogos object from clubs data
+   let leagueLogos = {};
+   for (const club of clubs) {
+     leagueLogos[club.leagueName] = club.leagueImage;
+   }
 
-    // Set the league name as the content of the option
-    option.textContent = leagueName;
+   // Function to create an option for a league
+   function createLeagueOption(leagueName) {
+     const option = document.createElement('div');
+     option.className = 'dropdown-option';
 
-    // Add a click event listener to toggle selection
-    option.addEventListener('click', () => {
-      if (selectedLeagues.includes(leagueName)) {
-        // Remove the league from the selected leagues
-        selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
-      } else {
-        // Add the league to the selected leagues
-        selectedLeagues.push(leagueName);
-      }
-      // Update the filter and marker display
-      filterClubsByLeague();
-    });
+     // Set the league name as the content of the option
+     option.textContent = leagueName;
 
-    dropdownContent.appendChild(option);
-  }
+     // Add a click event listener to toggle selection
+     option.addEventListener('click', () => {
+       if (selectedLeagues.includes(leagueName)) {
+         // Remove the league from the selected leagues
+         selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
+       } else {
+         // Add the league to the selected leagues
+         selectedLeagues.push(leagueName);
+       }
+       // Update the filter and marker display
+       filterClubsByLeague();
+     });
 
-  // Populate the dropdown with league options
-  for (const leagueName of Object.keys(leagueLogos)) {
-    createLeagueOption(leagueName);
-  }
+     dropdownContent.appendChild(option);
+   }
 
-  function filterClubsByLeague() {
-    for (const club of clubs) {
-      if (selectedLeagues.includes(club.league) || selectedLeagues.length === 0) {
-        clubMarkers[club.name].addTo(map);
-      } else {
-        clubMarkers[club.name].remove();
-      }
-    }
-  }
+   // Populate the dropdown with league options
+   for (const leagueName of Object.keys(leagueLogos)) {
+     createLeagueOption(leagueName);
+   }
 
-}
+   function filterClubsByLeague() {
+     for (const club of clubs) {
+       if (selectedLeagues.includes(club.leagueName) || selectedLeagues.length === 0) {
+         clubMarkers[club.clubName].addTo(map);
+       } else {
+         clubMarkers[club.clubName].remove();
+       }
+     }
+   }
+ }
 //
 
 //SEARCH SEARCH Search
