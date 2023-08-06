@@ -374,14 +374,14 @@
             margin-right: 10px;
         }
         .filters-container {
-
-    position: absolute;
-    bottom: 100px;
+    position: fixed;
+    bottom: 10vh; /* Adjust this value to set the distance from the bottom */
     left: 50%;
-    z-index: 999;
-  background-color: black;
+    transform: translateX(-50%);
+    background-color: black;
     padding: 20px;
-  }
+    z-index: 999;
+}
   .logo-weddies-bg {
     position: absolute;
 bottom: 20px;
