@@ -848,12 +848,12 @@ function initializeSearch(clubs) {
       }
     });
 
-    if (filteredClubs.length > 0) {
-          searchSuggestions.style.display = 'block';
-        } else {
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target)) {
           searchSuggestions.style.display = 'none';
         }
       });
+    }
 
 
 
