@@ -686,7 +686,7 @@ const clubMarkers = {};
 let selectedLeagues = [];
 const customPopup = document.createElement('div');
 const contentContainer = document.createElement('div');
-const closeButton = document.createElement('button');
+const closeButton2 = document.createElement('button');
 
 // Styles for customPopup
 customPopup.style.zIndex = '1000';
@@ -707,17 +707,17 @@ contentContainer.style.height = 'auto';
 contentContainer.style.overflowY = 'auto'; // Only vertical scrolling
 
 // Styles and attributes for closeButton
-closeButton.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
-closeButton.style.position = 'absolute';
-closeButton.style.right = '10px';
-closeButton.style.top = '10px';
-closeButton.style.border = 'none';
-closeButton.style.background = 'transparent';
-closeButton.style.cursor = 'pointer';
-closeButton.style.fontSize = '18px';
-closeButton.style.fontWeight = 'bold';
+closeButton2.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
+closeButton2.style.position = 'absolute';
+closeButton2.style.right = '10px';
+closeButton2.style.top = '10px';
+closeButton2.style.border = 'none';
+closeButton2.style.background = 'transparent';
+closeButton2.style.cursor = 'pointer';
+closeButton2.style.fontSize = '18px';
+closeButton2.style.fontWeight = 'bold';
 
-closeButton.addEventListener('click', function() {
+closeButton2.addEventListener('click', function() {
     customPopup.style.display = 'none'; // Hide the popup on close button click
 });
 
@@ -735,7 +735,7 @@ function showCustomPopup(content) {
   contentContainer.innerHTML = content; // Adjust this line to fill the contentContainer
       customPopup.style.display = 'block';
 
-  
+
 }
 
 
