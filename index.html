@@ -513,70 +513,46 @@ button {
   text-align: center;
 }
 
-.navigation-bar {
-position: fixed;
-background: #fff;
-border-radius: 3px;
-  overflow: hidden;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  z-index: 9999;  /* Set it above the z-index of your popup */
-  top: 0;
-  width: 100%;
-}
-.navigation-bar .list-items {
-  list-style: none;
-  display: flex;
-  position: relative;
-}
-.navigation-bar .list-items .pointer {
-  position: absolute;
-  left: 0px;
-  height: 100%;
-  width: 4.5rem;
-  z-index: 0;
-  transition: all 0.2s linear;
-}
-.navigation-bar .list-items .pointer::before,
-.navigation-bar .list-items .pointer::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-}
-.navigation-bar .list-items .pointer::before {
-  top: 0;
-  border-bottom: 8px solid var(--main-color);
-  border-radius: 0 0 30px 30px;
-}
-.navigation-bar .list-items .pointer::after {
-  bottom: 0;
-  border-top: 8px solid var(--main-color);
-  border-radius: 30px 30px 0 0;
+.nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 55px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    display: flex;
+    overflow-x: auto;
 }
 
-.navigation-bar .list-items .item {
-  flex: 1 1 0px;
-  position: relative;
-  z-index: 2;
+.nav__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    min-width: 50px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: sans-serif;
+    font-size: 13px;
+    color: #444444;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.1s ease-in-out;
 }
-.navigation-bar .list-items .item .link {
-  display: inline-block;
-  height: 4rem;
-  width: 4.5rem;
-  line-height: 4.5;
-  text-align: center;
-  color: var(--second-color);
+
+.nav__link:hover {
+    background-color: #eeeeee;
 }
-.navigation-bar .list-items .item.active .link {
-  color: var(--main-color);
+
+.nav__link--active {
+    color: #009578;
 }
-.navigation-bar .list-items .item .link i {
-  font-size: 1.6rem;
-  transition: font-size 0.2s linear;
+
+.nav__icon {
+    font-size: 18px;
 }
-.navigation-bar .list-items .item.active .link i {
-  font-size: 1.4rem;
-}
+
 
 
     </style>
@@ -620,36 +596,29 @@ border-radius: 3px;
   </div>
 
     <div id="mapid">
-      <nav class="navigation-bar">
-  <ul class="list-items">
-    <span class="pointer"></span>
-    <li class="item active">
-      <a class="link" href="#">
-        <i class="fas fa-home fa-2x"></i>
-      </a>
-    </li>
-    <li class="item">
-      <a class="link" href="#">
-        <i class="fas fa-search fa-2x"></i>
-      </a>
-    </li>
-    <li class="item">
-      <a class="link" href="#">
-        <i class="fas fa-heart fa-2x"></i>
-      </a>
-    </li>
-    <li class="item">
-      <a class="link" href="#">
-        <i class="fas fa-bell fa-2x"></i>
-      </a>
-    </li>
-    <li class="item">
-      <a class="link" href="#">
-        <i class="fas fa-user fa-2x"></i>
-      </a>
-    </li>
-  </ul>
-</nav>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <nav class="nav">
+    <a href="#" class="nav__link">
+      <i class="material-icons nav__icon">dashboard</i>
+      <span class="nav__text">Dashboard</span>
+    </a>
+    <a href="#" class="nav__link nav__link--active">
+      <i class="material-icons nav__icon">person</i>
+      <span class="nav__text">Profile</span>
+    </a>
+    <a href="#" class="nav__link">
+      <i class="material-icons nav__icon">devices</i>
+      <span class="nav__text">Devices</span>
+    </a>
+    <a href="#" class="nav__link">
+      <i class="material-icons nav__icon">lock</i>
+      <span class="nav__text">Privacy</span>
+    </a>
+    <a href="#" class="nav__link">
+      <i class="material-icons nav__icon">settings</i>
+      <span class="nav__text">Settings</span>
+    </a>
+  </nav>
       <div class="profile-icon" id="profileIcon">
          <img src="profile.png" alt="Profile Image" width="40" height="40">
        </div>
