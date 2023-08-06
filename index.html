@@ -761,7 +761,10 @@ map.setView([e.latlng.lat - offset , e.latlng.lng ], map.getZoom());// Center th
 })
   .addTo(map);
 
-   clubMarkers[club.clubName] = marker;
+  if (!clubMarkers[club.clubName]) {
+    clubMarkers[club.clubName] = [];
+  }
+  clubMarkers[club.clubName].push(marker);
 });
 map.on('click', hideCustomPopup);
 
@@ -872,7 +875,10 @@ function initialize(clubs) {
 
         for (const club of clubs) {
             if (selectedLeagues.includes(club.leagueName)) {
-                clubMarkers[club.clubName].addTo(map);
+              for (const marker of clubMarkers[club.clubName]) {
+marker.addTo(map);
+}
+
             }
         }
     }
@@ -881,7 +887,9 @@ function initialize(clubs) {
   // First, remove all club markers from the map
   for (const club of clubs) {
     if (clubMarkers[club.clubName]) {
-      clubMarkers[club.clubName].removeFrom(map);
+      for (const marker of clubMarkers[club.clubName]) {
+      marker.removeFrom(map);
+    }
     }
   }
 
@@ -892,7 +900,10 @@ function initialize(clubs) {
       clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
       (selectedLeagues.length === 0 || selectedLeagues.includes(club.leagueName))
     ) {
-      clubMarkers[club.clubName].addTo(map);
+      for (const marker of clubMarkers[club.clubName]) {
+    marker.addTo(map);
+  }
+
     }
   }
 }
