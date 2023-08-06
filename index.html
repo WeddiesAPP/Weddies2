@@ -755,21 +755,21 @@ iconAnchor: [25, 50]
 });
 
 const marker = L.marker([club.latitude, club.longitude], { icon: markerIcon })
-.on('click', (e) => {
-const content = createPopupContent(club);
-showCustomPopup(content);
-const offset = 0.05;
-map.setView([e.latlng.lat - offset , e.latlng.lng ], map.getZoom());// Center the map on the clicked marker
-})
+  .on('click', (e) => {
+    const content = createPopupContent(club);
+    showCustomPopup(content);
+    const offset = 0.05;
+    // Adjust map's view to the marker's location with the offset applied to the latitude
+    map.setView([e.latlng.lat - offset, e.latlng.lng], 12);
+  })
   .addTo(map);
 
-  if (!clubMarkers[club.clubName]) {
-    clubMarkers[club.clubName] = [];
-  }
-  clubMarkers[club.clubName].push(marker);
-});
-map.on('click', hideCustomPopup);
+if (!clubMarkers[club.clubName]) {
+  clubMarkers[club.clubName] = [];
+}
+clubMarkers[club.clubName].push(marker);
 
+map.on('click', hideCustomPopup);
 }
 
 
