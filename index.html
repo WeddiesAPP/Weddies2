@@ -826,18 +826,21 @@ function hideCustomPopup() {
           }
 
           function filterClubsByLeague() {
-  // First, remove all club markers from the map
-  for (const club of clubs) {
-    clubMarkers[club.clubName].removeFrom(map);
-  }
-
-  // Then, add back only those markers that belong to the selected leagues
-  for (const club of clubs) {
-    if (selectedLeagues.includes(club.leagueName)) {
-      clubMarkers[club.clubName].addTo(map);
+    // First, remove all club markers from the map
+    for (const club of clubs) {
+      clubMarkers[club.clubName].removeFrom(map);
     }
+
+    // Then, add back only those markers that belong to the selected leagues
+    for (const club of clubs) {
+      if (selectedLeagues.includes(club.leagueName)) {
+        clubMarkers[club.clubName].addTo(map);
+      }
+    }
+
+    // Apply radius filter on top of league filter
+    filterMarkers(radiusSlider.value);
   }
-}
 
 
         }
@@ -949,10 +952,11 @@ if (navigator.geolocation) {
 
       // Update radius circle and filtered markers when the slider value changes
       radiusSlider.addEventListener('input', (e) => {
-        const searchRadius = parseInt(e.target.value);
-        setRadiusCircle(searchRadius);
-        filterMarkers(searchRadius);
-      });
+      const searchRadius = parseInt(e.target.value);
+      setRadiusCircle(searchRadius);
+      // Update the filter and marker display
+      filterClubsByLeague();
+    });
 
       // Function to set the radius circle on the map
       function setRadiusCircle(radius) {
@@ -1004,14 +1008,14 @@ if (navigator.geolocation) {
 
 
 
-
+/*
   function displayAllMarkers() {
   for (const club of clubs) {
     clubMarkers[club.name].addTo(map);
   }
 }
 
-
+*/
 
 
 function getUserLocation() {
