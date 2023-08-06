@@ -619,7 +619,7 @@ let selectedLeagues = [];
 
 // Function to show the custom popup
 function showCustomPopup(content) {
-  map.setZoom(7);
+  map.setZoom(12);
 
   customPopup.innerHTML = content;
   customPopup.style.display = 'block';
@@ -631,7 +631,7 @@ closeButton.style.top = '-10px';
 closeButton.style.cursor = 'pointer';
 closeButton.style.fontSize = '18px';
 closeButton.style.fontWeight = 'bold';
-
+closeButton.style.zIndex = '10000';
 // Add click event listener to close button
 closeButton.addEventListener('click', hideCustomPopup);
 
