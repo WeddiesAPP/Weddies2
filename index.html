@@ -762,71 +762,78 @@ function hideCustomPopup() {
 
 
 
-function initliazeLeagues (clubs) {
-  const dropdownButton = document.getElementById('dropdown-button');
-  const dropdownContent = document.getElementById('dropdown-content');
+        function initliazeLeagues (clubs) {
+          const dropdownButton = document.getElementById('dropdown-button');
+          const dropdownContent = document.getElementById('dropdown-content');
 
-  let selectedLeagues = [];
+          let selectedLeagues = [];
 
+          // Construct leagueLogos object from clubs data
+          let leagueLogos = {};
+          for (const club of clubs) {
+            leagueLogos[club.leagueName] = club.leagueImage;
+          }
 
-  // Construct leagueLogos object from clubs data
-   let leagueLogos = {};
-   for (const club of clubs) {
-     leagueLogos[club.leagueName] = club.leagueImage;
-   }
+          // Function to create an option for a league
+          function createLeagueOption(leagueName) {
+            const option = document.createElement('div');
+            option.className = 'dropdown-option';
 
-   // Function to create an option for a league
-   function createLeagueOption(leagueName) {
-     const option = document.createElement('div');
-     option.className = 'dropdown-option';
+            // Create an image element for the league logo
+            const leagueLogo = document.createElement('img');
+            leagueLogo.src = leagueLogos[leagueName];
+            leagueLogo.alt = `${leagueName} logo`;
+            leagueLogo.className = 'dropdown-option-logo';  // this class can be used for styling
 
-     // Create an image element for the league logo
-     const leagueLogo = document.createElement('img');
-     leagueLogo.src = leagueLogos[leagueName];
-     leagueLogo.alt = `${leagueName} logo`;
-     leagueLogo.className = 'dropdown-option-logo';  // this class can be used for styling
+            // Append the image element to the option
+            option.appendChild(leagueLogo);
 
-     // Append the image element to the option
-     option.appendChild(leagueLogo);
+            // Create a span element for the league name
+            const leagueNameElement = document.createElement('span');
+            leagueNameElement.textContent = leagueName;
 
-     // Create a span element for the league name
-     const leagueNameElement = document.createElement('span');
-     leagueNameElement.textContent = leagueName;
+            // Append the span element to the option
+            option.appendChild(leagueNameElement);
 
-     // Append the span element to the option
-     option.appendChild(leagueNameElement);
+            // Add a click event listener to toggle selection
+            option.addEventListener('click', () => {
+              if (selectedLeagues.includes(leagueName)) {
+                // Remove the league from the selected leagues
+                selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
+                // Remove the green background color
+                option.style.backgroundColor = '';
+              } else {
+                // Add the league to the selected leagues
+                selectedLeagues.push(leagueName);
+                // Add a green background color to show that it is selected
+                option.style.backgroundColor = 'lightgreen';
+              }
+              // Update the filter and marker display
+              filterClubsByLeague();
+            });
 
-     // Add a click event listener to toggle selection
-     option.addEventListener('click', () => {
-       if (selectedLeagues.includes(leagueName)) {
-         // Remove the league from the selected leagues
-         selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
-       } else {
-         // Add the league to the selected leagues
-         selectedLeagues.push(leagueName);
-       }
-       // Update the filter and marker display
-       filterClubsByLeague();
-     });
+            dropdownContent.appendChild(option);
+          }
 
-     dropdownContent.appendChild(option);
-   }
+          // Get league names and sort them alphabetically
+          const sortedLeagueNames = Object.keys(leagueLogos).sort();
 
-   // Populate the dropdown with league options
-   for (const leagueName of Object.keys(leagueLogos)) {
-     createLeagueOption(leagueName);
-   }
+          // Populate the dropdown with sorted league options
+          for (const leagueName of sortedLeagueNames) {
+            createLeagueOption(leagueName);
+          }
 
-   function filterClubsByLeague() {
-     for (const club of clubs) {
-       if (selectedLeagues.includes(club.leagueName) || selectedLeagues.length === 0) {
-         clubMarkers[club.clubName].addTo(map);
-       } else {
-        clubMarkers[club.clubName].removeFrom(map);
-       }
-     }
-   }
- }
+          function filterClubsByLeague() {
+            for (const club of clubs) {
+              if (selectedLeagues.includes(club.leagueName) || selectedLeagues.length === 0) {
+                clubMarkers[club.clubName].addTo(map);
+              } else {
+                clubMarkers[club.clubName].removeFrom(map);
+              }
+            }
+          }
+        }
+
 //
 
 //SEARCH SEARCH Search
