@@ -804,7 +804,7 @@ function initliazeLeagues (clubs) {
        if (selectedLeagues.includes(club.leagueName) || selectedLeagues.length === 0) {
          clubMarkers[club.clubName].addTo(map);
        } else {
-         clubMarkers[club.clubName].remove();
+        clubMarkers[club.clubName].removeFrom(map);
        }
      }
    }
