@@ -719,6 +719,7 @@ function hideCustomPopup() {
           });
           addClubLogosToMap(clubs);
           initializeSearch(clubs);
+          initliazeLeagues(clubs);
           RadiusSlider(clubs);
           // Now you have an array of club objects, you can use it as you wish
           console.log(clubs);
@@ -756,39 +757,52 @@ function hideCustomPopup() {
 
 
 
+function initliazeLeagues (clubs) {
+  const dropdownButton = document.getElementById('dropdown-button');
+  const dropdownContent = document.getElementById('dropdown-content');
 
-// Function to create the custom dropdown component
-const leagueLogos = {
-  'Premier League': 'Premier League.png',
-  'Bundesliga': 'Bundesliga.png',
-  'Ligue 1': 'Ligue 1.png',
-  'Serie A': 'Serie A.png',
-  'Eredivisie': 'Eredivisie.png',
-  'La Liga': 'La Liga.png',
-  'Liga NOS': 'Liga NOS.png',
-  'MLS': 'MLS.png',
-  'Championship': 'Championship.png',
-  'Jupiler Pro League': 'Jupiler Pro League.png',
-  'Keuken Kampioen Divisie': 'Keuken Kampioen Divisie.png',
-  'Tweede Divisie': 'Tweede Divisie.png',
-  'Derde Divisie Zaterdag': 'Derde Divisie Zaterdag.png',
-  'Derde Divisie Zondag': 'Derde Divisie Zondag.png',
+  let selectedLeagues = [];
+  let clubMarkers = [];
 
-};
+  // Function to create an option for a league
+  function createLeagueOption(leagueName) {
+    const option = document.createElement('div');
+    option.className = 'dropdown-option';
 
-const dropdownButton = document.getElementById('dropdown-button');
-const dropdownContent = document.getElementById('dropdown-content');
+    // Set the league name as the content of the option
+    option.textContent = leagueName;
 
-let selectedLeagues = [];
-let clubMarkers = [];
-function filterClubsByLeague() {
-  for (const club of clubs) {
-    if (selectedLeagues.includes(club.league) || selectedLeagues.length === 0) {
-      clubMarkers[club.name].addTo(map);
-    } else {
-      clubMarkers[club.name].remove();
+    // Add a click event listener to toggle selection
+    option.addEventListener('click', () => {
+      if (selectedLeagues.includes(leagueName)) {
+        // Remove the league from the selected leagues
+        selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
+      } else {
+        // Add the league to the selected leagues
+        selectedLeagues.push(leagueName);
+      }
+      // Update the filter and marker display
+      filterClubsByLeague();
+    });
+
+    dropdownContent.appendChild(option);
+  }
+
+  // Populate the dropdown with league options
+  for (const leagueName of Object.keys(leagueLogos)) {
+    createLeagueOption(leagueName);
+  }
+
+  function filterClubsByLeague() {
+    for (const club of clubs) {
+      if (selectedLeagues.includes(club.league) || selectedLeagues.length === 0) {
+        clubMarkers[club.name].addTo(map);
+      } else {
+        clubMarkers[club.name].remove();
+      }
     }
   }
+
 }
 //
 
