@@ -619,13 +619,15 @@ let selectedLeagues = [];
 
 // Function to show the custom popup
 function showCustomPopup(content) {
+  map.setZoom(7);
+
   customPopup.innerHTML = content;
   customPopup.style.display = 'block';
   const closeButton = document.createElement('div');
 closeButton.innerHTML = 'X'; // Or you can use an icon/image
 closeButton.style.position = 'absolute';
-closeButton.style.right = '10px';
-closeButton.style.top = '10px';
+closeButton.style.right = '-10px';
+closeButton.style.top = '-10px';
 closeButton.style.cursor = 'pointer';
 closeButton.style.fontSize = '18px';
 closeButton.style.fontWeight = 'bold';
