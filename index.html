@@ -487,6 +487,11 @@ transform: translate(-50%, 0%);
   text-decoration: none;
   cursor: pointer;
 }
+.dropdown-option-logo {
+  width: 20px;  // Adjust as needed
+  height: 20px;  // Adjust as needed
+  margin-right: 5px;  // Space between the logo and the league name
+}
 
 form {
   display: flex;
@@ -775,8 +780,21 @@ function initliazeLeagues (clubs) {
      const option = document.createElement('div');
      option.className = 'dropdown-option';
 
-     // Set the league name as the content of the option
-     option.textContent = leagueName;
+     // Create an image element for the league logo
+     const leagueLogo = document.createElement('img');
+     leagueLogo.src = leagueLogos[leagueName];
+     leagueLogo.alt = `${leagueName} logo`;
+     leagueLogo.className = 'dropdown-option-logo';  // this class can be used for styling
+
+     // Append the image element to the option
+     option.appendChild(leagueLogo);
+
+     // Create a span element for the league name
+     const leagueNameElement = document.createElement('span');
+     leagueNameElement.textContent = leagueName;
+
+     // Append the span element to the option
+     option.appendChild(leagueNameElement);
 
      // Add a click event listener to toggle selection
      option.addEventListener('click', () => {
