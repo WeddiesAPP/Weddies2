@@ -725,8 +725,7 @@ function hideCustomPopup() {
           });
           addClubLogosToMap(clubs);
           initializeSearch(clubs);
-          initliazeLeagues(clubs);
-          RadiusSlider(clubs);
+          initialize(clubs);
           // Now you have an array of club objects, you can use it as you wish
           console.log(clubs);
         },
@@ -763,87 +762,6 @@ function hideCustomPopup() {
         }
 
 
-
-        function initliazeLeagues (clubs) {
-          const dropdownButton = document.getElementById('dropdown-button');
-          const dropdownContent = document.getElementById('dropdown-content');
-
-
-
-          // Construct leagueLogos object from clubs data
-          let leagueLogos = {};
-          for (const club of clubs) {
-            leagueLogos[club.leagueName] = club.leagueImage;
-          }
-
-          // Function to create an option for a league
-          function createLeagueOption(leagueName) {
-            const option = document.createElement('div');
-            option.className = 'dropdown-option';
-
-            // Create an image element for the league logo
-            const leagueLogo = document.createElement('img');
-            leagueLogo.src = leagueLogos[leagueName];
-            leagueLogo.alt = `${leagueName} logo`;
-            leagueLogo.className = 'dropdown-option-logo';  // this class can be used for styling
-
-            // Append the image element to the option
-            option.appendChild(leagueLogo);
-
-            // Create a span element for the league name
-            const leagueNameElement = document.createElement('span');
-            leagueNameElement.textContent = leagueName;
-
-            // Append the span element to the option
-            option.appendChild(leagueNameElement);
-
-            // Add a click event listener to toggle selection
-            option.addEventListener('click', () => {
-              if (selectedLeagues.includes(leagueName)) {
-                // Remove the league from the selected leagues
-                selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
-                // Remove the green background color
-                option.style.backgroundColor = '';
-              } else {
-                // Add the league to the selected leagues
-                selectedLeagues.push(leagueName);
-                // Add a green background color to show that it is selected
-                option.style.backgroundColor = 'lightgreen';
-              }
-              // Update the filter and marker display
-              filterClubsByLeague();
-            });
-
-            dropdownContent.appendChild(option);
-          }
-
-          // Get league names and sort them alphabetically
-          const sortedLeagueNames = Object.keys(leagueLogos).sort();
-
-          // Populate the dropdown with sorted league options
-          for (const leagueName of sortedLeagueNames) {
-            createLeagueOption(leagueName);
-          }
-
-          function filterClubsByLeague() {
-    // First, remove all club markers from the map
-    for (const club of clubs) {
-      clubMarkers[club.clubName].removeFrom(map);
-    }
-
-    // Then, add back only those markers that belong to the selected leagues
-    for (const club of clubs) {
-      if (selectedLeagues.includes(club.leagueName)) {
-        clubMarkers[club.clubName].addTo(map);
-      }
-    }
-
-    // Apply radius filter on top of league filter
-    filterMarkers(radiusSlider.value);
-  }
-
-
-        }
 
 //
 
@@ -933,78 +851,114 @@ const dropdownContainer = document.getElementById('dropdown-button');
 dropdownContainer.style.zIndex = '0'; // Set a higher z-index value for the dropdown
 
 
+function initialize(clubs) {
+    const radiusSlider = document.getElementById('radius-slider');
+    const radiusValue = document.getElementById('radius-value');
+    let userLocation;
 
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                userLocation = L.latLng(latitude, longitude);
 
-function RadiusSlider(clubs) {
-const radiusSlider = document.getElementById('radius-slider');
-const radiusValue = document.getElementById('radius-value');
-let userLocation;
+                const initialRadius = parseInt(radiusSlider.value);
+                setRadiusCircle(initialRadius);
 
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords;
-      userLocation = L.latLng(latitude, longitude);
+                radiusSlider.addEventListener('input', (e) => {
+                    const searchRadius = parseInt(e.target.value);
+                    setRadiusCircle(searchRadius);
+                    filterMarkers(searchRadius);
+                });
 
-      // Set the initial radius circle based on the user's location
-      const initialRadius = parseInt(radiusSlider.value);
-      setRadiusCircle(initialRadius);
+                function setRadiusCircle(radius) {
+                    if (radius === parseInt(radiusSlider.max)) {
+                        radiusValue.textContent = 'ALL';
+                    } else {
+                        radiusValue.textContent = radius;
+                    }
 
-      // Update radius circle and filtered markers when the slider value changes
-      radiusSlider.addEventListener('input', (e) => {
-      const searchRadius = parseInt(e.target.value);
-      setRadiusCircle(searchRadius);
-      // Update the filter and marker display
-      filterClubsByLeague();
-    });
+                    if (window.radius) map.removeLayer(window.radius);
 
-      // Function to set the radius circle on the map
-      function setRadiusCircle(radius) {
-        // Update radius value display
-        if (radius === parseInt(radiusSlider.max)) {
-          radiusValue.textContent = 'ALL';
-        } else {
-          radiusValue.textContent = radius;
-        }
+                    window.radius = L.circle(userLocation, {
+                        radius: radius * 1000,
+                        color: 'rgba(0, 0, 0, 0.0)',
+                        fillOpacity: 0.2,
+                    }).addTo(map);
 
-        // Clear previous radius circle
-        if (window.radius) map.removeLayer(window.radius);
+                    for (const club of clubs) {
+                        if (selectedLeagues.includes(club.leagueName)) {
+                            clubMarkers[club.clubName].addTo(map);
+                        }
+                    }
+                }
 
-        // Set new radius circle
-        window.radius = L.circle(userLocation, {
-          radius: radius * 1000, // Convert to meters
-          color: 'rgba(0, 0, 0, 0.0)', // Light gray with transparency
-          fillOpacity: 0.2,
-        }).addTo(map);
-      }
+                function filterMarkers(searchRadius) {
+                    for (const club of clubs) {
+                        const clubLatLng = L.latLng(club.latitude, club.longitude);
+                        if (
+                            clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
+                            (selectedLeagues.length === 0 || selectedLeagues.includes(club.leagueName))
+                        ) {
+                            clubMarkers[club.clubName].addTo(map);
+                        } else {
+                            clubMarkers[club.clubName].removeFrom(map);
+                        }
+                    }
+                }
+            },
+            (error) => {
+                console.error('Error retrieving location:', error);
+            }
+        );
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+    }
 
-      // Function to filter markers based on the search radius and league filter
-      function filterMarkers(searchRadius) {
+    const dropdownButton = document.getElementById('dropdown-button');
+    const dropdownContent = document.getElementById('dropdown-content');
+
+    let leagueLogos = {};
     for (const club of clubs) {
-      const clubLatLng = L.latLng(club.latitude, club.longitude);
-      if (
-        clubLatLng.distanceTo(userLocation) <= searchRadius * 1000 &&
-        (selectedLeagues.length === 0 || selectedLeagues.includes(club.leagueName))  // Update this condition
-      ) {
-        clubMarkers[club.clubName].addTo(map);
-      } else {
-        clubMarkers[club.clubName].removeFrom(map);
-      }
+        leagueLogos[club.leagueName] = club.leagueImage;
     }
-  }
 
+    function createLeagueOption(leagueName) {
+        const option = document.createElement('div');
+        option.className = 'dropdown-option';
 
-    },
-    (error) => {
-      console.error('Error retrieving location:', error);
+        const leagueLogo = document.createElement('img');
+        leagueLogo.src = leagueLogos[leagueName];
+        leagueLogo.alt = `${leagueName} logo`;
+        leagueLogo.className = 'dropdown-option-logo';
+
+        option.appendChild(leagueLogo);
+
+        const leagueNameElement = document.createElement('span');
+        leagueNameElement.textContent = leagueName;
+
+        option.appendChild(leagueNameElement);
+
+        option.addEventListener('click', () => {
+            if (selectedLeagues.includes(leagueName)) {
+                selectedLeagues = selectedLeagues.filter((league) => league !== leagueName);
+                option.style.backgroundColor = '';
+            } else {
+                selectedLeagues.push(leagueName);
+                option.style.backgroundColor = 'lightgreen';
+            }
+            filterMarkers(parseInt(radiusSlider.value));
+        });
+
+        dropdownContent.appendChild(option);
     }
-  );
-} else {
-  console.error('Geolocation is not supported by this browser.');
-}
 
-}
+    const sortedLeagueNames = Object.keys(leagueLogos).sort();
 
+    for (const leagueName of sortedLeagueNames) {
+        createLeagueOption(leagueName);
+    }
+}
 
 
 
@@ -1015,7 +969,7 @@ if (navigator.geolocation) {
   }
 }
 
-*/
+
 
 
 function getUserLocation() {
