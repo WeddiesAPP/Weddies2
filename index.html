@@ -374,14 +374,17 @@
             height: 128px;
             margin-right: 10px;
         }
-        .filters-container {
+
+
+.filters-container {
     position: fixed;
-    bottom: 10vh; /* Adjust this value to set the distance from the bottom */
+    bottom: 10vh;
     left: 50%;
     transform: translateX(-50%);
     background-color: black;
-    padding: 20px;
+    padding: 0px;
     z-index: 999;
+    height: 5vh;
 }
   .logo-weddies-bg {
     position: absolute;
@@ -470,7 +473,8 @@ transform: translate(-50%, 0%);
 }
 
 .popup-club-info {
-  text-align: center;
+    text-align: center;
+    height: 60vh;
 }
 
 .popup-club-logo {
@@ -701,7 +705,7 @@ const closeButton2 = document.createElement('button');
 customPopup.style.zIndex = '1000';
 customPopup.style.position = 'fixed';
 customPopup.style.width = 'auto';
-customPopup.style.height = 'auto';
+customPopup.style.height = 'height: 75vh';
 customPopup.style.overflow = 'hidden'; // Set overflow to hidden here
 customPopup.style.top = '50%';
 customPopup.style.left = '50%';
