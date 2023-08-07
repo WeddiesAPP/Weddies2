@@ -700,8 +700,8 @@ const closeButton2 = document.createElement('button');
 // Styles for customPopup
 customPopup.style.zIndex = '1000';
 customPopup.style.position = 'fixed';
-customPopup.style.width = '300px';
-customPopup.style.maxHeight = '50vh';
+customPopup.style.width = 'auto';
+customPopup.style.height = 'auto';
 customPopup.style.overflow = 'hidden'; // Set overflow to hidden here
 customPopup.style.top = '50%';
 customPopup.style.left = '50%';
@@ -712,7 +712,7 @@ customPopup.style.padding = '10px'; // Provide padding to ensure the close butto
 
 // Styles for contentContainer
 contentContainer.style.width = '100%';
-contentContainer.style.height = 'calc(50vh - 20px)'; // Take into account the padding from customPopup
+contentContainer.style.height = 'auto'; // Take into account the padding from customPopup
 contentContainer.style.overflowY = 'auto'; // Only vertical scrolling
 contentContainer.classList.add('no-scrollbar'); // Add the no-scrollbar class
 
