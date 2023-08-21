@@ -450,38 +450,61 @@ transform: translate(-50%, 0%);
   max-width: 200px; /* Adjust the maximum width as desired */
 }
 .popup-container {
-  width: auto;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.popup-container::-webkit-scrollbar {
-    display: none;
-}
-
-.popup-container {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.popup-stadium-image {
-  width: 100%;
-  max-height: 100px;
-  object-fit: cover;
-  margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f0f0f0; /* Ultra thin material appearance */
 }
 
 .popup-club-info {
-    text-align: center;
-    height: 60vh;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.popup-club-info h3 {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.popup-club-info p {
+    font-size: 14px;
+}
+
+.popup-stadium-image {
+    width: 130px;
+    height: 130px;
+    border-radius: 10px;
 }
 
 .popup-club-logo {
-  width: 50px;
-  height: 50px;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    background-color: white;
 }
-/* Rest of the CSS code remains the same */
+
+.popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.popup-buttons a {
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-align: center;
+    width: 125px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.popup-buttons a:hover {
+    background-color: darkgray;
+}
 
 
 .close {
@@ -832,27 +855,25 @@ function hideCustomPopup() {
 
 
         function createPopupContent(club) {
-          return `
+        return `
             <div class="popup-container">
-              <img class="popup-stadium-image" src="${club.stadiumImageName}" alt="${club.stadiumName}">
-              <div class="popup-club-info">
-                <img class="popup-club-logo" src="${club.clubImageName}" alt="${club.clubName}">
-                <h3>${club.clubName}</h3>
-                <p><strong>Country:</strong> ${club.country}</p>
-                <p><strong>League:</strong> ${club.leagueName}</p>
-                <p><strong>Founded:</strong> ${club.founded}</p>
-                <p><strong>Stadium:</strong> ${club.stadiumName}</p>
-                <p><strong>Address:</strong> ${club.stadiumAddress}</p>
-                <p><strong>City:</strong> ${club.cityName}</p>
-                <p><strong>Capacity:</strong> ${club.capacity}</p>
-                <p><strong>Surface:</strong> ${club.surface}</p>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${club.latitude},${club.longitude}" target="_blank" style="background-color: blue; color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;">Navigate To</a>
-              </div>
+                <div class="popup-club-info">
+                    <img class="popup-club-logo" src="${club.clubImageName}" alt="${club.clubName}">
+                    <div>
+                        <h3>${club.clubName}</h3>
+                        <p>${club.stadiumName}</p>
+                    </div>
+                </div>
+                <img class="popup-stadium-image" src="${club.stadiumImageName}" alt="${club.stadiumName}">
+                <div class="popup-buttons">
+                    <a href="#" style="background-color: ${club.firstColor}; color: ${club.secondColor};">Learn More</a>
+                    <a href="#" style="background-color: ${club.firstColor}; color: ${club.secondColor};">Matches</a>
+                    <a href="#" style="background-color: red; color: white;">Not Visited</a>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=${club.coordinates.latitude},${club.coordinates.longitude}" target="_blank" style="background-color: blue; color: white;">Navigate To</a>
+                </div>
             </div>
-          `;
-        }
-
-
+        `;
+    }
 
 //
 
