@@ -450,11 +450,13 @@ transform: translate(-50%, 0%);
   max-width: 200px; /* Adjust the maximum width as desired */
 }
 .popup-container {
+    position: relative; /* Makes child absolute positioning relative to this container */
     display: flex;
     flex-direction: row;
     border-radius: 10px;
     padding: 20px;
-    background-color: #f0f0f0; /* Ultra thin material appearance */
+    padding-left: 70px; /* Space for the club logo */
+    background-color: #f0f0f0;
 }
 
 .popup-left-section {
@@ -466,11 +468,15 @@ transform: translate(-50%, 0%);
 }
 
 .popup-club-logo {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* Adjust based on your preference */
+    transform: translateY(-50%); /* Center vertically */
     width: 120px;
     height: 120px;
     border-radius: 10px;
-    margin-top: auto;
-    background-color: transparent;
+    z-index: 1; /* Ensures it's above other content */
+    background-color: white;
 }
 
 .popup-club-details {
