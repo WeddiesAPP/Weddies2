@@ -858,8 +858,8 @@ function hideCustomPopup() {
               stadiumCity: row.stadiumCity,
               stadiumAdress: row.stadiumAdress,
               stadiumZipcode: row.stadiumZipcode,
-              latitude: row.latitude,
-              longitude: row.longitude,
+              latitude: parseFloat(row.latitude.replace(',', '.')),
+             longitude: parseFloat(row.longitude.replace(',', '.')),
               stadiumSurface: row.stadiumSurface,
               stadiumCapacity: row.stadiumCapacity,
             };
