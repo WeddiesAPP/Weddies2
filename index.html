@@ -825,7 +825,7 @@ function hideCustomPopup() {
 
 
     // Fetch the CSV file
-  fetch('teams.csv')
+    fetch('teamsdata.csv')
     .then((response) => response.text())
     .then((csvString) => {
       // Parse the CSV string
@@ -837,32 +837,37 @@ function hideCustomPopup() {
           const clubs = results.data.map((row) => {
             return {
               leagueID: row.leagueID,
+              countryID: row.countryID,
               leagueName: row.leagueName,
-              leagueImage: row.leagueImage,
-              clubID: row.clubID,
-              clubName: row.clubName,
-              clubCode: row.clubCode,
-              country: row.country,
-              founded: row.founded,
-              national: row.national,
+              leagueActive: row.leagueActive,
+              leagueShortCode: row.leagueShortCode,
+              leagueImageName: row.leagueImageName,
+              leagueType: row.leagueType,
+              leagueSubType: row.leagueSubType,
+              leagueLastPlayedAt: row.leagueLastPlayedAt,
+              leagueCategory: row.leagueCategory,
+              seasonID: row.seasonID,
+              seasonName: row.seasonName,
+              teamID: row.teamID,
+              teamName: row.teamName,
               clubImageName: row.clubImageName,
+              clubFounded: row.clubFounded,
+              clubGender: row.clubGender,
               stadiumID: row.stadiumID,
               stadiumName: row.stadiumName,
-              stadiumAddress: row.stadiumAddress,
-              cityName: row.cityName,
-              capacity: row.capacity,
-              surface: row.surface,
-              stadiumImageName: row.stadiumImageName,
+              stadiumCity: row.stadiumCity,
+              stadiumAdress: row.stadiumAdress,
+              stadiumZipcode: row.stadiumZipcode,
               latitude: row.latitude,
               longitude: row.longitude,
-              firstColor: row.firstColor,
-              secondColor: row.secondColor,
+              stadiumSurface: row.stadiumSurface,
+              stadiumCapacity: row.stadiumCapacity,
             };
           });
+          // Call your existing functions with the new data
           addClubLogosToMap(clubs);
           initializeSearch(clubs);
           initialize(clubs);
-          // Now you have an array of club objects, you can use it as you wish
           console.log(clubs);
         },
       });
@@ -870,6 +875,7 @@ function hideCustomPopup() {
     .catch((error) => {
       console.error('An error occurred while fetching the CSV file:', error);
     });
+
 
 
         // Any additional processing on the 'clubs' array can be done here
