@@ -831,7 +831,7 @@ function hideCustomPopup() {
       // Parse the CSV string
       Papa.parse(csvString, {
         header: true, // Specify that the CSV file has headers
-        dynamicTyping: true,
+        dynamicTyping: false,
         skipEmptyLines: true,
         complete: function (results) {
           const clubs = results.data.map((row) => {
