@@ -595,7 +595,7 @@ button {
     white-space: nowrap;
     font-family: sans-serif;
     font-size: 13px;
-    color: #444444;
+    color: black;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color 0.1s ease-in-out;
@@ -621,7 +621,12 @@ button {
   'FILL' 1,
   'wght' 700,
   'GRAD' 0,
-  'opsz' 72
+  'opsz' 72;
+  color: black;
+}
+
+.nav__link--active .material-symbols-outlined {
+  color: #009578; /* This sets the color for the active link */
 }
 .no-scrollbar::-webkit-scrollbar {
     width: 0;
@@ -682,19 +687,17 @@ cancel
     <div id="mapid">
 
   <nav class="nav">
-    <a href="#" class="nav__link">
-      <span class="material-symbols-outlined">
-    pin_drop
-    </span>
-
-    </a>
-    <a href="#" class="nav__link nav__link--active">
-      <span class="material-symbols-outlined">
-  person
-  </span>
-
+        <a href="index.html" class="nav__link nav__link--active">
+        <span class="material-symbols-outlined">
+            pin_drop
+        </span>
     </a>
     <a href="#" class="nav__link">
+        <span class="material-symbols-outlined">
+            person
+        </span>
+    </a>
+    <a href="matches.html" class="nav__link">
       <span class="material-symbols-outlined">
   table_rows
   </span>
