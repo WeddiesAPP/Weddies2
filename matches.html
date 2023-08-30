@@ -113,6 +113,20 @@
   height: 40px;
   margin-right: 10px;
 }
+.date-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.date-arrow {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 18px;
+  margin: 0 10px;
+}
 
 /* Rest of your CSS */
 
@@ -148,9 +162,12 @@
     </a>
 </nav>
 
-<h1>This is the matches page.</h1>
-<label for="dateInput">Select a date:</label>
-  <input type="date" id="datePicker">
+<div class="date-container">
+  <button id="prev-day" class="date-arrow">&#9664;</button> <!-- Left arrow -->
+  <input type="text" id="datePicker" value="Today">
+  <button id="next-day" class="date-arrow">&#9654;</button> <!-- Right arrow -->
+</div>
+
 
  <div id="matchContainer">
     <!-- Match divs will be populated by JavaScript -->
@@ -239,10 +256,39 @@ function loadFixtures() {
     })
     .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
 }
-document.getElementById('datePicker').addEventListener('change', function() {
-  const selectedDate = this.value; // Get the selected date in YYYY-MM-DD format
+const datePicker = document.getElementById('datePicker');
+const prevDayButton = document.getElementById('prev-day');
+const nextDayButton = document.getElementById('next-day');
+
+// Initialize the datePicker to Today's date in the format 'YYYY-MM-DD'
+const today = new Date();
+const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+datePicker.value = 'Today';
+
+// Event Listener for Previous Day
+prevDayButton.addEventListener('click', () => {
+  changeDate(-1);
+});
+
+// Event Listener for Next Day
+nextDayButton.addEventListener('click', () => {
+  changeDate(1);
+});
+
+// Event listener when date changes from the picker
+datePicker.addEventListener('change', function() {
+  const selectedDate = this.value === 'Today' ? formattedToday : this.value;
   updateMatchesForDate(selectedDate);
 });
+
+function changeDate(days) {
+  const currentVal = datePicker.value === 'Today' ? formattedToday : datePicker.value;
+  const currentDate = new Date(currentVal);
+  currentDate.setDate(currentDate.getDate() + days);
+  const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+  datePicker.value = newDate === formattedToday ? 'Today' : newDate;
+  updateMatchesForDate(newDate);
+}
 
 function updateMatchesForDate(selectedDate) {
   // Filter the matches for the selected date
@@ -304,7 +350,7 @@ function displayMatches(matches) {
       const timeDiv = document.createElement('div');
 timeDiv.className = 'matchTime';
 const matchDate = new Date(match.time);
-const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes().toString().padStart(2, '0')}UTC`;
+const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes().toString().padStart(2, '0')} accesskey=""UTC`;
 timeDiv.textContent = formattedTime;
 
       const homeName = document.createElement('div');
