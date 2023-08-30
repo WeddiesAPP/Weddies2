@@ -117,7 +117,7 @@
 
 <h1>This is the matches page.</h1>
 <label for="dateInput">Select a date:</label>
-  <input type="date" id="dateInput">
+  <input type="date" id="datePicker">
 
  <div id="matchContainer">
     <!-- Match divs will be populated by JavaScript -->
@@ -125,7 +125,7 @@
 </body>
 <script>
 let clubs = [];
-let fixtures = [];
+let allFixtures = [];
 // Fetch the CSV file
 fetch('teamsdata.csv')
 .then((response) => response.text())
@@ -177,6 +177,9 @@ fetch('teamsdata.csv')
 });
 
 function loadFixtures() {
+  const today = new Date().toISOString().split('T')[0]; // get today's date in YYYY-MM-DD format
+  document.getElementById('datePicker').value = today; // set the date picker to today
+
   fetch('fixtures.csv')
     .then(response => response.text())
     .then(csvString => {
@@ -184,11 +187,10 @@ function loadFixtures() {
         header: true,
         skipEmptyLines: true,
         complete: function (results) {
-          fixtures = results.data.map(row => {
+          allFixtures = results.data.map(row => {
             const [homeTeamName, awayTeamName] = row.Name.split(' vs ');
             const homeTeam = clubs.find(club => club.clubName === homeTeamName);
             const awayTeam = clubs.find(club => club.clubName === awayTeamName);
-
             return {
               date: row.Date,
               homeTeam: homeTeam || { clubName: homeTeamName, clubImageName: 'default.jpg' },
@@ -196,11 +198,27 @@ function loadFixtures() {
               time: row['Starting At'],
             };
           });
-          displayMatches(fixtures);
+
+          updateMatchesForDate(today);
         },
       });
     })
     .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
+}
+document.getElementById('datePicker').addEventListener('change', function() {
+  const selectedDate = this.value; // Get the selected date in YYYY-MM-DD format
+  updateMatchesForDate(selectedDate);
+});
+
+function updateMatchesForDate(selectedDate) {
+  // Filter the matches for the selected date
+  const filteredMatches = allFixtures.filter(match => match.date === selectedDate);
+
+  // Clear the current matches
+  document.getElementById('matchContainer').innerHTML = '';
+
+  // Display the new matches
+  displayMatches(filteredMatches);
 }
 // Function to display matches
 function displayMatches(matches) {
