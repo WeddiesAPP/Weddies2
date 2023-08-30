@@ -79,6 +79,11 @@
       background-position: center;
       margin: 0 20px;
     }
+    .team-name {
+  font-size: 12px;
+  text-align: center;
+}
+
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -217,11 +222,21 @@ function displayMatches(matches) {
     timeDiv.textContent = match.time;
     timeDiv.className = 'time';
 
-    matchDiv.appendChild(homeLogo);
-    matchDiv.appendChild(timeDiv);
-    matchDiv.appendChild(awayLogo);
+    const homeName = document.createElement('div');
+    homeName.textContent = match.homeTeam.clubName;
+    homeName.className = 'team-name';
 
-    matchContainer.appendChild(matchDiv);
+    const awayName = document.createElement('div');
+    awayName.textContent = match.awayTeam.clubName;
+    awayName.className = 'team-name';
+
+    matchDiv.appendChild(homeLogo);
+      matchDiv.appendChild(homeName);
+      matchDiv.appendChild(timeDiv);
+      matchDiv.appendChild(awayName);
+      matchDiv.appendChild(awayLogo);
+
+      matchContainer.appendChild(matchDiv);
   });
 }
 
