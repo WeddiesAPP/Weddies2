@@ -94,7 +94,7 @@
 .league h2 {
   margin: 0;
   padding: 10px;
-  background-color: #ddd;
+  background-color: transparent;
 }
 .leagueInfo {
   display: flex;
@@ -298,10 +298,10 @@ function displayMatches(matches) {
       awayLogo.className = 'awayLogo';
 
       const timeDiv = document.createElement('div');
-      timeDiv.className = 'matchTime';
-      const matchDate = new Date(match.time);
-      const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes()}`;
-      timeDiv.textContent = formattedTime;
+timeDiv.className = 'matchTime';
+const matchDate = new Date(match.time);
+const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes().toString().padStart(2, '0')}`;
+timeDiv.textContent = formattedTime;
 
       const homeName = document.createElement('div');
       homeName.className = 'homeName';
