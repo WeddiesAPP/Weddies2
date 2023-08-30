@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Weddies - Fixtures </title>
+  <meta name="description" content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
+  <link rel="icon" href="Weddies-bg.png" type="image/x-icon">
+  <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
 <style>
 .nav {
     position: fixed;
@@ -128,7 +132,14 @@
   font-size: 18px;
   margin: 0 10px;
 }
-
+.logo-weddies-bg {
+  position: absolute;
+  top: 20px; /* Changed from bottom to top */
+  left: 20px;
+  z-index: 999;
+  width: 64px;
+  height: 64px;
+}
 
 /* Rest of your CSS */
 
@@ -163,7 +174,7 @@
         </span>
     </a>
 </nav>
-
+<img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
 <div id="date-container" class="date-container">
   <button id="prev-day" class="date-arrow">&#9664;</button> <!-- Left arrow -->
   <span id="date-display">Today</span>
