@@ -244,6 +244,7 @@ fetch('teamsdata.csv')
   dateDisplay.textContent = 'Today';
 
   function loadFixtures() {
+
     fetch('fixtures.csv')
       .then(response => response.text())
       .then(csvString => {
@@ -251,9 +252,21 @@ fetch('teamsdata.csv')
           header: true,
           skipEmptyLines: true,
           complete: function (results) {
-            // Your existing code...
-            updateMatchesForDate(formattedToday);
-          }
+            allFixtures = results.data.map(row => {
+              const [homeTeamName, awayTeamName] = row.Name.split(' vs ');
+              const homeTeam = clubs.find(club => club.clubName === homeTeamName);
+              const awayTeam = clubs.find(club => club.clubName === awayTeamName);
+              return {
+                date: row.Date,
+                leagueID: row['League ID'], // Include the League ID
+                homeTeam: homeTeam || { clubName: homeTeamName, clubImageName: 'default.jpg' },
+                awayTeam: awayTeam || { clubName: awayTeamName, clubImageName: 'default.jpg' },
+                time: row['Starting At'],
+              };
+            });
+
+            updateMatchesForDate(today);
+          },
         });
       })
       .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
