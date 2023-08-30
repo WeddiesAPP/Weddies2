@@ -230,7 +230,6 @@ fetch('teamsdata.csv')
   console.error('An error occurred while fetching the CSV file:', error);
 });
 
-document.addEventListener("DOMContentLoaded", function() {
 
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
@@ -293,7 +292,6 @@ document.addEventListener("DOMContentLoaded", function() {
     updateMatchesForDate(newDate);
   }
 
-});
 
 
 
