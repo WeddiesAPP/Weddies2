@@ -8,6 +8,8 @@
   <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
 <style>
 
+
+
 body {
   background-color: lightblue;
 }
@@ -79,11 +81,17 @@ body {
   height: auto;
 }
 
-.matchTime {
+.homeName,
+.awayName {
+  flex: 1;
+  flex-basis: 40%;  /* Allocating 40% of available space */
+  text-align: center;
   font-size: 1rem;
 }
 
-.homeName, .awayName {
+.matchTime {
+  flex: 0 0 auto;
+  flex-basis: 20%;  /* Allocating 20% of available space */
   text-align: center;
   font-size: 1rem;
 }
@@ -140,6 +148,11 @@ body {
   height: 4em;
 }
 
+
+
+
+
+/* Rest of your CSS */
 
 
 
