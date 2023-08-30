@@ -118,6 +118,7 @@
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  cursor: pointer; /* Makes it look clickable */
 }
 
 .date-arrow {
@@ -127,6 +128,7 @@
   font-size: 18px;
   margin: 0 10px;
 }
+
 
 /* Rest of your CSS */
 
@@ -162,11 +164,13 @@
     </a>
 </nav>
 
-<div class="date-container">
+<div id="date-container" class="date-container">
   <button id="prev-day" class="date-arrow">&#9664;</button> <!-- Left arrow -->
-  <input type="text" id="datePicker" value="Today">
+  <span id="date-display">Today</span>
+  <input type="date" id="hidden-date-picker" style="display: none;">
   <button id="next-day" class="date-arrow">&#9654;</button> <!-- Right arrow -->
 </div>
+
 
 
  <div id="matchContainer">
@@ -256,39 +260,49 @@ function loadFixtures() {
     })
     .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
 }
-const datePicker = document.getElementById('datePicker');
+cconst dateContainer = document.getElementById('date-container');
+const dateDisplay = document.getElementById('date-display');
+const hiddenDatePicker = document.getElementById('hidden-date-picker');
 const prevDayButton = document.getElementById('prev-day');
 const nextDayButton = document.getElementById('next-day');
 
-// Initialize the datePicker to Today's date in the format 'YYYY-MM-DD'
 const today = new Date();
 const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-datePicker.value = 'Today';
+hiddenDatePicker.value = formattedToday;
+dateDisplay.textContent = 'Today';
 
-// Event Listener for Previous Day
+dateContainer.addEventListener('click', function(event) {
+  // Check if we clicked one of the arrows; if not, open the date picker.
+  if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
+    hiddenDatePicker.focus();
+    hiddenDatePicker.click();
+  }
+});
+
+hiddenDatePicker.addEventListener('change', function() {
+  const selectedDate = this.value;
+  dateDisplay.textContent = selectedDate === formattedToday ? 'Today' : selectedDate;
+  updateMatchesForDate(selectedDate);
+});
+
 prevDayButton.addEventListener('click', () => {
   changeDate(-1);
 });
 
-// Event Listener for Next Day
 nextDayButton.addEventListener('click', () => {
   changeDate(1);
 });
 
-// Event listener when date changes from the picker
-datePicker.addEventListener('change', function() {
-  const selectedDate = this.value === 'Today' ? formattedToday : this.value;
-  updateMatchesForDate(selectedDate);
-});
-
 function changeDate(days) {
-  const currentVal = datePicker.value === 'Today' ? formattedToday : datePicker.value;
+  const currentVal = hiddenDatePicker.value;
   const currentDate = new Date(currentVal);
   currentDate.setDate(currentDate.getDate() + days);
   const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
-  datePicker.value = newDate === formattedToday ? 'Today' : newDate;
+  hiddenDatePicker.value = newDate;
+  dateDisplay.textContent = newDate === formattedToday ? 'Today' : newDate;
   updateMatchesForDate(newDate);
 }
+
 
 function updateMatchesForDate(selectedDate) {
   // Filter the matches for the selected date
