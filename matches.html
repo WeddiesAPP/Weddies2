@@ -96,6 +96,19 @@
   padding: 10px;
   background-color: #ddd;
 }
+.leagueInfo {
+  display: flex;
+  align-items: center;
+}
+
+.leagueLogo {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+/* Rest of your CSS */
+
 
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -254,10 +267,20 @@ function displayMatches(matches) {
     const leagueDiv = document.createElement('div');
     leagueDiv.className = 'league';
 
+    const leagueInfo = document.createElement('div');
+    leagueInfo.className = 'leagueInfo';
+
+    const leagueLogo = document.createElement('img');
+    const leagueDetails = clubs.find(club => club.leagueID === leagueID);
+    leagueLogo.src = leagueDetails.leagueImage;
+    leagueLogo.className = 'leagueLogo';
+
     const leagueName = document.createElement('h2');
-    const leagueInfo = clubs.find(club => club.leagueID === leagueID);
-    leagueName.textContent = leagueInfo ? leagueInfo.leagueName : 'Unknown League';
-    leagueDiv.appendChild(leagueName);
+    leagueName.textContent = leagueDetails ? leagueDetails.leagueName : 'Unknown League';
+
+    leagueInfo.appendChild(leagueLogo);
+    leagueInfo.appendChild(leagueName);
+    leagueDiv.appendChild(leagueInfo);
 
     leagueMatches.forEach(match => {
       const matchDiv = document.createElement('div');
@@ -273,7 +296,9 @@ function displayMatches(matches) {
 
       const timeDiv = document.createElement('div');
       timeDiv.className = 'matchTime';
-      timeDiv.textContent = match.time;
+      const matchDate = new Date(match.time);
+      const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes()}`;
+      timeDiv.textContent = formattedTime;
 
       const homeName = document.createElement('div');
       homeName.className = 'homeName';
@@ -294,6 +319,7 @@ function displayMatches(matches) {
     matchContainer.appendChild(leagueDiv);
   }
 }
+
 
 
  var navBar = document.querySelector(".nav");
