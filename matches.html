@@ -83,6 +83,17 @@
   font-size: 12px;
   text-align: center;
 }
+.league {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f4f4f4;
+}
+
+.league h2 {
+  margin: 0;
+  padding: 10px;
+  background-color: #ddd;
+}
 
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -193,6 +204,7 @@ function loadFixtures() {
             const awayTeam = clubs.find(club => club.clubName === awayTeamName);
             return {
               date: row.Date,
+              leagueID: row['League ID'], // Include the League ID
               homeTeam: homeTeam || { clubName: homeTeamName, clubImageName: 'default.jpg' },
               awayTeam: awayTeam || { clubName: awayTeamName, clubImageName: 'default.jpg' },
               time: row['Starting At'],
@@ -223,39 +235,62 @@ function updateMatchesForDate(selectedDate) {
 // Function to display matches
 function displayMatches(matches) {
   const matchContainer = document.getElementById('matchContainer');
+  matchContainer.innerHTML = ''; // Clear previous matches
 
+  // Group the matches by league
+  const matchesByLeague = {};
   matches.forEach(match => {
-    const matchDiv = document.createElement('div');
-    matchDiv.className = 'match';
+    const leagueID = match.leagueID;
+    if (!matchesByLeague[leagueID]) {
+      matchesByLeague[leagueID] = [];
+    }
+    matchesByLeague[leagueID].push(match);
+  });
 
-    const homeLogo = document.createElement('div');
-    homeLogo.className = 'team-logo';
-    homeLogo.style.backgroundImage = `url('${match.homeTeam.clubImageName}')`;
+  // Create a div for each league and add its matches
+  for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
+    const leagueDiv = document.createElement('div');
+    leagueDiv.className = 'league';
 
-    const awayLogo = document.createElement('div');
-    awayLogo.className = 'team-logo';
-    awayLogo.style.backgroundImage = `url('${match.awayTeam.clubImageName}')`;
+    const leagueName = document.createElement('h2');
+    const leagueInfo = clubs.find(club => club.leagueID === leagueID);
+    leagueName.textContent = leagueInfo ? leagueInfo.leagueName : 'Unknown League';
+    leagueDiv.appendChild(leagueName);
 
-    const timeDiv = document.createElement('div');
-    timeDiv.textContent = match.time;
-    timeDiv.className = 'time';
+    leagueMatches.forEach(match => {
+      const matchDiv = document.createElement('div');
+      matchDiv.className = 'match';
 
-    const homeName = document.createElement('div');
-    homeName.textContent = match.homeTeam.clubName;
-    homeName.className = 'team-name';
+      const homeLogo = document.createElement('img');
+      homeLogo.src = match.homeTeam.clubImageName;
+      homeLogo.className = 'homeLogo';
 
-    const awayName = document.createElement('div');
-    awayName.textContent = match.awayTeam.clubName;
-    awayName.className = 'team-name';
+      const awayLogo = document.createElement('img');
+      awayLogo.src = match.awayTeam.clubImageName;
+      awayLogo.className = 'awayLogo';
 
-    matchDiv.appendChild(homeLogo);
+      const timeDiv = document.createElement('div');
+      timeDiv.className = 'matchTime';
+      timeDiv.textContent = match.time;
+
+      const homeName = document.createElement('div');
+      homeName.className = 'homeName';
+      homeName.textContent = match.homeTeam.clubName;
+
+      const awayName = document.createElement('div');
+      awayName.className = 'awayName';
+      awayName.textContent = match.awayTeam.clubName;
+
+      matchDiv.appendChild(homeLogo);
       matchDiv.appendChild(homeName);
       matchDiv.appendChild(timeDiv);
       matchDiv.appendChild(awayName);
       matchDiv.appendChild(awayLogo);
+      leagueDiv.appendChild(matchDiv);
+    });
 
-      matchContainer.appendChild(matchDiv);
-  });
+    matchContainer.appendChild(leagueDiv);
+  }
 }
 
 
