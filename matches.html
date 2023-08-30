@@ -231,9 +231,7 @@ fetch('teamsdata.csv')
 });
 
 function loadFixtures() {
-  const today = new Date().toISOString().split('T')[0]; // get today's date in YYYY-MM-DD format
-  document.getElementById('datePicker').value = today; // set the date picker to today
-
+  
   fetch('fixtures.csv')
     .then(response => response.text())
     .then(csvString => {
