@@ -304,7 +304,7 @@ function displayMatches(matches) {
       const timeDiv = document.createElement('div');
 timeDiv.className = 'matchTime';
 const matchDate = new Date(match.time);
-const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes().toString().padStart(2, '0')}`;
+const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes().toString().padStart(2, '0')}UTC`;
 timeDiv.textContent = formattedTime;
 
       const homeName = document.createElement('div');
