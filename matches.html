@@ -515,6 +515,27 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const filterButton = document.getElementById("filterButton");
   const filterModal = document.getElementById("filterModal");
   const closeButton = document.querySelector(".close");
+  const leaguesSelect = document.getElementById("leagues");
+  const countriesSelect = document.getElementById("countries");
+  const leagues = new Set();
+  const countries = new Set();
+
+  allFixtures.forEach(fixture => {
+    if (fixture.date === hiddenDatePicker.value) {
+      leagues.add(fixture.leagueName);
+      countries.add(fixture.leagueCountry);
+    }
+  });
+
+  leagues.forEach(league => {
+    const option = new Option(league, league);
+    leaguesSelect.add(option);
+  });
+
+  countries.forEach(country => {
+    const option = new Option(country, country);
+    countriesSelect.add(option);
+  });
 
   if (filterButton) {
     filterButton.addEventListener("click", function() {
