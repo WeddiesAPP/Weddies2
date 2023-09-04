@@ -436,7 +436,7 @@ let radiusFilter = null;
 
   function updateMatchesForDate(date) {
   // Your matches container in HTML
-  const matchesDisplay = document.getElementById("matchesDisplay");
+  const matchesDisplay = document.getElementById("matchContainer");
 
   // Clear previous matches
   matchesDisplay.innerHTML = "";
@@ -464,7 +464,7 @@ let radiusFilter = null;
     return leagueMatch && countryMatch && radiusMatch;
   });
 
-  
+
 
 
   displayMatches(filteredMatches);
