@@ -233,10 +233,10 @@ color: white;}
     <h2>Filter Options</h2>
 
     <label for="leagues">Select League:</label>
-    <select id="leagues"></select>
+    <select id="leagues"  multiple></select>
 
     <label for="countries">Select Country:</label>
-    <select id="countries"></select>
+    <select id="countries"  multiple></select>
 
     <label for="radius">Select Radius (in km):</label>
     <input type="number" id="radius" min="0" />
@@ -442,27 +442,16 @@ let radiusFilter = null;
   matchesDisplay.innerHTML = "";
 
   // Filtering
-  const filteredMatches = allFixtures.filter(match => {
-    let leagueMatch = true;
-    let countryMatch = true;
-    let radiusMatch = true;
+  function updateMatchesForDate(date) {
+  // Assume matchesDisplay and allFixtures are defined
 
-    if (leagueFilter.size > 0) {
-      leagueMatch = leagueFilter.has(match.leagueName);
-    }
-
-    if (countryFilter.size > 0) {
-      countryMatch = countryFilter.has(match.leagueCountry);
-    }
-
-    if (radiusFilter !== null) {
-      // Implement your logic for radius matching
-      // For this example, let's assume each fixture has a "distance" property.
-      // radiusMatch = match.distance <= radiusFilter;
-    }
-
-    return leagueMatch && countryMatch && radiusMatch;
+  let filteredMatches = allFixtures.filter(match => {
+    // Filter by date
+    return match.date === date &&
+      // Filter by selected leagues OR selected countries
+      (filterSettings.league.includes(match.leagueName) || filterSettings.country.includes(match.leagueCountry));
   });
+
 
 
 
@@ -587,26 +576,18 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     }
 
     applyFilterBtn.addEventListener('click', () => {
-    leagueFilter.clear();
-    countryFilter.clear();
+      // Get multiple selected options for leagues
+      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+      // Get multiple selected options for countries
+      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-    if (leaguesSelect.value) {
-      leagueFilter.add(leaguesSelect.value);
-    }
+      filterSettings.league = selectedLeagues;
+      filterSettings.country = selectedCountries;
+      filterSettings.radius = parseFloat(radiusInput.value);
 
-    if (countriesSelect.value) {
-      countryFilter.add(countriesSelect.value);
-    }
-
-    radiusFilter = radiusInput.value ? parseFloat(radiusInput.value) : null;
-
-    // Close the modal
-    filterModal.style.display = 'none';
-
-    // Update matches
-    updateMatchesForDate(hiddenDatePicker.value);
-  });
-
+      filterModal.style.display = 'none';
+      updateMatchesForDate(hiddenDatePicker.value);
+    });
 
   });
 
