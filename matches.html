@@ -205,54 +205,48 @@ color: white;}
 let clubs = [];
 let allFixtures = [];
 // Fetch the CSV file
-fetch('teamsdata.csv')
-.then((response) => response.text())
-.then((csvString) => {
-  // Parse the CSV string
-  Papa.parse(csvString, {
-    header: true, // Specify that the CSV file has headers
-    dynamicTyping: false,
-    skipEmptyLines: true,
-    complete: function (results) {
-      clubs = results.data.map((row) => {
-        return {
-          leagueID: row.leagueID,
-          countryID: row.countryID,
-          leagueName: row.leagueName,
-          leagueActive: row.leagueActive,
-          leagueShortCode: row.leagueShortCode,
-          leagueImage: row.leagueImageName,
-          leagueType: row.leagueType,
-          leagueSubType: row.leagueSubType,
-          leagueLastPlayedAt: row.leagueLastPlayedAt,
-          leagueCategory: row.leagueCategory,
-          seasonID: row.seasonID,
-          seasonName: row.seasonName,
-        clubID: row.teamID,
-          clubName: row.teamName,
-          clubImageName: row.clubImageName,
-          clubFounded: row.clubFounded,
-          clubGender: row.clubGender,
-          stadiumID: row.stadiumID,
-          stadiumName: row.stadiumName,
-          stadiumCity: row.stadiumCity,
-          stadiumAdress: row.stadiumAdress,
-          stadiumZipcode: row.stadiumZipcode,
-          latitude: parseFloat(row.latitude.replace(',', '.')),
-         longitude: parseFloat(row.longitude.replace(',', '.')),
-          stadiumSurface: row.stadiumSurface,
-          stadiumCapacity: row.stadiumCapacity,
-        };
-      });
-      // Call your existing functions with the new data
-    loadFixtures();
-      console.log(clubs);
-    },
+fetch('teams.csv')
+  .then((response) => response.text())
+  .then((csvString) => {
+    // Parse the CSV string
+    Papa.parse(csvString, {
+      header: true,
+      dynamicTyping: false,
+      skipEmptyLines: true,
+      delimiter: ';', // Note: the example uses semicolon as delimiter
+      complete: function (results) {
+        clubs = results.data.map((row) => {
+          return {
+            leagueID: row.leagueID,
+            leagueName: row.leagueName,
+            leagueImage: row.leagueImage,
+            clubID: row.clubID,
+            clubName: row.clubName,
+            clubCode: row.clubCode,
+            country: row.country,
+            founded: row.founded,
+            national: row.national === "True" ? true : false,
+            clubImageName: row.clubImageName,
+            stadiumID: row.stadiumID,
+            stadiumName: row.stadiumName,
+            stadiumAddress: row.stadiumAddress,
+            cityName: row.cityName,
+            capacity: row.capacity,
+            surface: row.surface,
+            stadiumImageName: row.stadiumImageName,
+            latitude: parseFloat(row.latitude),
+            longitude: parseFloat(row.longitude),
+          };
+        });
+        // Call your existing functions with the new data
+        loadFixtures();
+        console.log(clubs);
+      },
+    });
+  })
+  .catch((error) => {
+    console.error('An error occurred while fetching the CSV file:', error);
   });
-})
-.catch((error) => {
-  console.error('An error occurred while fetching the CSV file:', error);
-});
 
 
   let today = new Date();
@@ -268,29 +262,43 @@ fetch('teamsdata.csv')
   dateDisplay.textContent = 'Today';
 
   function loadFixtures() {
-
     fetch('fixtures.csv')
       .then(response => response.text())
       .then(csvString => {
+        // Parse the CSV string
         Papa.parse(csvString, {
           header: true,
+          delimiter: ';', // Specify the field delimiter as semi-colon
           skipEmptyLines: true,
           complete: function (results) {
             allFixtures = results.data.map(row => {
-              const [homeTeamName, awayTeamName] = row.Name.split(' vs ');
-              const homeTeam = clubs.find(club => club.clubName === homeTeamName);
-              const awayTeam = clubs.find(club => club.clubName === awayTeamName);
+              const homeTeam = clubs.find(club => club.clubID == row.Home_ID);
+              const awayTeam = clubs.find(club => club.clubID == row.Away_ID);
+
               return {
-                date: row.Date,
-                leagueID: row['League ID'], // Include the League ID
-                homeTeam: homeTeam || { clubName: homeTeamName, clubImageName: 'default.jpg' },
-                awayTeam: awayTeam || { clubName: awayTeamName, clubImageName: 'default.jpg' },
-                time: row['Starting At'],
+                date: row.Date.split(" ")[0],  // Only get the date without the time
+                startingAt: row.Starting_At,  // Start time
+                timezone: row.Timezone,
+                fixtureID: row.Fixture_ID,
+                referee: row.Fixture_Referee,
+                leagueID: row.League_ID,
+                leagueName: row.League_Name,
+                leagueCountry: row.League_Country,
+                homeTeam: homeTeam || { clubName: row.Home_Name, clubImageName: row.Home_Logo },
+                homeWinner: row.Home_Winner === "WAAR",
+                awayTeam: awayTeam || { clubName: row.Away_Name, clubImageName: row.Away_Logo },
+                awayWinner: row.Away_Winner === "ONWAAR",
+                goalsHome: row.Goals_Home,
+                goalsAway: row.Goals_Away,
+                halftimeHome: row.Score_Halftime_Home,
+                halftimeAway: row.Score_Halftime_Away,
+                fulltimeHome: row.Score_Fulltime_Home,
+                fulltimeAway: row.Score_Fulltime_Away
               };
             });
 
+            // Call your existing function to update the matches for today
             updateMatchesForDate(formattedToday);
-
           },
         });
       })
@@ -298,6 +306,7 @@ fetch('teamsdata.csv')
   }
 
   loadFixtures();
+
 
   dateContainer.addEventListener('click', function(event) {
     if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
