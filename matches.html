@@ -262,7 +262,6 @@ fetch('teams.csv')
 
   hiddenDatePicker.value = formattedToday;
   dateDisplay.textContent = 'Today';
-
   function loadFixtures() {
     fetch('fixtures.csv')
       .then(response => response.text())
@@ -287,15 +286,9 @@ fetch('teams.csv')
                 leagueName: row.League_Name,
                 leagueCountry: row.League_Country,
                 leagueLogo: row.League_Logo,
-                homeLocation: row.Home_Location,
-                awayLocation: row.Away_Location,
-                homeID: parseInt(row.Home_ID),
-                homeName: row.Home_Name,
-                homeLogo: row.Home_Logo,
+                homeTeam: { clubImageName: row.Home_Logo },
                 homeWinner: row.Home_Winner === "True",
-                awayID: parseInt(row.Away_ID),
-                awayName: row.Away_Name,
-                awayLogo: row.Away_Logo,
+                awayTeam: { clubImageName: row.Away_Logo },
                 awayWinner: row.Away_Winner === "True",
                 goalsHome: parseFloat(row.Goals_Home),
                 goalsAway: parseFloat(row.Goals_Away),
@@ -315,10 +308,7 @@ fetch('teams.csv')
       .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
   }
 
-
-
   loadFixtures();
-
 
   dateContainer.addEventListener('click', function(event) {
     if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
@@ -351,12 +341,9 @@ fetch('teams.csv')
     updateMatchesForDate(newDate);
   }
 
-
-
-
   function updateMatchesForDate(selectedDate) {
     // Filter the matches for the selected date
-    const filteredMatches = allFixtures.filter(match => match.date === selectedDate);
+    const filteredMatches = allFixtures.filter(fixture => fixture.date === selectedDate);
 
     // Clear the current matches
     document.getElementById('matchContainer').innerHTML = '';
@@ -365,89 +352,89 @@ fetch('teams.csv')
     displayMatches(filteredMatches);
   }
 
-  // Function to display matches
   function displayMatches(matches) {
-  const matchContainer = document.getElementById('matchContainer');
-  matchContainer.innerHTML = '';
+    const matchContainer = document.getElementById('matchContainer');
+    matchContainer.innerHTML = '';
 
-  const matchesByLeague = {};
-  matches.forEach(match => {
-    const leagueID = match.leagueID;
-    if (!matchesByLeague[leagueID]) {
-      matchesByLeague[leagueID] = [];
-    }
-    matchesByLeague[leagueID].push(match);
-  });
-
-  for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
-    const leagueDiv = document.createElement('div');
-    leagueDiv.className = 'league';
-
-    const leagueInfo = document.createElement('div');
-    leagueInfo.className = 'leagueInfo';
-
-    const leagueLogo = document.createElement('img');
-    leagueLogo.src = leagueMatches[0].leagueLogo;
-    leagueLogo.className = 'leagueLogo';
-
-    const leagueName = document.createElement('h2');
-    leagueName.textContent = leagueMatches[0].leagueName;
-
-    leagueInfo.appendChild(leagueLogo);
-    leagueInfo.appendChild(leagueName);
-    leagueDiv.appendChild(leagueInfo);
-
-    leagueMatches.forEach(match => {
-      const matchDiv = document.createElement('div');
-      matchDiv.className = 'match';
-
-      const homeLogo = document.createElement('img');
-      homeLogo.src = match.homeTeam.clubImageName;
-      homeLogo.className = 'homeLogo';
-
-      const awayLogo = document.createElement('img');
-      awayLogo.src = match.awayTeam.clubImageName;
-      awayLogo.className = 'awayLogo';
-
-      const timeDiv = document.createElement('div');
-      timeDiv.className = 'matchTime';
-
-      if (match.awayWinner === true || match.homeWinner === true) {
-        const homeGoals = document.createElement('span');
-        homeGoals.textContent = match.goalsHome;
-        const awayGoals = document.createElement('span');
-        awayGoals.textContent = match.goalsAway;
-
-        timeDiv.appendChild(homeGoals);
-        timeDiv.appendChild(document.createTextNode(' - '));
-        timeDiv.appendChild(awayGoals);
-      } else {
-        if (match.statusShort === '1H' || match.statusShort === '2H') {
-          timeDiv.textContent = match.statusShort + ' ' + match.statusElapsed + '\'';
-        } else {
-          timeDiv.textContent = match.startingAt + ' ' + match.timezone;
-        }
+    const matchesByLeague = {};
+    matches.forEach(match => {
+      const leagueID = match.leagueID;
+      if (!matchesByLeague[leagueID]) {
+        matchesByLeague[leagueID] = [];
       }
-
-      const homeName = document.createElement('div');
-      homeName.className = 'homeName';
-      homeName.textContent = match.homeTeam.clubName;
-
-      const awayName = document.createElement('div');
-      awayName.className = 'awayName';
-      awayName.textContent = match.awayTeam.clubName;
-
-      matchDiv.appendChild(homeLogo);
-      matchDiv.appendChild(homeName);
-      matchDiv.appendChild(timeDiv);
-      matchDiv.appendChild(awayName);
-      matchDiv.appendChild(awayLogo);
-      leagueDiv.appendChild(matchDiv);
+      matchesByLeague[leagueID].push(match);
     });
 
-    matchContainer.appendChild(leagueDiv);
+    for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
+      const leagueDiv = document.createElement('div');
+      leagueDiv.className = 'league';
+
+      const leagueInfo = document.createElement('div');
+      leagueInfo.className = 'leagueInfo';
+
+      const leagueLogo = document.createElement('img');
+      leagueLogo.src = leagueMatches[0].leagueLogo;
+      leagueLogo.className = 'leagueLogo';
+
+      const leagueName = document.createElement('h2');
+      leagueName.textContent = leagueMatches[0].leagueName;
+
+      leagueInfo.appendChild(leagueLogo);
+      leagueInfo.appendChild(leagueName);
+      leagueDiv.appendChild(leagueInfo);
+
+      leagueMatches.forEach(match => {
+        const matchDiv = document.createElement('div');
+        matchDiv.className = 'match';
+
+        const homeLogo = document.createElement('img');
+        homeLogo.src = match.homeTeam.clubImageName;
+        homeLogo.className = 'homeLogo';
+
+        const awayLogo = document.createElement('img');
+        awayLogo.src = match.awayTeam.clubImageName;
+        awayLogo.className = 'awayLogo';
+
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'matchTime';
+
+        if (match.awayWinner === true || match.homeWinner === true) {
+          const homeGoals = document.createElement('span');
+          homeGoals.textContent = match.goalsHome;
+          const awayGoals = document.createElement('span');
+          awayGoals.textContent = match.goalsAway;
+
+          timeDiv.appendChild(homeGoals);
+          timeDiv.appendChild(document.createTextNode(' - '));
+          timeDiv.appendChild(awayGoals);
+        } else {
+          if (match.statusShort === '1H' || match.statusShort === '2H') {
+            timeDiv.textContent = match.statusShort + ' ' + match.statusElapsed + '\'';
+          } else {
+            timeDiv.textContent = match.startingAt + ' ' + match.timezone;
+          }
+        }
+
+        const homeName = document.createElement('div');
+        homeName.className = 'homeName';
+        homeName.textContent = match.homeTeam.clubName;
+
+        const awayName = document.createElement('div');
+        awayName.className = 'awayName';
+        awayName.textContent = match.awayTeam.clubName;
+
+        matchDiv.appendChild(homeLogo);
+        matchDiv.appendChild(homeName);
+        matchDiv.appendChild(timeDiv);
+        matchDiv.appendChild(awayName);
+        matchDiv.appendChild(awayLogo);
+        leagueDiv.appendChild(matchDiv);
+      });
+
+      matchContainer.appendChild(leagueDiv);
+    }
   }
-}
+
 
 
 
