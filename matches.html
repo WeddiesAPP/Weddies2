@@ -510,13 +510,15 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
   }
 
 
+  document.addEventListener("DOMContentLoaded", function() {
+    applyFilterBtn.addEventListener('click', () => {
+      filterSettings.league = leaguesSelect.value;
+      filterSettings.country = countriesSelect.value;
+      filterSettings.radius = parseFloat(radiusInput.value);
+      filterModal.style.display = 'none'; // Close the modal
+      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
+    });
 
-  applyFilterBtn.addEventListener('click', () => {
-    filterSettings.league = leaguesSelect.value;
-    filterSettings.country = countriesSelect.value;
-    filterSettings.radius = parseFloat(radiusInput.value);
-    filterModal.style.display = 'none'; // Close the modal
-    updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
   });
 
   // Function to calculate straight-line distance
