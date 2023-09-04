@@ -156,6 +156,30 @@ color: white;}
   height: 4em;
 }
 
+.filter-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: #fff;
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.close {
+  cursor: pointer;
+}
 
 
 </style>
@@ -194,6 +218,27 @@ color: white;}
   <span id="date-display">Today</span>
   <input type="date" id="hidden-date-picker" style="display: none;">
   <button id="next-day" class="date-arrow">&#9654;</button> <!-- Right arrow -->
+</div>
+<!-- Filter Button -->
+<button id="filterButton" class="filter-button">Filter</button>
+
+<!-- Filter Modal -->
+<div id="filterModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Filter Options</h2>
+
+    <label for="leagues">Select League:</label>
+    <select id="leagues"></select>
+
+    <label for="countries">Select Country:</label>
+    <select id="countries"></select>
+
+    <label for="radius">Select Radius (in km):</label>
+    <input type="number" id="radius" min="0" />
+
+    <button id="applyFilter">Apply Filter</button>
+  </div>
 </div>
 
 
@@ -449,6 +494,56 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
 
 
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const filterButton = document.getElementById('filterButton');
+    const filterModal = document.getElementById('filterModal');
+    const closeBtn = document.querySelector('.close');
+    const applyFilterBtn = document.getElementById('applyFilter');
+    const leaguesSelect = document.getElementById('leagues');
+    const countriesSelect = document.getElementById('countries');
+    const radiusInput = document.getElementById('radius');
+
+    // Populate leagues and countries select (replace with your actual data)
+    // Assuming you have an array of leagues and countries
+    // const allLeagues = [...];
+    // const allCountries = [...];
+    allLeagues.forEach((league) => {
+      const option = document.createElement('option');
+      option.value = league.id;
+      option.text = league.name;
+      leaguesSelect.appendChild(option);
+    });
+
+    allCountries.forEach((country) => {
+      const option = document.createElement('option');
+      option.value = country;
+      option.text = country;
+      countriesSelect.appendChild(option);
+    });
+
+    // Open Modal
+    filterButton.addEventListener('click', () => {
+      filterModal.style.display = 'block';
+    });
+
+    // Close Modal
+    closeBtn.addEventListener('click', () => {
+      filterModal.style.display = 'none';
+    });
+
+    // Apply Filter
+    applyFilterBtn.addEventListener('click', () => {
+      const selectedLeague = leaguesSelect.value;
+      const selectedCountry = countriesSelect.value;
+      const selectedRadius = Number(radiusInput.value);
+
+      // Implement your filter logic here
+      // ...
+
+      // Close the modal
+      filterModal.style.display = 'none';
+    });
+  });
 
 
  var navBar = document.querySelector(".nav");
