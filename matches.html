@@ -205,6 +205,7 @@ color: white;}
 let clubs = [];
 let allFixtures = [];
 // Fetch the CSV file
+/*
 fetch('teams.csv')
   .then((response) => response.text())
   .then((csvString) => {
@@ -248,7 +249,7 @@ fetch('teams.csv')
     console.error('An error occurred while fetching the CSV file:', error);
   });
 
-
+*/
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -268,13 +269,10 @@ fetch('teams.csv')
         // Parse the CSV string
         Papa.parse(csvString, {
           header: true,
-          delimiter: ';', // Specify the field delimiter as semi-colon
+          delimiter: ';', // Specify the field delimiter as a semi-colon
           skipEmptyLines: true,
           complete: function (results) {
             allFixtures = results.data.map(row => {
-              const homeTeam = clubs.find(club => club.clubID == row.Home_ID);
-              const awayTeam = clubs.find(club => club.clubID == row.Away_ID);
-
               return {
                 date: row.Date.split(" ")[0],  // Only get the date without the time
                 startingAt: row.Starting_At,  // Start time
@@ -284,9 +282,10 @@ fetch('teams.csv')
                 leagueID: row.League_ID,
                 leagueName: row.League_Name,
                 leagueCountry: row.League_Country,
-                homeTeam: homeTeam || { clubName: row.Home_Name, clubImageName: row.Home_Logo },
+                leagueLogo: row.League_Logo,  // Added this new field
+                homeTeam: { clubName: row.Home_Name, clubImageName: row.Home_Logo },
                 homeWinner: row.Home_Winner === "WAAR",
-                awayTeam: awayTeam || { clubName: row.Away_Name, clubImageName: row.Away_Logo },
+                awayTeam: { clubName: row.Away_Name, clubImageName: row.Away_Logo },
                 awayWinner: row.Away_Winner === "ONWAAR",
                 goalsHome: row.Goals_Home,
                 goalsAway: row.Goals_Away,
@@ -304,6 +303,7 @@ fetch('teams.csv')
       })
       .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
   }
+
 
   loadFixtures();
 
@@ -342,88 +342,87 @@ fetch('teams.csv')
 
 
 
-function updateMatchesForDate(selectedDate) {
-  // Filter the matches for the selected date
-  const filteredMatches = allFixtures.filter(match => match.date === selectedDate);
+  function updateMatchesForDate(selectedDate) {
+    // Filter the matches for the selected date
+    const filteredMatches = allFixtures.filter(match => match.date === selectedDate);
 
-  // Clear the current matches
-  document.getElementById('matchContainer').innerHTML = '';
+    // Clear the current matches
+    document.getElementById('matchContainer').innerHTML = '';
 
-  // Display the new matches
-  displayMatches(filteredMatches);
-}
-// Function to display matches
-function displayMatches(matches) {
-  const matchContainer = document.getElementById('matchContainer');
-  matchContainer.innerHTML = ''; // Clear previous matches
+    // Display the new matches
+    displayMatches(filteredMatches);
+  }
 
-  // Group the matches by league
-  const matchesByLeague = {};
-  matches.forEach(match => {
-    const leagueID = match.leagueID;
-    if (!matchesByLeague[leagueID]) {
-      matchesByLeague[leagueID] = [];
-    }
-    matchesByLeague[leagueID].push(match);
-  });
+  // Function to display matches
+  function displayMatches(matches) {
+    const matchContainer = document.getElementById('matchContainer');
+    matchContainer.innerHTML = ''; // Clear previous matches
 
-  // Create a div for each league and add its matches
-  for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
-    const leagueDiv = document.createElement('div');
-    leagueDiv.className = 'league';
-
-    const leagueInfo = document.createElement('div');
-    leagueInfo.className = 'leagueInfo';
-
-    const leagueLogo = document.createElement('img');
-    const leagueDetails = clubs.find(club => club.leagueID === leagueID);
-    leagueLogo.src = leagueDetails.leagueImage;
-    leagueLogo.className = 'leagueLogo';
-
-    const leagueName = document.createElement('h2');
-    leagueName.textContent = leagueDetails ? leagueDetails.leagueName : 'Unknown League';
-
-    leagueInfo.appendChild(leagueLogo);
-    leagueInfo.appendChild(leagueName);
-    leagueDiv.appendChild(leagueInfo);
-
-    leagueMatches.forEach(match => {
-      const matchDiv = document.createElement('div');
-      matchDiv.className = 'match';
-
-      const homeLogo = document.createElement('img');
-      homeLogo.src = match.homeTeam.clubImageName;
-      homeLogo.className = 'homeLogo';
-
-      const awayLogo = document.createElement('img');
-      awayLogo.src = match.awayTeam.clubImageName;
-      awayLogo.className = 'awayLogo';
-
-      const timeDiv = document.createElement('div');
-timeDiv.className = 'matchTime';
-const matchDate = new Date(match.time);
-const formattedTime = `${matchDate.getHours()}:${matchDate.getMinutes().toString().padStart(2, '0')}  UTC`;
-timeDiv.textContent = formattedTime;
-
-      const homeName = document.createElement('div');
-      homeName.className = 'homeName';
-      homeName.textContent = match.homeTeam.clubName;
-
-      const awayName = document.createElement('div');
-      awayName.className = 'awayName';
-      awayName.textContent = match.awayTeam.clubName;
-
-      matchDiv.appendChild(homeLogo);
-      matchDiv.appendChild(homeName);
-      matchDiv.appendChild(timeDiv);
-      matchDiv.appendChild(awayName);
-      matchDiv.appendChild(awayLogo);
-      leagueDiv.appendChild(matchDiv);
+    // Group the matches by league
+    const matchesByLeague = {};
+    matches.forEach(match => {
+      const leagueID = match.leagueID;
+      if (!matchesByLeague[leagueID]) {
+        matchesByLeague[leagueID] = [];
+      }
+      matchesByLeague[leagueID].push(match);
     });
 
-    matchContainer.appendChild(leagueDiv);
+    // Create a div for each league and add its matches
+    for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
+      const leagueDiv = document.createElement('div');
+      leagueDiv.className = 'league';
+
+      const leagueInfo = document.createElement('div');
+      leagueInfo.className = 'leagueInfo';
+
+      const leagueLogo = document.createElement('img');
+      leagueLogo.src = leagueMatches[0].leagueLogo;  // Assuming all matches in the same league have the same logo
+      leagueLogo.className = 'leagueLogo';
+
+      const leagueName = document.createElement('h2');
+      leagueName.textContent = leagueMatches[0].leagueName;  // Assuming all matches in the same league have the same name
+
+      leagueInfo.appendChild(leagueLogo);
+      leagueInfo.appendChild(leagueName);
+      leagueDiv.appendChild(leagueInfo);
+
+      leagueMatches.forEach(match => {
+        const matchDiv = document.createElement('div');
+        matchDiv.className = 'match';
+
+        const homeLogo = document.createElement('img');
+        homeLogo.src = match.homeTeam.clubImageName;
+        homeLogo.className = 'homeLogo';
+
+        const awayLogo = document.createElement('img');
+        awayLogo.src = match.awayTeam.clubImageName;
+        awayLogo.className = 'awayLogo';
+
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'matchTime';
+        timeDiv.textContent = match.startingAt + " " + match.timezone;  // Using startingAt and timezone directly from the fixture data
+
+        const homeName = document.createElement('div');
+        homeName.className = 'homeName';
+        homeName.textContent = match.homeTeam.clubName;
+
+        const awayName = document.createElement('div');
+        awayName.className = 'awayName';
+        awayName.textContent = match.awayTeam.clubName;
+
+        matchDiv.appendChild(homeLogo);
+        matchDiv.appendChild(homeName);
+        matchDiv.appendChild(timeDiv);
+        matchDiv.appendChild(awayName);
+        matchDiv.appendChild(awayLogo);
+        leagueDiv.appendChild(matchDiv);
+      });
+
+      matchContainer.appendChild(leagueDiv);
+    }
   }
-}
+
 
 
 
