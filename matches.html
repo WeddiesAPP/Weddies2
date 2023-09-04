@@ -7,12 +7,6 @@
   <meta name="description" content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
   <link rel="icon" href="Weddies-bg.png" type="image/x-icon">
   <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-
 <style>
 
 
@@ -190,12 +184,6 @@ color: white;}
   cursor: pointer;
 }
 
-.img-logo, .img-flag {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-  border-radius: 50%;
-}
 
 
 </style>
@@ -244,14 +232,11 @@ color: white;}
     <span class="close">&times;</span>
     <h2>Filter Options</h2>
 
+    <label for="leagues">Select League:</label>
+    <select id="leagues"  multiple></select>
 
-        <label for="leagues">Select leagues:</label>
-        <select id="leagues" multiple="multiple"></select>
-
-
-    <label for="countries">Select countries:</label>
-    <select id="countries" multiple="multiple"></select>
-
+    <label for="countries">Select Country:</label>
+    <select id="countries"  multiple></select>
 
     <label for="radius">Select Radius (in km):</label>
     <input type="number" id="radius" min="0" />
@@ -392,84 +377,43 @@ let userLocation;
 
     // Inside your populateDropdowns function
     function populateDropdowns() {
-  const leaguesSelect = document.getElementById("leagues");
-  const countriesSelect = document.getElementById("countries");
-  // Clear previous options
-  leaguesSelect.innerHTML = '';
-  countriesSelect.innerHTML = '';
+      const leaguesSelect = document.getElementById("leagues");
+      const countriesSelect = document.getElementById("countries");
+      const leagues = new Set();
+      const countries = new Set();
 
-  const leagues = new Set();
-  const countries = new Set();
+      allFixtures.forEach(fixture => {
+        if (fixture.date === hiddenDatePicker.value) {
+          leagues.add(fixture.leagueName);
+          countries.add(fixture.leagueCountry);
+        }
+      });
 
-  allFixtures.forEach(fixture => {
-    if (fixture.date === hiddenDatePicker.value) {
-      leagues.add({name: fixture.leagueName, logo: fixture.leagueLogo});
-      countries.add({name: fixture.leagueCountry, flag: fixture.countryFlag});
+      leagues.forEach(league => {
+        const option = new Option(league, league);
+        leaguesSelect.add(option);
+      });
+
+      countries.forEach(country => {
+        const option = new Option(country, country);
+        countriesSelect.add(option);
+      });
+
+      // If leagueFilter or countryFilter are empty, populate them
+      if (!leagueFilter || leagueFilter.size === 0) {
+        leagueFilter = new Set(leagues);
+      }
+
+      if (!countryFilter || countryFilter.size === 0) {
+        countryFilter = new Set(countries);
+      }
     }
-  });
-
-  // Populate leagues
-  leagues.forEach(league => {
-    const option = new Option(league.name, league.name);
-    option.dataset.logo = league.logo;
-    leaguesSelect.add(option);
-  });
-
-  $(leaguesSelect).select2({
-    templateResult: formatLeague,
-    templateSelection: formatLeague
-  });
-
-  // Populate countries
-  countries.forEach(country => {
-    const option = new Option(country.name, country.name);
-    option.dataset.flag = country.flag;
-    countriesSelect.add(option);
-  });
-
-  $(countriesSelect).select2({
-    templateResult: formatCountry,
-    templateSelection: formatCountry
-  });
-
-  // If leagueFilter or countryFilter is empty, populate it
-  if (!leagueFilter || leagueFilter.size === 0) {
-    leagueFilter = new Set(leagues);
-  }
-
-  if (!countryFilter || countryFilter.size === 0) {
-    countryFilter = new Set(countries);
-  }
-}
-
-// Function to display the league logo alongside the league name
-function formatLeague(league) {
-  if (!league.id) {
-    return league.text;
-  }
-  const logoUrl = league.element.dataset.logo;
-  return $(
-    `<span><img src="${logoUrl}" class="img-logo" /> ${league.text}</span>`
-  );
-}
-
-// Function to display the country flag alongside the country name
-function formatCountry(country) {
-  if (!country.id) {
-    return country.text;
-  }
-  const flagUrl = country.element.dataset.flag;
-  return $(
-    `<span><img src="${flagUrl}" class="img-flag" /> ${country.text}</span>`
-  );
-}
-
 
 
 
   const applyFilterBtn = document.getElementById('applyFilter');  // Make sure you have an element with id="applyFilterBtn" in your HTML
-  const leaguesSelect = document.getElementById('leagues');    // id="leaguesSelect"
-  const countriesSelect = document.getElementById('countries');// id="countriesSelect"
+  const leaguesSelect = document.getElementById('leaguesSelect');    // id="leaguesSelect"
+  const countriesSelect = document.getElementById('countriesSelect');// id="countriesSelect"
   const radiusInput = document.getElementById('radiusInput');        // id="radiusInput"
   const filterModal = document.getElementById('filterModal');        // id="filterModal"
 
