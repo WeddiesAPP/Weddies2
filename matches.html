@@ -404,9 +404,14 @@ fetch('teams.csv')
           if (match.statusShort === 'LIVE') {
             timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n LIVE`;
           } else {
-            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n ${match.statusShort} ${match.statusElapsed}'`;
+            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway}`;
+            if (match.statusElapsed && match.statusElapsed > 0) {
+
+              timeDiv.appendChild(document.createTextNode(`${match.statusShort}`));
+                timeDiv.appendChild(document.createElement('br'));
+                  timeDiv.appendChild(document.createTextNode(`${match.statusElapsed}'`));
+            }
           }
-          
         } else {
           timeDiv.textContent = match.startingAt + ' ' + match.timezone;
         }
@@ -430,7 +435,6 @@ fetch('teams.csv')
       matchContainer.appendChild(leagueDiv);
     }
   }
-
 
 
 
