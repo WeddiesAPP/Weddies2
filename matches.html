@@ -548,13 +548,11 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const filterModal = document.getElementById("filterModal");
     const closeButton = document.querySelector(".close");
 
-    // Add definitions for these, or make sure they're defined somewhere
     const leaguesSelect = document.getElementById("leagues");
     const countriesSelect = document.getElementById("countries");
     const radiusInput = document.getElementById("radius");
     const hiddenDatePicker = document.getElementById("hidden-date-picker");
 
-    // Debugging line
     console.log(leaguesSelect, countriesSelect, radiusInput, hiddenDatePicker);
 
     if (filterButton) {
@@ -571,26 +569,23 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
     const applyFilterBtn = document.getElementById("applyFilter");
 
-  if (applyFilterBtn) {
-    applyFilterBtn.addEventListener('click', () => {
-      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+    if (applyFilterBtn) {
+      applyFilterBtn.addEventListener('click', () => {
+        const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+        const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-      // Populate your existing filter variables
-      leagueFilter = new Set(selectedLeagues);
-      countryFilter = new Set(selectedCountries);
-      radiusFilter = parseFloat(radiusInput.value);
+        leagueFilter = new Set(selectedLeagues);
+        countryFilter = new Set(selectedCountries);
+        radiusFilter = parseFloat(radiusInput.value);
 
-      filterModal.style.display = 'none'; // Close the modal
-      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
-
+        filterModal.style.display = 'none';
+        updateMatchesForDate(hiddenDatePicker.value);
+      });
+    }
   });
-}
 
-
-  // Function to calculate straight-line distance
   function distanceFromUser(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Earth radius in km
+    const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
 
@@ -603,24 +598,24 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     return d;
   }
 
- var navBar = document.querySelector(".nav");
+  var navBar = document.querySelector(".nav");
   navBar.style.display = "flex";
-  const navigation_items_elms = document.querySelectorAll(
-  ".navigation-bar .list-items .item"
-);
-const navigation_pointer = document.querySelector(".navigation-bar .pointer");
 
-navigation_items_elms.forEach((item, index) => {
-  item.addEventListener("click", (e) => {
-    e.preventDefault();
-    navigation_items_elms.forEach((itm) => itm.classList.remove("active"));
-    item.classList.add("active");
+  const navigation_items_elms = document.querySelectorAll(".navigation-bar .list-items .item");
+  const navigation_pointer = document.querySelector(".navigation-bar .pointer");
 
-    const parentWidth = item.parentElement.clientWidth;
-    const lefPercent = (parentWidth / navigation_items_elms.length) * index;
-    navigation_pointer.style.left = lefPercent + "px";
+  navigation_items_elms.forEach((item, index) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigation_items_elms.forEach((itm) => itm.classList.remove("active"));
+      item.classList.add("active");
+
+      const parentWidth = item.parentElement.clientWidth;
+      const leftPercent = (parentWidth / navigation_items_elms.length) * index;
+      navigation_pointer.style.left = leftPercent + "px";
+    });
   });
-});
+
 </script>
 
 </html>
