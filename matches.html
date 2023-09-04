@@ -166,20 +166,24 @@ color: white;}
 .modal {
   display: none;
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  background-color: #fff;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
+  background-color: #fff;
+  margin: auto;
   padding: 20px;
+  width: 50%;
 }
 
 .close {
   cursor: pointer;
 }
+
 
 
 </style>
@@ -362,12 +366,21 @@ fetch('teams.csv')
   // Don't forget to actually call loadFixtures at some point
   loadFixtures();
 
+
+
+
   dateContainer.addEventListener('click', function(event) {
     if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
       hiddenDatePicker.focus();
       hiddenDatePicker.click();
     }
   });
+
+  let filterSettings = {
+  league: null,
+  country: null,
+  radius: null,
+};
 
   hiddenDatePicker.addEventListener('change', function() {
     const selectedDate = this.value;
@@ -394,15 +407,16 @@ fetch('teams.csv')
   }
 
   function updateMatchesForDate(selectedDate) {
-    // Filter the matches for the selected date
-    const filteredMatches = allFixtures.filter(fixture => fixture.date === selectedDate);
+  let filteredMatches = allFixtures.filter(fixture => {
+    return fixture.date === selectedDate &&
+           (!filterSettings.league || filterSettings.league === fixture.leagueID) &&
+           (!filterSettings.country || filterSettings.country === fixture.leagueCountry) &&
+           (!filterSettings.radius || distanceFromUser(0, 0, fixture.latitude, fixture.longitude) <= filterSettings.radius); // Replace (0,0) with actual user coordinates
+  });
 
-    // Clear the current matches
-    document.getElementById('matchContainer').innerHTML = '';
+  displayMatches(filteredMatches);
+}
 
-    // Display the new matches
-    displayMatches(filteredMatches);
-  }
 
   function displayMatches(matches) {
     const matchContainer = document.getElementById('matchContainer');
@@ -493,58 +507,28 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
 
 
-
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const filterButton = document.getElementById('filterButton');
-    const filterModal = document.getElementById('filterModal');
-    const closeBtn = document.querySelector('.close');
-    const applyFilterBtn = document.getElementById('applyFilter');
-    const leaguesSelect = document.getElementById('leagues');
-    const countriesSelect = document.getElementById('countries');
-    const radiusInput = document.getElementById('radius');
-
-    // Populate leagues and countries select (replace with your actual data)
-    // Assuming you have an array of leagues and countries
-    // const allLeagues = [...];
-    // const allCountries = [...];
-    allLeagues.forEach((league) => {
-      const option = document.createElement('option');
-      option.value = league.id;
-      option.text = league.name;
-      leaguesSelect.appendChild(option);
-    });
-
-    allCountries.forEach((country) => {
-      const option = document.createElement('option');
-      option.value = country;
-      option.text = country;
-      countriesSelect.appendChild(option);
-    });
-
-    // Open Modal
-    filterButton.addEventListener('click', () => {
-      filterModal.style.display = 'block';
-    });
-
-    // Close Modal
-    closeBtn.addEventListener('click', () => {
-      filterModal.style.display = 'none';
-    });
-
-    // Apply Filter
-    applyFilterBtn.addEventListener('click', () => {
-      const selectedLeague = leaguesSelect.value;
-      const selectedCountry = countriesSelect.value;
-      const selectedRadius = Number(radiusInput.value);
-
-      // Implement your filter logic here
-      // ...
-
-      // Close the modal
-      filterModal.style.display = 'none';
-    });
+  applyFilterBtn.addEventListener('click', () => {
+    filterSettings.league = leaguesSelect.value;
+    filterSettings.country = countriesSelect.value;
+    filterSettings.radius = parseFloat(radiusInput.value);
+    filterModal.style.display = 'none'; // Close the modal
+    updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
   });
 
+  // Function to calculate straight-line distance
+  function distanceFromUser(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c;
+
+    return d;
+  }
 
  var navBar = document.querySelector(".nav");
   navBar.style.display = "flex";
