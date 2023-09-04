@@ -404,7 +404,7 @@ fetch('teams.csv')
           timeDiv.appendChild(document.createTextNode(`${match.statusShort}`));
         } else if (match.statusShort === '1H' || match.statusShort === '2H' || match.statusShort === 'LIVE' || match.statusShort === 'BT' || match.statusShort === 'INT') {
           if (match.statusShort === 'LIVE') {
-            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n LIVE`;
+            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway}  LIVE`;
           } else {
             timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway}`;
             if (match.statusElapsed && match.statusElapsed > 0) {
