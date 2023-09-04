@@ -435,26 +435,23 @@ let radiusFilter = null;
   }
 
   function updateMatchesForDate(date) {
-  // Your matches container in HTML
   const matchesDisplay = document.getElementById("matchContainer");
 
   // Clear previous matches
   matchesDisplay.innerHTML = "";
 
   // Filtering
-
   let filteredMatches = allFixtures.filter(match => {
     // Filter by date
     return match.date === date &&
-      // Filter by selected leagues OR selected countries
-      (filterSettings.league.includes(match.leagueName) || filterSettings.country.includes(match.leagueCountry));
+      // Replace filterSettings with your existing variables
+      (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry));
   });
 
-
-
-
+  // Continue the rest of the logic
   displayMatches(filteredMatches);
 }
+
 
 
   function displayMatches(matches) {
@@ -574,19 +571,19 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
     const applyFilterBtn = document.getElementById("applyFilter");
 
-      if (applyFilterBtn) {
-        applyFilterBtn.addEventListener('click', () => {
-          const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-          const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+  if (applyFilterBtn) {
+    applyFilterBtn.addEventListener('click', () => {
+      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-          filterSettings.league = selectedLeagues;
-          filterSettings.country = selectedCountries;
-          filterSettings.radius = parseFloat(radiusInput.value);
+      // Populate your existing filter variables
+      leagueFilter = new Set(selectedLeagues);
+      countryFilter = new Set(selectedCountries);
+      radiusFilter = parseFloat(radiusInput.value);
 
-          filterModal.style.display = 'none'; // Close the modal
-          updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
-        });
-      }
+      filterModal.style.display = 'none'; // Close the modal
+      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
+
   });
 
 
