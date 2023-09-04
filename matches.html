@@ -296,6 +296,13 @@ fetch('teams.csv')
                 halftimeAway: parseFloat(row.Score_Halftime_Away),
                 fulltimeHome: parseFloat(row.Score_Fulltime_Home),
                 fulltimeAway: parseFloat(row.Score_Fulltime_Away),
+                homeTeam: {
+                  clubImageName: row.Home_Logo,
+                  clubName: row.Home_Name  // Add this line
+                },
+                awayTeam: {
+                  clubImageName: row.Away_Logo,
+                  clubName: row.Away_Name  // Add this line
               };
             });
             console.log(allFixtures); // Check if the data is parsed correctly
@@ -418,13 +425,14 @@ fetch('teams.csv')
           timeDiv.textContent = match.startingAt + ' ' + match.timezone;
         }
 
-        const homeName = document.createElement('div');
-        homeName.className = 'homeName';
-        homeName.textContent = match.homeTeam.clubName;
+        cconst homeName = document.createElement('div');
+homeName.className = 'homeName';
+homeName.textContent = match.homeTeam.clubName;  // Use the clubName here
 
-        const awayName = document.createElement('div');
-        awayName.className = 'awayName';
-        awayName.textContent = match.awayTeam.clubName;
+const awayName = document.createElement('div');
+awayName.className = 'awayName';
+awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
+
 
         matchDiv.appendChild(homeLogo);
         matchDiv.appendChild(homeName);
