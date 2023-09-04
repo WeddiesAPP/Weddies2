@@ -300,9 +300,9 @@ fetch('teams.csv')
   });
 
 */
-
 let leagueFilter = new Set();
 let countryFilter = new Set();
+let radiusFilter = null;
 
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
@@ -360,11 +360,8 @@ let countryFilter = new Set();
             console.log(allFixtures); // Check if the data is parsed correctly
 
             // Call your existing function to update the matches with the parsed data
-
+            updateMatchesForDate(formattedToday);
             populateDropdowns();
-
-              updateMatchesForDate(formattedToday);
-
           },
         });
       })
@@ -374,41 +371,29 @@ let countryFilter = new Set();
   // Don't forget to actually call loadFixtures at some point
   loadFixtures();
 
+  function populateDropdowns() {
+   const leaguesSelect = document.getElementById("leagues");
+   const countriesSelect = document.getElementById("countries");
+   const leagues = new Set();
+   const countries = new Set();
 
-    // Inside your populateDropdowns function
-    function populateDropdowns() {
-      const leaguesSelect = document.getElementById("leagues");
-      const countriesSelect = document.getElementById("countries");
-      const leagues = new Set();
-      const countries = new Set();
+   allFixtures.forEach(fixture => {
+     if (fixture.date === hiddenDatePicker.value) {
+       leagues.add(fixture.leagueName);
+       countries.add(fixture.leagueCountry);
+     }
+   });
 
-      allFixtures.forEach(fixture => {
-        if (fixture.date === hiddenDatePicker.value) {
-          leagues.add(fixture.leagueName);
-          countries.add(fixture.leagueCountry);
-        }
-      });
+   leagues.forEach(league => {
+     const option = new Option(league, league);
+     leaguesSelect.add(option);
+   });
 
-      leagues.forEach(league => {
-        const option = new Option(league, league);
-        leaguesSelect.add(option);
-      });
-
-      countries.forEach(country => {
-        const option = new Option(country, country);
-        countriesSelect.add(option);
-      });
-
-      // If leagueFilter or countryFilter are empty, populate them
-      if (!leagueFilter || leagueFilter.size === 0) {
-        leagueFilter = new Set(leagues);
-      }
-
-      if (!countryFilter || countryFilter.size === 0) {
-        countryFilter = new Set(countries);
-      }
-    }
-
+   countries.forEach(country => {
+     const option = new Option(country, country);
+     countriesSelect.add(option);
+   });
+ }
 
 
   const applyFilterBtn = document.getElementById('applyFilter');  // Make sure you have an element with id="applyFilterBtn" in your HTML
@@ -569,8 +554,8 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const radiusInput = document.getElementById("radius");
     const hiddenDatePicker = document.getElementById("hidden-date-picker");
 
-    // Select all options for leagues and countries by default
-
+    // Debugging line
+    console.log(leaguesSelect, countriesSelect, radiusInput, hiddenDatePicker);
 
     if (filterButton) {
       filterButton.addEventListener("click", function() {
@@ -586,20 +571,19 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
     const applyFilterBtn = document.getElementById("applyFilter");
 
-    if (applyFilterBtn) {
-      applyFilterBtn.addEventListener('click', () => {
-        const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-        const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+  if (applyFilterBtn) {
+    applyFilterBtn.addEventListener('click', () => {
+      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-        // Populate your existing filter variables
-        leagueFilter = selectedLeagues
-        countryFilter = selectedCountries;
-        radiusFilter = parseFloat(radiusInput.value);
+      // Populate your existing filter variables
+      leagueFilter = new Set(selectedLeagues);
+      countryFilter = new Set(selectedCountries);
+      radiusFilter = parseFloat(radiusInput.value);
 
-        filterModal.style.display = 'none'; // Close the modal
-        updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
-      });
-    }
+      filterModal.style.display = 'none'; // Close the modal
+      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
+
   });
 
 
