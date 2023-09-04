@@ -554,6 +554,24 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const radiusInput = document.getElementById("radius");
     const hiddenDatePicker = document.getElementById("hidden-date-picker");
 
+    // Select all options for leagues and countries by default
+  for (let option of leaguesSelect.options) {
+    option.selected = true;
+  }
+
+  for (let option of countriesSelect.options) {
+    option.selected = true;
+  }
+
+  // Set default value for radius (assuming you want to set it to, say, 100)
+  radiusInput.value = 100000;
+
+  // Populate initial filters
+  const initialLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+  const initialCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+  leagueFilter = new Set(initialLeagues);
+  countryFilter = new Set(initialCountries);
+  radiusFilter = parseFloat(radiusInput.value);
     // Debugging line
     console.log(leaguesSelect, countriesSelect, radiusInput, hiddenDatePicker);
 
