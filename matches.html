@@ -592,8 +592,9 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
         const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
         // Populate your existing filter variables
-        leagueFilter = selectedLeagues
-        countryFilter = selectedCountries;
+        leagueFilter = new Set(selectedLeagues);
+        countryFilter = new Set(selectedCountries);
+
         radiusFilter = parseFloat(radiusInput.value);
 
         filterModal.style.display = 'none'; // Close the modal
