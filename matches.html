@@ -296,7 +296,7 @@ fetch('teams.csv')
                 fulltimeAway: row.Score_Fulltime_Away
               };
             });
-
+            console.log(formattedToday);
             // Call your existing function to update the matches for today
             updateMatchesForDate(formattedToday);
           },
