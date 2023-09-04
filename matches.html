@@ -303,7 +303,7 @@ fetch('teams.csv')
 
 let leagueFilter = new Set();
 let countryFilter = new Set();
-
+let userLocation;
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -637,6 +637,22 @@ navigation_items_elms.forEach((item, index) => {
     navigation_pointer.style.left = lefPercent + "px";
   });
 });
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const userLocation = L.latLng(latitude, longitude);
+      },
+      (error) => {
+        console.error('Error retrieving location:', error);
+      }
+    );
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+  }
+}
+
 </script>
 
 </html>
