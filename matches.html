@@ -571,19 +571,20 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
     const applyFilterBtn = document.getElementById("applyFilter");
 
-  if (applyFilterBtn) {
-    applyFilterBtn.addEventListener('click', () => {
-      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+    if (applyFilterBtn) {
+      applyFilterBtn.addEventListener('click', () => {
+        const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+        const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-      // Populate your existing filter variables
-      leagueFilter = new Set(selectedLeagues);
-      countryFilter = new Set(selectedCountries);
-      radiusFilter = parseFloat(radiusInput.value);
+        // Populate your existing filter variables
+        leagueFilter = new Set(selectedLeagues);
+        countryFilter = new Set(selectedCountries);
+        radiusFilter = parseFloat(radiusInput.value);
 
-      filterModal.style.display = 'none'; // Close the modal
-      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
-
+        filterModal.style.display = 'none'; // Close the modal
+        updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
+      });
+    }
   });
 
 
