@@ -303,7 +303,7 @@ fetch('teams.csv')
 
 let leagueFilter = new Set();
 let countryFilter = new Set();
-let userLocation;
+
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -592,9 +592,8 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
         const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
         // Populate your existing filter variables
-        leagueFilter = new Set(selectedLeagues);
-        countryFilter = new Set(selectedCountries);
-
+        leagueFilter = selectedLeagues
+        countryFilter = selectedCountries;
         radiusFilter = parseFloat(radiusInput.value);
 
         filterModal.style.display = 'none'; // Close the modal
@@ -637,22 +636,6 @@ navigation_items_elms.forEach((item, index) => {
     navigation_pointer.style.left = lefPercent + "px";
   });
 });
-function getUserLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const userLocation = L.latLng(latitude, longitude);
-      },
-      (error) => {
-        console.error('Error retrieving location:', error);
-      }
-    );
-  } else {
-    console.error('Geolocation is not supported by this browser.');
-  }
-}
-
 </script>
 
 </html>
