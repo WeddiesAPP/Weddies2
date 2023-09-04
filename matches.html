@@ -300,9 +300,7 @@ fetch('teams.csv')
   });
 
 */
-let leagueFilter = new Set();
-let countryFilter = new Set();
-let radiusFilter = null;
+
 
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
@@ -360,8 +358,16 @@ let radiusFilter = null;
             console.log(allFixtures); // Check if the data is parsed correctly
 
             // Call your existing function to update the matches with the parsed data
-            updateMatchesForDate(formattedToday);
+
             populateDropdowns();
+            const selectAllOptions = (selectElement) => {
+              const values = Array.from(selectElement.options).map(option => option.value);
+              Array.from(selectElement.options).forEach(option => option.selected = true);
+              return new Set(values);
+            };
+            let leagueFilter = selectAllOptions(leaguesSelect);
+            let countryFilter = selectAllOptions(countriesSelect);
+            updateMatchesForDate(formattedToday);
           },
         });
       })
@@ -555,30 +561,7 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const hiddenDatePicker = document.getElementById("hidden-date-picker");
 
     // Select all options for leagues and countries by default
-    if (leaguesSelect && leaguesSelect.options && leaguesSelect.options.length > 0) {
-        for (let option of leaguesSelect.options) {
-          option.selected = true;
-        }
-      }
 
-      if (countriesSelect && countriesSelect.options && countriesSelect.options.length > 0) {
-        for (let option of countriesSelect.options) {
-          option.selected = true;
-        }
-      }
-
-      // Check again if options are actually selected
-      const initialLeagues = Array.from(leaguesSelect.selectedOptions || []).map(option => option.value);
-      const initialCountries = Array.from(countriesSelect.selectedOptions || []).map(option => option.value);
-
-      // Debug line to check the initial selections
-      console.log('Initial leagues:', initialLeagues);
-      console.log('Initial countries:', initialCountries);
-
-      leagueFilter = new Set(initialLeagues);
-      countryFilter = new Set(initialCountries);
-      radiusFilter = parseFloat(radiusInput.value);
-      updateMatchesForDate(hiddenDatePicker.value)
 
     if (filterButton) {
       filterButton.addEventListener("click", function() {
