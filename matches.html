@@ -360,14 +360,7 @@ fetch('teams.csv')
             // Call your existing function to update the matches with the parsed data
 
             populateDropdowns();
-            const selectAllOptions = (selectElement) => {
-              const values = Array.from(selectElement.options).map(option => option.value);
-              Array.from(selectElement.options).forEach(option => option.selected = true);
-              return new Set(values);
-            };
-            let leagueFilter = selectAllOptions(leaguesSelect);
-            let countryFilter = selectAllOptions(countriesSelect);
-            updateMatchesForDate(formattedToday);
+
           },
         });
       })
@@ -561,7 +554,14 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const hiddenDatePicker = document.getElementById("hidden-date-picker");
 
     // Select all options for leagues and countries by default
-
+    const selectAllOptions = (selectElement) => {
+      const values = Array.from(selectElement.options).map(option => option.value);
+      Array.from(selectElement.options).forEach(option => option.selected = true);
+      return new Set(values);
+    };
+    let leagueFilter = selectAllOptions(leaguesSelect);
+    let countryFilter = selectAllOptions(countriesSelect);
+    updateMatchesForDate(formattedToday);
 
     if (filterButton) {
       filterButton.addEventListener("click", function() {
