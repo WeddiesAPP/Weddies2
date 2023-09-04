@@ -399,7 +399,9 @@ fetch('teams.csv')
         timeDiv.className = 'matchTime';
 
         if (match.statusShort === 'FT') {
-          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n FT`;
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway}`;
+          timeDiv.appendChild(document.createElement('br'));
+          imeDiv.appendChild(document.createTextNode(`${match.statusShort}`));
         } else if (match.statusShort === '1H' || match.statusShort === '2H' || match.statusShort === 'LIVE' || match.statusShort === 'BT' || match.statusShort === 'INT') {
           if (match.statusShort === 'LIVE') {
             timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n LIVE`;
@@ -407,7 +409,7 @@ fetch('teams.csv')
             timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway}`;
             if (match.statusElapsed && match.statusElapsed > 0) {
                 timeDiv.appendChild(document.createElement('br'));
-            
+
 
                   timeDiv.appendChild(document.createTextNode(`${match.statusElapsed}'`));
             }
