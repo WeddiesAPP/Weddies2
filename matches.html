@@ -399,15 +399,14 @@ fetch('teams.csv')
         timeDiv.className = 'matchTime';
 
         if (match.statusShort === 'FT') {
-          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} FT\nFinal Score`;
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n FT`;
         } else if (match.statusShort === '1H' || match.statusShort === '2H' || match.statusShort === 'LIVE' || match.statusShort === 'BT' || match.statusShort === 'INT') {
           if (match.statusShort === 'LIVE') {
-            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} LIVE`;
+            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n LIVE`;
           } else {
-            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort} ${match.statusElapsed}'`;
+            timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} \n ${match.statusShort} ${match.statusElapsed}'`;
           }
-          timeDiv.appendChild(document.createElement('br'));
-          timeDiv.appendChild(document.createTextNode(match.statusLong));
+          
         } else {
           timeDiv.textContent = match.startingAt + ' ' + match.timezone;
         }
