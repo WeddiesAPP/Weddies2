@@ -356,9 +356,8 @@ fetch('teams.csv')
   // Function to display matches
   function displayMatches(matches) {
     const matchContainer = document.getElementById('matchContainer');
-    matchContainer.innerHTML = ''; // Clear previous matches
+    matchContainer.innerHTML = '';
 
-    // Group the matches by league
     const matchesByLeague = {};
     matches.forEach(match => {
       const leagueID = match.leagueID;
@@ -368,7 +367,6 @@ fetch('teams.csv')
       matchesByLeague[leagueID].push(match);
     });
 
-    // Create a div for each league and add its matches
     for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
       const leagueDiv = document.createElement('div');
       leagueDiv.className = 'league';
@@ -377,11 +375,11 @@ fetch('teams.csv')
       leagueInfo.className = 'leagueInfo';
 
       const leagueLogo = document.createElement('img');
-      leagueLogo.src = leagueMatches[0].leagueLogo;  // Assuming all matches in the same league have the same logo
+      leagueLogo.src = leagueMatches[0].leagueLogo;
       leagueLogo.className = 'leagueLogo';
 
       const leagueName = document.createElement('h2');
-      leagueName.textContent = leagueMatches[0].leagueName;  // Assuming all matches in the same league have the same name
+      leagueName.textContent = leagueMatches[0].leagueName;
 
       leagueInfo.appendChild(leagueLogo);
       leagueInfo.appendChild(leagueName);
@@ -401,7 +399,27 @@ fetch('teams.csv')
 
         const timeDiv = document.createElement('div');
         timeDiv.className = 'matchTime';
-        timeDiv.textContent = match.startingAt + " " + match.timezone;  // Using startingAt and timezone directly from the fixture data
+
+        if (match.awayWinner === true || match.homeWinner === true) {
+          const homeGoals = document.createElement('span');
+          homeGoals.textContent = match.goalsHome;
+          const awayGoals = document.createElement('span');
+          awayGoals.textContent = match.goalsAway;
+
+          if (match.awayWinner === true) {
+            awayGoals.style.color = 'green';
+            homeGoals.style.color = 'red';
+          } else {
+            homeGoals.style.color = 'green';
+            awayGoals.style.color = 'red';
+          }
+
+          timeDiv.appendChild(homeGoals);
+          timeDiv.appendChild(document.createTextNode(' - '));
+          timeDiv.appendChild(awayGoals);
+        } else {
+          timeDiv.textContent = match.startingAt + " " + match.timezone;
+        }
 
         const homeName = document.createElement('div');
         homeName.className = 'homeName';
