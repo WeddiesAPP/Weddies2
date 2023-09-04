@@ -367,7 +367,11 @@ fetch('teams.csv')
   loadFixtures();
 
 
-
+  const applyFilterBtn = document.getElementById('applyFilterBtn');  // Make sure you have an element with id="applyFilterBtn" in your HTML
+  const leaguesSelect = document.getElementById('leaguesSelect');    // id="leaguesSelect"
+  const countriesSelect = document.getElementById('countriesSelect');// id="countriesSelect"
+  const radiusInput = document.getElementById('radiusInput');        // id="radiusInput"
+  const filterModal = document.getElementById('filterModal');        // id="filterModal"
 
   dateContainer.addEventListener('click', function(event) {
     if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
