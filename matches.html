@@ -442,8 +442,6 @@ let radiusFilter = null;
   matchesDisplay.innerHTML = "";
 
   // Filtering
-  function updateMatchesForDate(date) {
-  // Assume matchesDisplay and allFixtures are defined
 
   let filteredMatches = allFixtures.filter(match => {
     // Filter by date
@@ -451,7 +449,6 @@ let radiusFilter = null;
       // Filter by selected leagues OR selected countries
       (filterSettings.league.includes(match.leagueName) || filterSettings.country.includes(match.leagueCountry));
   });
-
 
 
 
@@ -575,20 +572,21 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
       });
     }
 
-    applyFilterBtn.addEventListener('click', () => {
-      // Get multiple selected options for leagues
-      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-      // Get multiple selected options for countries
-      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+    const applyFilterBtn = document.getElementById("applyFilter");
 
-      filterSettings.league = selectedLeagues;
-      filterSettings.country = selectedCountries;
-      filterSettings.radius = parseFloat(radiusInput.value);
+      if (applyFilterBtn) {
+        applyFilterBtn.addEventListener('click', () => {
+          const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+          const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-      filterModal.style.display = 'none';
-      updateMatchesForDate(hiddenDatePicker.value);
-    });
+          filterSettings.league = selectedLeagues;
+          filterSettings.country = selectedCountries;
+          filterSettings.radius = parseFloat(radiusInput.value);
 
+          filterModal.style.display = 'none'; // Close the modal
+          updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
+        });
+      }
   });
 
 
