@@ -286,9 +286,15 @@ fetch('teams.csv')
                 leagueName: row.League_Name,
                 leagueCountry: row.League_Country,
                 leagueLogo: row.League_Logo,
-                homeTeam: { clubImageName: row.Home_Logo },
+                homeTeam: {
+                  clubImageName: row.Home_Logo,
+                  clubName: row.Home_Name  // Adding this line
+                },
                 homeWinner: row.Home_Winner === "True",
-                awayTeam: { clubImageName: row.Away_Logo },
+                awayTeam: {
+                  clubImageName: row.Away_Logo,
+                  clubName: row.Away_Name  // Adding this line
+                },
                 awayWinner: row.Away_Winner === "True",
                 goalsHome: parseFloat(row.Goals_Home),
                 goalsAway: parseFloat(row.Goals_Away),
@@ -296,13 +302,6 @@ fetch('teams.csv')
                 halftimeAway: parseFloat(row.Score_Halftime_Away),
                 fulltimeHome: parseFloat(row.Score_Fulltime_Home),
                 fulltimeAway: parseFloat(row.Score_Fulltime_Away),
-                homeTeam: {
-                  clubImageName: row.Home_Logo,
-                  clubName: row.Home_Name  // Add this line
-                },
-                awayTeam: {
-                  clubImageName: row.Away_Logo,
-                  clubName: row.Away_Name  // Add this line
               };
             });
             console.log(allFixtures); // Check if the data is parsed correctly
@@ -315,6 +314,7 @@ fetch('teams.csv')
       .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
   }
 
+  // Don't forget to actually call loadFixtures at some point
   loadFixtures();
 
   dateContainer.addEventListener('click', function(event) {
