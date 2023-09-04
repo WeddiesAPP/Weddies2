@@ -398,21 +398,12 @@ fetch('teams.csv')
         const timeDiv = document.createElement('div');
         timeDiv.className = 'matchTime';
 
-        if (match.awayWinner === true || match.homeWinner === true) {
-          const homeGoals = document.createElement('span');
-          homeGoals.textContent = match.goalsHome;
-          const awayGoals = document.createElement('span');
-          awayGoals.textContent = match.goalsAway;
-
-          timeDiv.appendChild(homeGoals);
-          timeDiv.appendChild(document.createTextNode(' - '));
-          timeDiv.appendChild(awayGoals);
+        if (match.statusShort === 'FT') {
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} FT`;
+        } else if (match.statusShort === '1H' || match.statusShort === '2H') {
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort} ${match.statusElapsed}'`;
         } else {
-          if (match.statusShort === '1H' || match.statusShort === '2H') {
-            timeDiv.textContent = match.statusShort + ' ' + match.statusElapsed + '\'';
-          } else {
-            timeDiv.textContent = match.startingAt + ' ' + match.timezone;
-          }
+          timeDiv.textContent = match.startingAt + ' ' + match.timezone;
         }
 
         const homeName = document.createElement('div');
@@ -434,6 +425,7 @@ fetch('teams.csv')
       matchContainer.appendChild(leagueDiv);
     }
   }
+
 
 
 
