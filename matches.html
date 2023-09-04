@@ -300,8 +300,8 @@ fetch('teams.csv')
   });
 
 */
-let leagueFilter = new Set();
-let countryFilter = new Set();
+let leaguesSelect = new Set();
+let countrySelect = new Set();
 let radiusFilter = null;
 
   let today = new Date();
@@ -574,8 +574,8 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
         const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
         const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-        leagueFilter = new Set(selectedLeagues);
-        countryFilter = new Set(selectedCountries);
+        leaguesSelect = new Set(selectedLeagues);
+        countrySelect = new Set(selectedCountries);
         radiusFilter = parseFloat(radiusInput.value);
 
         filterModal.style.display = 'none';
