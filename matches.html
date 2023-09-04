@@ -358,10 +358,10 @@ let radiusFilter = null;
               };
             });
             console.log(allFixtures); // Check if the data is parsed correctly
-
+            populateDropdowns();
             // Call your existing function to update the matches with the parsed data
             updateMatchesForDate(formattedToday);
-            populateDropdowns();
+
           },
         });
       })
@@ -397,8 +397,8 @@ let radiusFilter = null;
 
 
   const applyFilterBtn = document.getElementById('applyFilter');  // Make sure you have an element with id="applyFilterBtn" in your HTML
-  const leaguesSelect = document.getElementById('leaguesSelect');    // id="leaguesSelect"
-  const countriesSelect = document.getElementById('countriesSelect');// id="countriesSelect"
+  const leaguesSelect = document.getElementById('leagues');    // id="leaguesSelect"
+  const countriesSelect = document.getElementById('countries');// id="countriesSelect"
   const radiusInput = document.getElementById('radiusInput');        // id="radiusInput"
   const filterModal = document.getElementById('filterModal');        // id="filterModal"
 
