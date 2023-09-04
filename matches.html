@@ -511,6 +511,23 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
 
 
   document.addEventListener("DOMContentLoaded", function() {
+
+    const filterButton = document.getElementById("filterButton");
+  const filterModal = document.getElementById("filterModal");
+  const closeButton = document.querySelector(".close");
+
+  if (filterButton) {
+    filterButton.addEventListener("click", function() {
+      filterModal.style.display = "block";
+    });
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener("click", function() {
+      filterModal.style.display = "none";
+    });
+  }
+});
     applyFilterBtn.addEventListener('click', () => {
       filterSettings.league = leaguesSelect.value;
       filterSettings.country = countriesSelect.value;
@@ -518,6 +535,7 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
       filterModal.style.display = 'none'; // Close the modal
       updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
     });
+
 
   });
 
