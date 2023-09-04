@@ -124,8 +124,8 @@ border-radius: 25px;
   border: 2px solid white;}
 
 .leagueLogo {
-  width: auto;
-  height: 7vh;
+  width: 7vw;
+  height: auto;
   margin-right: 1vw;
 }
 
@@ -401,25 +401,25 @@ fetch('teams.csv')
         timeDiv.className = 'matchTime';
 
         if (match.awayWinner === true || match.homeWinner === true) {
-  const homeGoals = document.createElement('span');
-  homeGoals.textContent = match.goalsHome;
-  const awayGoals = document.createElement('span');
-  awayGoals.textContent = match.goalsAway;
+    const homeGoals = document.createElement('span');
+    homeGoals.textContent = match.goalsHome;
+    const awayGoals = document.createElement('span');
+    awayGoals.textContent = match.goalsAway;
 
-  if (match.awayWinner === true) {
-    awayGoals.style.color = 'green';
-    homeGoals.style.color = 'red';
-  } else if (match.homeWinner === true) {
-    homeGoals.style.color = 'green';
-    awayGoals.style.color = 'red';
+    if (match.awayWinner === true) {
+      awayGoals.style.color = 'green';
+      homeGoals.style.color = 'red';
+    } else if (match.homeWinner === true) {
+      homeGoals.style.color = 'green';
+      awayGoals.style.color = 'red';
+    }
+
+    timeDiv.appendChild(homeGoals);
+    timeDiv.appendChild(document.createTextNode(' - '));
+    timeDiv.appendChild(awayGoals);
+  } else {
+    timeDiv.textContent = match.startingAt + " " + match.timezone;
   }
-
-  timeDiv.appendChild(homeGoals);
-  timeDiv.appendChild(document.createTextNode(' - '));
-  timeDiv.appendChild(awayGoals);
-} else {
-  timeDiv.textContent = match.startingAt + " " + match.timezone;
-}
 
         const homeName = document.createElement('div');
         homeName.className = 'homeName';
