@@ -401,7 +401,7 @@ fetch('teams.csv')
         if (match.statusShort === 'FT') {
           timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} FT`;
         } else if (match.statusShort === '1H' || match.statusShort === '2H') {
-          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort} ${match.statusElapsed}'`;
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} '/n' ${match.statusShort}  ${match.statusElapsed}'`;
         } else {
           timeDiv.textContent = match.startingAt + ' ' + match.timezone;
         }
