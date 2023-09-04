@@ -308,7 +308,7 @@ fetch('teams.csv')
             console.log(allFixtures); // Check if the data is parsed correctly
 
             // Call your existing function to update the matches with the parsed data
-            // updateMatchesForDate(formattedToday);
+            updateMatchesForDate(formattedToday);
           },
         });
       })
@@ -422,15 +422,12 @@ fetch('teams.csv')
         timeDiv.appendChild(document.createTextNode(' - '));
         timeDiv.appendChild(awayGoals);
       } else {
-  if (match.statusShort === '1H' || match.statusShort === '2H') {
-    const statusLine = match.goalsHome + '-' + match.goalsAway + '\n' +
-                      match.statusShort + ' ' + match.statusElapsed + '\'';
-    timeDiv.textContent = statusLine;
-  } else {
-    timeDiv.textContent = match.startingAt + ' ' + match.timezone;
-  }
-}
-
+        if (match.statusShort === '1H' || match.statusShort === '2H') {
+          timeDiv.textContent = match.statusShort + ' ' + match.statusElapsed + '\'';
+        } else {
+          timeDiv.textContent = match.startingAt + ' ' + match.timezone;
+        }
+      }
 
       const homeName = document.createElement('div');
       homeName.className = 'homeName';
