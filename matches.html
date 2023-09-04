@@ -300,6 +300,10 @@ fetch('teams.csv')
   });
 
 */
+let leagueFilter = new Set();
+let countryFilter = new Set();
+let radiusFilter = null;
+
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -405,11 +409,6 @@ fetch('teams.csv')
     }
   });
 
-  let filterSettings = {
-  league: null,
-  country: null,
-  radius: null,
-};
 
   hiddenDatePicker.addEventListener('change', function() {
     const selectedDate = this.value;
@@ -435,13 +434,38 @@ fetch('teams.csv')
     updateMatchesForDate(newDate);
   }
 
-  function updateMatchesForDate(selectedDate) {
-  let filteredMatches = allFixtures.filter(fixture => {
-    return fixture.date === selectedDate &&
-           (!filterSettings.league || filterSettings.league === fixture.leagueID) &&
-           (!filterSettings.country || filterSettings.country === fixture.leagueCountry) &&
-           (!filterSettings.radius || distanceFromUser(0, 0, fixture.latitude, fixture.longitude) <= filterSettings.radius); // Replace (0,0) with actual user coordinates
+  function updateMatchesForDate(date) {
+  // Your matches container in HTML
+  const matchesDisplay = document.getElementById("matchesDisplay");
+
+  // Clear previous matches
+  matchesDisplay.innerHTML = "";
+
+  // Filtering
+  const filteredMatches = allFixtures.filter(match => {
+    let leagueMatch = true;
+    let countryMatch = true;
+    let radiusMatch = true;
+
+    if (leagueFilter.size > 0) {
+      leagueMatch = leagueFilter.has(match.leagueName);
+    }
+
+    if (countryFilter.size > 0) {
+      countryMatch = countryFilter.has(match.leagueCountry);
+    }
+
+    if (radiusFilter !== null) {
+      // Implement your logic for radius matching
+      // For this example, let's assume each fixture has a "distance" property.
+      // radiusMatch = match.distance <= radiusFilter;
+    }
+
+    return leagueMatch && countryMatch && radiusMatch;
   });
+
+  
+
 
   displayMatches(filteredMatches);
 }
@@ -538,32 +562,54 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
   document.addEventListener("DOMContentLoaded", function() {
 
     const filterButton = document.getElementById("filterButton");
-  const filterModal = document.getElementById("filterModal");
-  const closeButton = document.querySelector(".close");
+    const filterModal = document.getElementById("filterModal");
+    const closeButton = document.querySelector(".close");
 
+    // Add definitions for these, or make sure they're defined somewhere
+    const leaguesSelect = document.getElementById("leagues");
+    const countriesSelect = document.getElementById("countries");
+    const radiusInput = document.getElementById("radius");
+    const hiddenDatePicker = document.getElementById("hidden-date-picker");
 
-  if (filterButton) {
-    filterButton.addEventListener("click", function() {
-      filterModal.style.display = "block";
-    });
-  }
+    // Debugging line
+    console.log(leaguesSelect, countriesSelect, radiusInput, hiddenDatePicker);
 
-  if (closeButton) {
-    closeButton.addEventListener("click", function() {
-      filterModal.style.display = "none";
-    });
-  }
+    if (filterButton) {
+      filterButton.addEventListener("click", function() {
+        filterModal.style.display = "block";
+      });
+    }
+
+    if (closeButton) {
+      closeButton.addEventListener("click", function() {
+        filterModal.style.display = "none";
+      });
+    }
 
     applyFilterBtn.addEventListener('click', () => {
-      filterSettings.league = leaguesSelect.value;
-      filterSettings.country = countriesSelect.value;
-      filterSettings.radius = parseFloat(radiusInput.value);
-      filterModal.style.display = 'none'; // Close the modal
-      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches displayed
-    });
+    leagueFilter.clear();
+    countryFilter.clear();
+
+    if (leaguesSelect.value) {
+      leagueFilter.add(leaguesSelect.value);
+    }
+
+    if (countriesSelect.value) {
+      countryFilter.add(countriesSelect.value);
+    }
+
+    radiusFilter = radiusInput.value ? parseFloat(radiusInput.value) : null;
+
+    // Close the modal
+    filterModal.style.display = 'none';
+
+    // Update matches
+    updateMatchesForDate(hiddenDatePicker.value);
+  });
 
 
   });
+
 
   // Function to calculate straight-line distance
   function distanceFromUser(lat1, lon1, lat2, lon2) {
