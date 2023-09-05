@@ -303,7 +303,8 @@ fetch('teams.csv')
 
 let leagueFilter = new Set();
 let countryFilter = new Set();
-let userLocation;
+let userLocation = null;
+let radiusFilter = 1000000;
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -326,6 +327,7 @@ let userLocation;
           skipEmptyLines: true,
           complete: function (results) {
             allFixtures = results.data.map(row => {
+              const [latitude, longitude] = row.Home_Location.slice(1, -1).split(', ').map(parseFloat);
               return {
                 date: row.Date.split(" ")[0],
                 startingAt: row.Starting_At,
@@ -342,6 +344,8 @@ let userLocation;
                 homeTeam: {
                   clubImageName: row.Home_Logo,
                   clubName: row.Home_Name  // Adding this line
+                  latitude, // add latitude
+                  longitude // add longitude
                 },
                 homeWinner: row.Home_Winner === "True",
                 awayTeam: {
@@ -492,16 +496,20 @@ let userLocation;
 
   // Filtering
   let filteredMatches = allFixtures.filter(match => {
-    // Filter by date
+    const withinRadius = userLocation ? distanceFromUser(
+      userLocation.latitude,
+      userLocation.longitude,
+      match.homeTeam.latitude,
+      match.homeTeam.longitude
+    ) <= radiusFilter : true;  // If userLocation is null, keep all matches
+
+    // Filter by date and other existing filters
     return match.date === date &&
-      // Replace filterSettings with your existing variables
-      (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry));
+      (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry)) &&
+      withinRadius;  // Add the new radius filter
   });
-  // Sort filteredMatches alphabetically by leagueName
-  filteredMatches.sort((a, b) => {
-    // Use localeCompare for case-insensitive sorting
-    return a.leagueName.localeCompare(b.leagueName);
-  });
+
+
 
   // Continue the rest of the logic
   displayMatches(filteredMatches);
@@ -627,20 +635,27 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
     const applyFilterBtn = document.getElementById("applyFilter");
 
     if (applyFilterBtn) {
-      applyFilterBtn.addEventListener('click', () => {
-        const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-        const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
+    applyFilterBtn.addEventListener('click', async () => {
+      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
+      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-        // Populate your existing filter variables
-        leagueFilter = new Set(selectedLeagues);
-        countryFilter = new Set(selectedCountries);
+      // Populate your existing filter variables
+      leagueFilter = new Set(selectedLeagues);
+      countryFilter = new Set(selectedCountries);
 
-        radiusFilter = parseFloat(radiusInput.value);
+      radiusFilter = parseFloat(radiusInput.value);
 
-        filterModal.style.display = 'none'; // Close the modal
-        updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
-      });
-    }
+      filterModal.style.display = 'none'; // Close the modal
+
+      try {
+        userLocation = await getUserLocation(); // Update the global variable with the user's location
+      } catch (error) {
+        console.error('An error occurred while fetching the user\'s location:', error);
+      }
+
+      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
+    });
+  }
   });
 
 
@@ -678,20 +693,22 @@ navigation_items_elms.forEach((item, index) => {
   });
 });
 function getUserLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const userLocation = L.latLng(latitude, longitude);
-      },
-      (error) => {
-        console.error('Error retrieving location:', error);
-      }
-    );
-  } else {
-    console.error('Geolocation is not supported by this browser.');
-  }
+  return new Promise((resolve, reject) => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        resolve({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      }, (error) => {
+        reject(error);
+      });
+    } else {
+      reject(new Error("Geolocation is not supported by this browser."));
+    }
+  });
 }
+
 
 </script>
 
