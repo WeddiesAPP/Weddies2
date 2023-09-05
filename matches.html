@@ -450,7 +450,8 @@ let userLocation;
     const countriesSelect = document.getElementById("countries");
     const leagues = new Set();
     const countries = new Set();
-
+    leagueFilter.Clear();
+    countryFilter.Clear();
     allFixtures.forEach(fixture => {
       if (fixture.date === newDate) {
         leagues.add(fixture.leagueName);
@@ -461,11 +462,13 @@ let userLocation;
     leagues.forEach(league => {
       const option = new Option(league, league);
       leaguesSelect.add(option);
+      leagueFilter.add(league);
     });
 
     countries.forEach(country => {
       const option = new Option(country, country);
       countriesSelect.add(option);
+      countryFilter.add(country);
     });
 
     // If leagueFilter or countryFilter are empty, populate them
@@ -476,7 +479,7 @@ let userLocation;
     if (!countryFilter || countryFilter.size === 0) {
       countryFilter = new Set(countries);
     }
-  
+
     updateMatchesForDate(newDate);
     console.log(leagueFilter);
   }
