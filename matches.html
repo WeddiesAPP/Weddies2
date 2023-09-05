@@ -342,11 +342,11 @@ let radiusFilter = 1000000;
                 leagueCountry: row.League_Country,
                 leagueLogo: row.League_Logo,
                 homeTeam: {
-                  clubImageName: row.Home_Logo,
-                  clubName: row.Home_Name  // Adding this line
-                  latitude, // add latitude
-                  longitude // add longitude
-                },
+                clubImageName: row.Home_Logo,
+                clubName: row.Home_Name, // Adding this line
+                latitude: latitude, // add latitude
+                longitude: longitude // add longitude
+              },
                 homeWinner: row.Home_Winner === "True",
                 awayTeam: {
                   clubImageName: row.Away_Logo,
