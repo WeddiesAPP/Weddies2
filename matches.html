@@ -448,6 +448,7 @@ let userLocation;
     dateDisplay.textContent = newDate === formattedToday ? 'Today' : newDate;
     populateDropdowns();
     updateMatchesForDate(newDate);
+    console.log(leagueFilter);
   }
 
   function updateMatchesForDate(date) {
