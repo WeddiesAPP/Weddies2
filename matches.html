@@ -639,12 +639,16 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
       const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
       const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
 
-      // Populate your existing filter variables
+      if (selectedLeagues.length > 0) {
       leagueFilter = new Set(selectedLeagues);
+    }
+    if (selectedCountries.length > 0) {
       countryFilter = new Set(selectedCountries);
+    }
 
+    if(radiusFilter > 0) {}
       radiusFilter = parseFloat(radiusInput.value);
-
+}
       filterModal.style.display = 'none'; // Close the modal
 
       try {
