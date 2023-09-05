@@ -502,7 +502,7 @@ let radiusFilter = 1000000;
       match.homeTeam.latitude,
       match.homeTeam.longitude
     ) <= radiusFilter : true;  // If userLocation is null, keep all matches
-
+    console.log(withinRadius);
     // Filter by date and other existing filters
     return match.date === date &&
       (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry)) &&
@@ -670,7 +670,7 @@ awayName.textContent = match.awayTeam.clubName;  // Use the clubName here
               Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
-
+    console.log(d);
     return d;
   }
 
