@@ -450,8 +450,8 @@ let userLocation;
     const countriesSelect = document.getElementById("countries");
     const leagues = new Set();
     const countries = new Set();
-    leagueFilter.Clear();
-    countryFilter.Clear();
+    leagueFilter.clear();
+    countryFilter.clear();
     allFixtures.forEach(fixture => {
       if (fixture.date === newDate) {
         leagues.add(fixture.leagueName);
