@@ -446,7 +446,37 @@ let userLocation;
     const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     hiddenDatePicker.value = newDate;
     dateDisplay.textContent = newDate === formattedToday ? 'Today' : newDate;
-    populateDropdowns();
+    const leaguesSelect = document.getElementById("leagues");
+    const countriesSelect = document.getElementById("countries");
+    const leagues = new Set();
+    const countries = new Set();
+
+    allFixtures.forEach(fixture => {
+      if (fixture.date === newDate) {
+        leagues.add(fixture.leagueName);
+        countries.add(fixture.leagueCountry);
+      }
+    });
+
+    leagues.forEach(league => {
+      const option = new Option(league, league);
+      leaguesSelect.add(option);
+    });
+
+    countries.forEach(country => {
+      const option = new Option(country, country);
+      countriesSelect.add(option);
+    });
+
+    // If leagueFilter or countryFilter are empty, populate them
+    if (!leagueFilter || leagueFilter.size === 0) {
+      leagueFilter = new Set(leagues);
+    }
+
+    if (!countryFilter || countryFilter.size === 0) {
+      countryFilter = new Set(countries);
+    }
+  }
     updateMatchesForDate(newDate);
     console.log(leagueFilter);
   }
