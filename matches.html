@@ -497,6 +497,11 @@ let userLocation;
       // Replace filterSettings with your existing variables
       (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry));
   });
+  // Sort filteredMatches alphabetically by leagueName
+  filteredMatches.sort((a, b) => {
+    // Use localeCompare for case-insensitive sorting
+    return a.leagueName.localeCompare(b.leagueName);
+  });
 
   // Continue the rest of the logic
   displayMatches(filteredMatches);
