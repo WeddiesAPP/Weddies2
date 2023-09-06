@@ -379,7 +379,8 @@ fetch('teams.csv')
       clubName: row.Home_Name,
       latitude: latitude,
       longitude: longitude,
-      homeID: parseInt(row.Home_ID) // Adding the HomeID
+      homeID: parseInt(row.Home_ID), // Adding the HomeID
+      stadiumName: row.Home_Stadium
     },
                 homeWinner: row.Home_Winner === "True",
                 awayTeam: {
@@ -490,7 +491,8 @@ initializePage();
      const optionsTime = { hour: '2-digit', minute: '2-digit' };
      const formattedTime = new Intl.DateTimeFormat('default', optionsTime).format(dateObj);
 
-     const stadium = match.stadiumName || 'Unknown';
+     const stadium = match.homeTeam.stadiumName || 'Unknown';
+     console.log(match.homeTeam.stadiumName);
 
      detailsDiv.innerHTML = `
      <span class="material-symbols-outlined">event</span> ${formattedDate}
