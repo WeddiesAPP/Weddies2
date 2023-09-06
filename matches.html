@@ -80,7 +80,7 @@ body {
   margin: 1vh;
   background-color: #292929;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 100vw;
+
 
 
 
@@ -128,10 +128,13 @@ word-wrap: break-word;
 
 .matchTime {
   flex: 0 0 auto;
-  flex-basis: 20%;  /* Allocating 20% of available space */
+  flex-basis: 10%;  /* Allocating 20% of available space */
   text-align: center;
   font-size: 1rem;
   color:white;
+  white-space: normal;
+  text-overflow: clip; /* Add ellipsis for overflow */
+  word-wrap: break-word;
 }
 
 /* League */
@@ -253,8 +256,8 @@ color: white;}
   background-color: #fefefe;
  top: 50%;
  left: 50%;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
 /* The Close Button */
@@ -433,16 +436,17 @@ let radiusFilter = 1000000;
                 leagueCountry: row.League_Country,
                 leagueLogo: row.League_Logo,
                 homeTeam: {
-                clubImageName: row.Home_Logo,
-                clubName: row.Home_Name, // Adding this line
-                latitude: latitude, // add latitude
-                longitude: longitude // add longitude
-              },
-                homeWinner: row.Home_Winner === "True",
-                awayTeam: {
-                  clubImageName: row.Away_Logo,
-                  clubName: row.Away_Name  // Adding this line
-                },
+       clubImageName: row.Home_Logo,
+       clubName: row.Home_Name,
+       latitude: latitude,
+       longitude: longitude,
+       homeID: parseInt(row.Home_ID) // Adding the HomeID
+     },
+     awayTeam: {
+       clubImageName: row.Away_Logo,
+       clubName: row.Away_Name,
+       awayID: parseInt(row.Away_ID) // Adding the AwayID
+     },
                 awayWinner: row.Away_Winner === "True",
                 goalsHome: parseFloat(row.Goals_Home),
                 goalsAway: parseFloat(row.Goals_Away),
@@ -474,6 +478,7 @@ let radiusFilter = 1000000;
     function populateDropdowns() {
       const leaguesSelect = document.getElementById("leagues");
       const countriesSelect = document.getElementById("countries");
+
       const leagues = new Set();
       const countries = new Set();
 
@@ -502,6 +507,8 @@ let radiusFilter = 1000000;
       if (!countryFilter || countryFilter.size === 0) {
         countryFilter = new Set(countries);
       }
+      console.log(leaguesSelect);
+      console.log(countriesSelect);
     }
 
 
@@ -593,7 +600,7 @@ let radiusFilter = 1000000;
       match.homeTeam.latitude,
       match.homeTeam.longitude
     ) <= radiusFilter : true;  // If userLocation is null, keep all matches
-    console.log(withinRadius);
+    //console.log(withinRadius);
     // Filter by date and other existing filters
     return match.date === date &&
       (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry)) &&
@@ -671,22 +678,27 @@ function displayMatches(matches) {
       const matchDiv = document.createElement('div');
       matchDiv.className = 'match';
       matchDiv.addEventListener('click', function() {
-          const modal2 = document.getElementById("myModal"); // Note: I changed the id to match your HTML
-            const modalText = document.getElementById("modalText"); // Same here
-              modalText.innerHTML = `Information for ${this.innerHTML}`;
-                modal2.style.display = "block";
-                document.body.style.overflow = 'hidden';
+        const fixtureID = match.fixtureID; // Assuming the 'match' object has a property called 'fixtureID'
+    window.location.href = `matchinfo.html?fixtureID=${fixtureID}`;
 
                 });
 
       const homeLogo = document.createElement('img');
       homeLogo.src = match.homeTeam.clubImageName;
       homeLogo.className = 'homeLogo';
-
+      homeLogo.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = match.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
       const awayLogo = document.createElement('img');
       awayLogo.src = match.awayTeam.clubImageName;
       awayLogo.className = 'awayLogo';
-
+      awayLogo.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
       const timeDiv = document.createElement('div');
   timeDiv.className = 'matchTime';
 
@@ -711,10 +723,19 @@ function displayMatches(matches) {
       const homeName = document.createElement('div');
       homeName.className = 'homeName';
       homeName.textContent = match.homeTeam.clubName;
-
+      homeName.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = match.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
       const awayName = document.createElement('div');
       awayName.className = 'awayName';
       awayName.textContent = match.awayTeam.clubName;
+      awayName.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
 
       matchContainerDiv.appendChild(matchDiv);
       matchDiv.appendChild(homeName);
@@ -751,7 +772,8 @@ function displayMatches(matches) {
     if (closeBtn) {
       closeBtn.addEventListener('click', function() {
         modal2.style.display = "none";
-        document.body.overflow.style = 'visible';
+        document.body.style.overflow = 'visible';
+
       });
     }
 

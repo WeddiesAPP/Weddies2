@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weddies - Match info </title>
+  <meta name="description" content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
+  <link rel="icon" href="Weddies-bg.png" type="image/x-icon">
+  <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
+<style>
+
+
+
+
+
+
+
+body {
+  background-color: black;
+  margin-bottom: 10vh;
+}
+
+/* Navigation */
+.nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 10vh;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  overflow-x: auto;
+  z-index: 9999;
+}
+
+.nav__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  min-width: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: sans-serif;
+  font-size: 1rem;
+  color: #444444;
+  text-decoration: none;
+  transition: background-color 0.1s ease-in-out;
+}
+
+.nav__link:hover {
+  background-color: #eeeeee;
+}
+
+.nav__link--active {
+  color: #009578;
+}
+
+.nav__icon {
+  font-size: 1.2rem;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 72;
+  color: black;
+}
+
+.nav__link--active .material-symbols-outlined {
+  color: #009578;
+}
+
+/* Matches */
+.match {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0em;
+  /*border: 1px solid #ccc;
+  border-radius: 10px;*/
+  margin: 1vh;
+  background-color: #292929;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+
+
+
+}
+
+
+.homeLogo, .awayLogo {
+  flex: 0 0 auto;  /* Do not grow, do not shrink, use automatic basis */
+  /*margin: 0.5rem;*/ /* Added margin for better spacing */
+width: 5vw;
+
+  height: 5vh;
+  object-fit: contain;
+}
+
+.homeName {
+  flex: 0 0 calc(30% - 1rem); /* Adjust percentage as needed; -1rem is for padding */
+  text-align: right;
+  font-size: 1rem;
+  color:white;
+  padding: 0 0.5rem;  /* Add some padding to avoid text touching the edge */
+  overflow: hidden; /* Hide overflow */
+  white-space: normal;
+  text-overflow: clip; /* Add ellipsis for overflow */
+  word-wrap: break-word;
+
+
+
+}
+.awayName{
+flex: 0 0 calc(30% - 1rem); /* Adjust percentage as needed; -1rem is for padding */
+text-align: left;
+font-size: 1rem;
+color:white;
+padding: 0 0.5rem;  /* Add some padding to avoid text touching the edge */
+overflow: hidden; /* Hide overflow */
+white-space: normal;
+text-overflow: clip; /* Add ellipsis for overflow */
+word-wrap: break-word;
+
+}
+
+.matchTime {
+  flex: 0 0 auto;
+  flex-basis: 10%;  /* Allocating 20% of available space */
+  text-align: center;
+  font-size: 1rem;
+  color:white;
+  white-space: normal;
+  text-overflow: clip; /* Add ellipsis for overflow */
+  word-wrap: break-word;
+}
+
+/* League */
+.league {
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  padding: 0em;
+  background-color: #292929;
+border-radius: 25px;
+  border: 3px solid white;}
+
+
+.league h2 {
+ font-size: 1rem;
+  margin: 0;
+  padding: 0em;
+  background-color: transparent;
+  color:black;
+}
+
+.leagueInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white; border-radius: 25px;
+  border: 2px solid white;}
+
+.leagueLogo {
+  max-width: 6vw;
+  max-height: 6vh;
+  margin-right: 1vw;
+}
+
+
+.logo-weddies-bg {
+
+  top: 1.25em;
+  left: 1.25em;
+  z-index: 2;
+  width: 4em;
+  height: 4em;
+  margin-bottom: 3vh;
+}
+
+
+.match-container {
+  overflow: hidden;
+  max-height: 1000px;  /* or any large number */
+  transition: max-height 0.2s ease-in-out;
+  margin-top: 10vh;
+}
+
+.modal2 {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Modal Content */
+.modal2-content {
+  position: fixed;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  background-color: #fefefe;
+ top: 50%;
+ left: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+/* The Close Button */
+.close2 {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close2:hover,
+.close2:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.matchDetails {
+  font-size: 14px;
+  color: #ffffff; /* White text */
+  text-align: center;
+  margin-bottom: 3vh;
+  padding: 10px;  /* Padding around text */
+  background-color: #333333; /* Dark background for white text */
+  border-radius: 4px;
+  overflow-wrap: break-word;  /* To make sure the content wraps and doesn't overflow */
+}
+
+.matchDetails, .matchDetails .material-symbols-outlined {
+  color: #ffffff; /* White text */
+  font-size: 16px;
+}
+.goToMatches-button {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 10px 20px;
+  background-color: transparent; /* Change as desired */
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 1000; /* Make sure the button appears above other elements */
+}
+
+
+.goToMatches-button, .goToMatches-button .material-symbols-outlined {
+  color: white; /* White text */
+  font-size: 16px;
+
+}
+
+</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <title>Matches info</title>
+</head>
+<body>
+  <button id="goToMatches" class="goToMatches-button">  <span class="material-symbols-outlined">
+        arrow_back
+    </span></button>
+
+<nav class="nav">
+    <a href="index.html" class="nav__link">
+        <span class="material-symbols-outlined">
+            pin_drop
+        </span>
+    </a>
+    <a href="#" class="nav__link">
+        <span class="material-symbols-outlined">
+            person
+        </span>
+    </a>
+    <a href="matches.html" class="nav__link nav__link--active">
+        <span class="material-symbols-outlined">
+            table_rows
+        </span>
+    </a>
+</nav>
+<img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
+
+
+ <div id="matchContainer">
+    <!-- Match divs will be populated by JavaScript -->
+  </div>
+</body>
+<script>
+let clubs = [];
+let allFixtures = [];
+// Fetch the CSV file
+/*
+fetch('teams.csv')
+  .then((response) => response.text())
+  .then((csvString) => {
+    // Parse the CSV string
+    Papa.parse(csvString, {
+      header: true,
+      dynamicTyping: false,
+      skipEmptyLines: true,
+      delimiter: ';', // Note: the example uses semicolon as delimiter
+      complete: function (results) {
+        clubs = results.data.map((row) => {
+          return {
+            leagueID: row.leagueID,
+            leagueName: row.leagueName,
+            leagueImage: row.leagueImage,
+            clubID: row.clubID,
+            clubName: row.clubName,
+            clubCode: row.clubCode,
+            country: row.country,
+            founded: row.founded,
+            national: row.national === "True" ? true : false,
+            clubImageName: row.clubImageName,
+            stadiumID: row.stadiumID,
+            stadiumName: row.stadiumName,
+            stadiumAddress: row.stadiumAddress,
+            cityName: row.cityName,
+            capacity: row.capacity,
+            surface: row.surface,
+            stadiumImageName: row.stadiumImageName,
+            latitude: parseFloat(row.latitude),
+            longitude: parseFloat(row.longitude),
+          };
+        });
+        // Call your existing functions with the new data
+        loadFixtures();
+        console.log(clubs);
+      },
+    });
+  })
+  .catch((error) => {
+    console.error('An error occurred while fetching the CSV file:', error);
+  });
+
+*/
+  let targetfixtureID;
+  let TargetfixtureID;
+  let today = new Date();
+  const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+
+  function loadFixtures() {
+    fetch('fixtures.csv')
+      .then(response => response.text())
+      .then(csvString => {
+        // Parse the CSV string
+        Papa.parse(csvString, {
+          header: true,
+          delimiter: ';', // Specify the field delimiter as a semi-colon
+          skipEmptyLines: true,
+          complete: function (results) {
+            allFixtures = results.data.map(row => {
+              const [latitude, longitude] = row.Home_Location.slice(1, -1).split(', ').map(parseFloat);
+              return {
+                date: row.Date.split(" ")[0],
+                startingAt: row.Starting_At,
+                timezone: row.Timezone,
+                fixtureID: parseInt(row.Fixture_ID),
+                referee: row.Fixture_Referee,
+                statusLong: row.Status_Long,
+                statusShort: row.Status_Short,
+                statusElapsed: parseFloat(row.Status_Elapsed),
+                leagueID: parseInt(row.League_ID),
+                leagueName: row.League_Name,
+                leagueCountry: row.League_Country,
+                leagueLogo: row.League_Logo,
+                homeTeam: {
+      clubImageName: row.Home_Logo,
+      clubName: row.Home_Name,
+      latitude: latitude,
+      longitude: longitude,
+      homeID: parseInt(row.Home_ID) // Adding the HomeID
+    },
+                homeWinner: row.Home_Winner === "True",
+                awayTeam: {
+        clubImageName: row.Away_Logo,
+        clubName: row.Away_Name,
+        awayID: parseInt(row.Away_ID) // Adding the AwayID
+      },
+                awayWinner: row.Away_Winner === "True",
+                goalsHome: parseFloat(row.Goals_Home),
+                goalsAway: parseFloat(row.Goals_Away),
+                halftimeHome: parseFloat(row.Score_Halftime_Home),
+                halftimeAway: parseFloat(row.Score_Halftime_Away),
+                fulltimeHome: parseFloat(row.Score_Fulltime_Home),
+                fulltimeAway: parseFloat(row.Score_Fulltime_Away),
+              };
+            });
+initializePage();
+
+            // Call your existing function to update the matches with the parsed data
+          },
+        });
+      })
+      .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
+  }
+
+  // Don't forget to actually call loadFixtures at some point
+  loadFixtures();
+
+
+  function updateMatchesForDate(targetFixtureID) {
+    const matchesDisplay = document.getElementById("matchContainer");
+
+    // Clear previous matches
+    matchesDisplay.innerHTML = "";
+
+    // Filtering
+    const filteredMatch = allFixtures.find(match => parseInt(match.fixtureID) === parseInt(targetFixtureID));
+
+    if (filteredMatch) {
+      displayMatches([filteredMatch]); // Wrapping it in an array as displayMatches expects an array
+    } else {
+      console.log("No matches found for the provided fixtureID");
+    }
+  }
+
+  function displayMatches(matches) {
+  const matchContainer = document.getElementById('matchContainer');
+  matchContainer.innerHTML = '';
+
+  const leagueDiv = document.createElement('div');
+  leagueDiv.className = 'league';
+
+  // Create and append leagueInfo
+  const leagueInfo = document.createElement('div');
+  leagueInfo.className = 'leagueInfo';
+  const leagueLogo = document.createElement('img');
+  leagueLogo.src = matches[0].leagueLogo;
+  leagueLogo.className = 'leagueLogo';
+  const leagueName = document.createElement('h2');
+  leagueName.textContent = matches[0].leagueName;
+  leagueInfo.appendChild(leagueLogo);
+  leagueInfo.appendChild(leagueName);
+  leagueDiv.appendChild(leagueInfo);
+
+  // Iterate through matches and build matchDiv and detailsDiv
+  matches.forEach(match => {
+    const matchDiv = document.createElement('div');
+    matchDiv.className = 'match';
+
+    const homeLogo = document.createElement('img');
+    homeLogo.src = match.homeTeam.clubImageName;
+    homeLogo.className = 'homeLogo';
+
+    const awayLogo = document.createElement('img');
+    awayLogo.src = match.awayTeam.clubImageName;
+    awayLogo.className = 'awayLogo';
+
+    const timeDiv = document.createElement('div');
+    timeDiv.className = 'matchTime';
+
+    const homeName = document.createElement('div');
+    homeName.className = 'homeName';
+    homeName.textContent = match.homeTeam.clubName;
+
+    const awayName = document.createElement('div');
+    awayName.className = 'awayName';
+    awayName.textContent = match.awayTeam.clubName;
+
+
+
+      matchDiv.appendChild(homeName);
+    matchDiv.appendChild(homeLogo);
+    matchDiv.appendChild(timeDiv);
+    matchDiv.appendChild(awayLogo);
+    matchDiv.appendChild(awayName);
+
+    const detailsDiv = document.createElement('div');
+   detailsDiv.className = 'matchDetails';
+
+   // Format the date and time
+   try {
+     const fullDateTime = `${match.date}T${match.startingAt}Z`; // Assuming the time is in UTC
+     const dateObj = new Date(fullDateTime);
+
+     const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+     const formattedDate = new Intl.DateTimeFormat('default', optionsDate).format(dateObj);
+
+     const optionsTime = { hour: '2-digit', minute: '2-digit' };
+     const formattedTime = new Intl.DateTimeFormat('default', optionsTime).format(dateObj);
+
+     const stadium = match.stadiumName || 'Unknown';
+
+     detailsDiv.innerHTML = `
+     <span class="material-symbols-outlined">event</span> ${formattedDate}
+     <span class="material-symbols-outlined">stadium</span> ${stadium}
+   `;
+
+   } catch (error) {
+     console.log('An error occurred while formatting the date or time:', error);
+   }
+
+    // Append matchDiv and detailsDiv to leagueDiv
+    leagueDiv.appendChild(matchDiv);
+    leagueDiv.appendChild(detailsDiv);
+  });
+
+  // Append leagueDiv to matchContainer
+  matchContainer.appendChild(leagueDiv);
+}
+
+
+  function initializePage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const TargetfixtureID = urlParams.get('fixtureID');
+    updateMatchesForDate(TargetfixtureID);
+    console.log(TargetfixtureID);
+    // Now you have the fixtureID and can use it to fetch or display the relevant information
+  }
+
+  document.addEventListener("DOMContentLoaded", initializePage);
+
+  document.addEventListener("DOMContentLoaded", function() {
+  const goToMatchesButton = document.getElementById('goToMatches');
+
+  goToMatchesButton.addEventListener('click', function() {
+    window.location.href = 'matches.html';
+  });
+});
+
+
+
+
+  // Function to calculate straight-line distance
+
+ var navBar = document.querySelector(".nav");
+  navBar.style.display = "flex";
+  const navigation_items_elms = document.querySelectorAll(
+  ".navigation-bar .list-items .item"
+);
+const navigation_pointer = document.querySelector(".navigation-bar .pointer");
+
+navigation_items_elms.forEach((item, index) => {
+  item.addEventListener("click", (e) => {
+    e.preventDefault();
+    navigation_items_elms.forEach((itm) => itm.classList.remove("active"));
+    item.classList.add("active");
+
+    const parentWidth = item.parentElement.clientWidth;
+    const lefPercent = (parentWidth / navigation_items_elms.length) * index;
+    navigation_pointer.style.left = lefPercent + "px";
+  });
+});
+
+
+
+</script>
+
+</html>
