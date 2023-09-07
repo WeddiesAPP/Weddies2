@@ -735,6 +735,7 @@ function displayMatches(matches) {
          event.stopPropagation();  // Prevent event from bubbling up
   const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
   window.location.href = `teaminfo.html?teamID=${teamID}`;
+  console.log(match.awayTeam.awayID);
 });
 
       matchContainerDiv.appendChild(matchDiv);

@@ -148,7 +148,7 @@ border-radius: 25px;
  font-size: 1rem;
   margin: 0;
   padding: 0em;
-  background-color: transparent;
+  background-color: white;
   color:black;
 }
 
@@ -344,8 +344,18 @@ fetch('teams.csv')
   });
 
 */
-  let targetfixtureID;
-  let TargetfixtureID;
+let TargetfixtureID;  // Declare it here as a global variable
+
+
+document.addEventListener("DOMContentLoaded", initializePage);
+
+function initializePage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    TargetfixtureID = parseInt(urlParams.get('teamID')); // Assign the value here
+    updateMatchesForDate(TargetfixtureID);
+}
+
+
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -396,8 +406,8 @@ fetch('teams.csv')
                 fulltimeAway: parseFloat(row.Score_Fulltime_Away),
               };
             });
-initializePage();
 
+              initializePage();
             // Call your existing function to update the matches with the parsed data
           },
         });
@@ -429,24 +439,31 @@ initializePage();
   function displayMatches(matches) {
     const matchContainer = document.getElementById('matchContainer');
     matchContainer.innerHTML = '';
-
+    const leagueDiv = document.createElement('div');
+      leagueDiv.className = 'league';
     matches.forEach(match => {
       // Create and set up the leagueDiv to show only the teamName
-      const leagueDiv = document.createElement('div');
-      leagueDiv.className = 'league';
 
-      const teamName = document.createElement('h2');
+
+      console.log(TargetfixtureID);
+      const teamName = document.createElement('h2')
       const teamLogo = document.createElement('img');
-      teamLogo.src = match.homeTeam.clubImageName; // Change this to awayTeam.clubImageName if you want
+      if (match.homeTeam.homeID ===TargetfixtureID) {
+      teamLogo.src = match.homeTeam.clubImageName;
+      teamName.textContent = match.homeTeam.clubName;
+    } else if (match.awayTeam.awayID === TargetfixtureID) {
+      teamLogo.src = match.awayTeam.clubImageName;
+      teamName.textContent = match.awayTeam.clubName;
+    } else {
+      // If ID does not match either, you can choose to do nothing or set a default
+      teamLogo.src = 'default_image.jpg';
+      teamName.textContent = 'Unknown Team';
+    }
       teamLogo.className = 'teamLogo';
       leagueDiv.appendChild(teamLogo);
-      teamName.textContent = match.homeTeam.clubName; // Change this to awayTeam.clubName if you want
+
+      
       leagueDiv.appendChild(teamName);
-
-      // Add leagueDiv to matchContainer
-      matchContainer.appendChild(leagueDiv);
-
-      // Create and set up the matchDiv
       const matchDiv = document.createElement('div');
       matchDiv.className = 'match';
 
@@ -454,9 +471,14 @@ initializePage();
 
 
       // ... rest of your matchDiv related elements like homeLogo, awayLogo, timeDiv, etc.
-
+        matchContainer.appendChild(leagueDiv);
       // Add matchDiv to matchContainer
       matchContainer.appendChild(matchDiv);
+      // Add leagueDiv to matchContainer
+
+
+      // Create and set up the matchDiv
+
     });
   }
 
@@ -464,15 +486,9 @@ initializePage();
 
 
 
-  function initializePage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const TargetfixtureID = urlParams.get('teamID');
-    updateMatchesForDate(TargetfixtureID);
-    console.log(TargetfixtureID);
-    // Now you have the fixtureID and can use it to fetch or display the relevant information
-  }
 
-  document.addEventListener("DOMContentLoaded", initializePage);
+
+  document.addEventListener("DOMContentLoaded", initializePage());
 
   document.addEventListener("DOMContentLoaded", function() {
   const goToMatchesButton = document.getElementById('goToMatches');
