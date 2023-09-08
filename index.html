@@ -449,84 +449,7 @@ transform: translate(-50%, 0%);
   text-overflow: ellipsis;
   max-width: 200px; /* Adjust the maximum width as desired */
 }
-.popup-container {
-    position: relative; /* Makes child absolute positioning relative to this container */
-    display: flex;
-    flex-direction: row;
-    border-radius: 10px;
-    padding: 70px 20px 20px 20px; /* Top padding increased to avoid overlap with the logo */
-    background-color: #f0f0f0;
-}
 
-
-.popup-left-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
-}
-
-.popup-club-logo {
-    position: absolute;
-    top: -60px; /* Half of the logo's height to make it pop out halfway */
-    left: 10px; /* Adjust based on your preference */
-    width: 120px;
-    height: 120px;
-    border-radius: 10px;
-    z-index: 9999; /* Ensures it's above other content */
-    background-color: white;
-}
-
-.popup-club-details {
-    gap: 4px;
-}
-
-.popup-club-details h3 {
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.popup-club-details p {
-    font-size: 14px;
-}
-
-.popup-right-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-}
-
-.popup-stadium-image {
-    width: 130px;
-    height: 130px;
-    background-color: transparent;
-    border-radius: 10px;
-}
-
-.popup-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-    margin-top: auto;  /* Pushes the buttons down */
-}
-
-.popup-buttons a {
-    padding: 8px 12px;
-    border-radius: 8px;
-    text-align: center;
-    width: 125px;
-    font-size: 18px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-.popup-buttons a:hover {
-    background-color: darkgray;
-}
 
 
 .close {
@@ -578,7 +501,7 @@ button {
     width: 100%;
     height: 10vh;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-    background-color: #ffffff;
+    background-color: black;
   display: none;
     overflow-x: auto;
     z-index: 9999;
@@ -615,6 +538,7 @@ button {
 .nav__icon {
     font-size: 18px;
     z-index: 9999;
+
 }
 .material-symbols-outlined {
   font-variation-settings:
@@ -638,6 +562,77 @@ button {
     -ms-overflow-style: none;  /* IE and Edge */
 }
 
+/* Styles for the custom popup */
+#custom-popup {
+  position: fixed;  /* fixed position */
+  bottom: 10vh;  /* aligned at the bottom */
+  left: 2.5vw;  /* 5vw left and right to center it horizontally */
+  z-index: 2000;  /* higher z-index to display above the map */
+  display: none;  /* initially hidden */
+  width: 90vw;  /* full width */
+  height: 25vh;  /* full height */
+  background-color: lightgray;
+  opacity: 0.9;
+  border-radius: 20px;
+  padding: 1vw;
+  box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+   flex-direction: row;
+   align-items: flex-start;  /* Align items to the top */
+}
+
+
+#popup-main-content {
+  flex: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align text to the left */
+
+}
+
+#popup-header {
+
+  position: relative;
+
+  position: relative;  /* Relative position for the header */
+  display: flex;
+  flex-direction: column;
+  align-items: bottom;  /* Align text to the left */
+}
+
+#popup-club-image {
+  position: absolute;  /* Make it absolute */
+  top: -10vh;  /* Pop it out */
+
+  left: 0;  /* Align to the left */
+  z-index: 2004;  /* Make sure it's above other elements */
+  width:20vh;
+  height: 20vh;
+
+
+}
+
+#popup-club-name
+{
+margin-top: 10vh;
+}
+#popup-stadium-name, #popup-stadium-capacity, #popup-club-name {
+  font-size: 2vh;
+
+
+  color: #333;
+}
+
+#popup-stadium-name {
+  font-weight: bold;
+}
+
+
+#map {
+  z-index: 1; /* Lower z-index compared to the popup */
+}
 
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -651,6 +646,8 @@ button {
 
 </head>
 <body>
+
+
 
   <div class="loading-animation">
     <img src="Weddies.png" alt="Loading..." class="logo-weddies-bg" />
@@ -684,7 +681,21 @@ cancel
     </div>
   </div>
 
-    <div id="mapid">
+  <div id="mapid">
+    <div id="custom-popup">
+      <div id="popup-main-content">
+        <div id="popup-header">
+          <img id="popup-club-image" src="" alt="" />
+          <h2 id="popup-club-name"></h2>
+        </div>
+        <div id="popup-content">
+          <p id="popup-stadium-name"></p>
+          <p id="popup-stadium-capacity"></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <nav class="nav">
         <a href="index.html" class="nav__link nav__link--active">
@@ -707,6 +718,7 @@ cancel
 
 
 </div>
+
 
 
 
@@ -743,70 +755,14 @@ filter_list
         filtersContainer.style.display = "none";
         searchContainer.style.display = "flex";
     });
-const clubMarkers = {};
+let clubMarkers = {};
 let selectedLeagues = [];
-const customPopup = document.createElement('div');
-const contentContainer = document.createElement('div');
-const closeButton2 = document.createElement('button');
 
-// Styles for customPopup
-customPopup.style.zIndex = '1000';
-customPopup.style.position = 'fixed';
-customPopup.style.width = 'auto';
-customPopup.style.height = 'height: 75vh';
-customPopup.style.overflow = 'hidden'; // Set overflow to hidden here
-customPopup.style.top = '50%';
-customPopup.style.left = '50%';
-customPopup.style.transform = 'translate(-50%, -50%)';
-customPopup.style.background = 'white';
-customPopup.style.display = 'none';
-customPopup.style.padding = '10px'; // Provide padding to ensure the close button doesn't overlap with the content
-
-// Styles for contentContainer
-contentContainer.style.width = '100%';
-contentContainer.style.height = 'auto'; // Take into account the padding from customPopup
-contentContainer.style.overflowY = 'auto'; // Only vertical scrolling
-contentContainer.classList.add('no-scrollbar'); // Add the no-scrollbar class
-
-// Styles and attributes for closeButton
-closeButton2.innerHTML = '<span class="material-symbols-outlined">cancel</span>';
-closeButton2.style.position = 'absolute';
-closeButton2.style.right = '-20px';
-closeButton2.style.top = '-20px';
-closeButton2.style.border = 'none';
-closeButton2.style.background = 'transparent';
-closeButton2.style.cursor = 'pointer';
-closeButton2.style.fontSize = '18px';
-closeButton2.style.fontWeight = 'bold';
-
-closeButton2.addEventListener('click', function() {
-    customPopup.style.display = 'none'; // Hide the popup on close button click
-});
-
-// Appending structures
-customPopup.appendChild(closeButton2);
-customPopup.appendChild(contentContainer);
-document.body.appendChild(customPopup);
-
-
-  // Rest of your code for showCustomPopup and hideCustomPopup functions...
-
-// Function to show the custom popup
-function showCustomPopup(content) {
-  map.setZoom(12);
-
-  contentContainer.innerHTML = content; // Adjust this line to fill the contentContainer
-      customPopup.style.display = 'block';
-
-
-}
 
 
 
 // Function to hide the custom popup
-function hideCustomPopup() {
-  customPopup.style.display = 'none';
-}
+
 
     const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 });
     const lightLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -828,7 +784,7 @@ function hideCustomPopup() {
 
 
     // Fetch the CSV file
-    fetch('teamsdata.csv')
+    fetch('teams.csv')
     .then((response) => response.text())
     .then((csvString) => {
       // Parse the CSV string
@@ -842,29 +798,29 @@ function hideCustomPopup() {
               leagueID: row.leagueID,
               countryID: row.countryID,
               leagueName: row.leagueName,
-              leagueActive: row.leagueActive,
-              leagueShortCode: row.leagueShortCode,
-              leagueImage: row.leagueImageName,
-              leagueType: row.leagueType,
-              leagueSubType: row.leagueSubType,
-              leagueLastPlayedAt: row.leagueLastPlayedAt,
-              leagueCategory: row.leagueCategory,
-              seasonID: row.seasonID,
-              seasonName: row.seasonName,
-            clubID: row.teamID,
-              clubName: row.teamName,
+
+              leagueImage: row.leagueImage,
+
+
+
+
+
+              clubID: row.clubID,
+              clubName: row.clubName,
               clubImageName: row.clubImageName,
-              clubFounded: row.clubFounded,
-              clubGender: row.clubGender,
+              clubFounded: row.Founded,
+              clubCode: row.clubCode,
+
               stadiumID: row.stadiumID,
               stadiumName: row.stadiumName,
-              stadiumCity: row.stadiumCity,
+              stadiumCity: row.cityName,
               stadiumAdress: row.stadiumAdress,
-              stadiumZipcode: row.stadiumZipcode,
+
               latitude: parseFloat(row.latitude.replace(',', '.')),
              longitude: parseFloat(row.longitude.replace(',', '.')),
-              stadiumSurface: row.stadiumSurface,
-              stadiumCapacity: row.stadiumCapacity,
+              stadiumSurface: row.surface,
+              stadiumCapacity: row.capacity,
+              stadiumImageName: row.stadiumImageName
             };
           });
           // Call your existing functions with the new data
@@ -885,64 +841,94 @@ function hideCustomPopup() {
 
 
 
-        function createPopupContent(club) {
-          return `
-              <div class="popup-container">
-                  <div class="popup-left-section">
-                      <img class="popup-club-logo" src="${club.clubImageName}" alt="${club.clubName}">
-                      <div class="popup-club-details">
-                          <h3>${club.clubName}</h3>
-                          <p>${club.stadiumName}</p>
-                      </div>
-                  </div>
-                  <div class="popup-right-section">
 
-                      <div class="popup-buttons">
-                          <a href="#" style="background-color: ${club.firstColor}; color: ${club.secondColor};">Learn More</a>
-                          <a href="#" style="background-color: ${club.firstColor}; color: ${club.secondColor};">Matches</a>
-                          <a href="#" style="background-color: red; color: white;">Not Visited</a>
 
-                      </div>
-                  </div>
-              </div>
-          `;
-      }
+
 
 //<a href="https://www.google.com/maps/dir/?api=1&destination=${club.latitude},${club.longitude}" target="_blank" style="background-color: blue; color: white;">Navigate To</a>
 
 //SEARCH SEARCH Search
-function addClubLogosToMap(clubs) {
-  clubs.forEach((club, index) => {
-    const clubLatLng = club.location;
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+  return distance;
+}
 
+
+function showCustomPopup(club) {
+  // Update popup content based on the club data
+  document.getElementById("popup-club-name").innerText = club.clubName;
+  document.getElementById("popup-club-image").src = club.clubImageName;
+  document.getElementById("popup-stadium-name").innerText = club.stadiumName;
+  document.getElementById("popup-stadium-capacity").innerText = `Capacity: ${club.stadiumCapacity}`;
+  // You can add more fields here
+
+  // Display the popup
+  const customPopup = document.getElementById("custom-popup");
+  customPopup.style.display = "block";
+}
+
+// Function to remove existing markers
+function clearExistingMarkers() {
+  for (const markers of Object.values(clubMarkers)) {
+    markers.forEach(marker => marker.remove());
+  }
+  clubMarkers = {};
+}
+
+// Function to add new markers based on sorted list of clubs
+function addNewMarkers(sortedClubs) {
+  sortedClubs.slice(0, 250).forEach((club) => {
     const markerIcon = L.divIcon({
       className: 'custom-div-icon',
       html: `
         <div class='marker-pin'></div>
         <img src="${club.clubImageName}" alt="${club.clubName}" style="width: 32px; height: 32px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2;" />`,
-      iconSize: [50, 50], // Adjust this size as needed to match the pin
+      iconSize: [50, 50],
       iconAnchor: [25, 50]
     });
 
     const marker = L.marker([club.latitude, club.longitude], { icon: markerIcon })
-      .on('click', (e) => {
-        const content = createPopupContent(club);
-        showCustomPopup(content);
+      .on('click', function(e) {
         const offset = 0.06;
-        // Adjust map's iew to the marker's location with the offset applied to the latitude
         map.setView([e.latlng.lat - offset, e.latlng.lng], 12);
+
+        const popup = document.getElementById('custom-popup');
+
+        // Update popup content with club details
+        document.getElementById('popup-club-name').innerText = club.clubName;
+        document.getElementById('popup-club-image').src = club.clubImageName;
+        document.getElementById('popup-stadium-name').innerText = club.stadiumName;
+        document.getElementById('popup-stadium-capacity').innerText = `Capacity: ${club.stadiumCapacity}`;
+
+        // Display the popup
+        popup.style.display = 'block';
       })
       .addTo(map);
+
+
 
     if (!clubMarkers[club.clubName]) {
       clubMarkers[club.clubName] = [];
     }
     clubMarkers[club.clubName].push(marker);
   });
-
-  // The event listener for map click should be outside of the loop
-  map.on('click', hideCustomPopup);
 }
+
+function addClubLogosToMap(clubs) {
+  // Clear existing markers
+  clearExistingMarkers();
+
+  // Add new markers
+  addNewMarkers(clubs);
+}
+
 
 //
 function initializeSearch(clubs) {
