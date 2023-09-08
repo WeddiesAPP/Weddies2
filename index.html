@@ -571,12 +571,11 @@ button {
   display: none;  /* initially hidden */
   width: 90vw;  /* full width */
   height: 25vh;  /* full height */
-  background-color: lightgray;
-  opacity: 0.9;
+  background: rgba(214, 214, 214, 0.7) ;   /*  70% opaque green */
   border-radius: 20px;
   padding: 1vw;
   box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
-  display: flex;
+  
   justify-content: space-between;
    flex-direction: row;
    align-items: flex-start;  /* Align items to the top */
@@ -757,7 +756,7 @@ filter_list
     });
 let clubMarkers = {};
 let selectedLeagues = [];
-
+let clubs = [];
 
 
 
@@ -793,7 +792,7 @@ let selectedLeagues = [];
         dynamicTyping: false,
         skipEmptyLines: true,
         complete: function (results) {
-          const clubs = results.data.map((row) => {
+          clubs = results.data.map((row) => {
             return {
               leagueID: row.leagueID,
               countryID: row.countryID,
@@ -883,7 +882,16 @@ function clearExistingMarkers() {
 }
 
 // Function to add new markers based on sorted list of clubs
-function addNewMarkers(sortedClubs) {
+function addNewMarkers() {
+  clearExistingMarkers(); // Clear existing markers
+
+  const center = map.getCenter();
+  const sortedClubs = clubs.slice().sort((a, b) => {
+    const distanceA = calculateDistance(center.lat, center.lng, a.latitude, a.longitude);
+    const distanceB = calculateDistance(center.lat, center.lng, b.latitude, b.longitude);
+    return distanceA - distanceB;
+  });
+
   sortedClubs.slice(0, 250).forEach((club) => {
     const markerIcon = L.divIcon({
       className: 'custom-div-icon',
@@ -1081,7 +1089,9 @@ marker.addTo(map);
   }
 }
 
-
+map.on('moveend', function() {
+addNewMarkers(); // Update markers when map moves
+});
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
