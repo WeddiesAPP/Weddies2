@@ -887,7 +887,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }).catch(error => {
     console.error('An error occurred:', error);
   });
-
+  console.log(clubs);
   let startX = 0;
   let currentIndex = 0;
   const swipeBox = document.getElementById('swipeBox');
@@ -966,6 +966,7 @@ return leagueStandingsList;
 
 function generateStandingsDiv(leagueStandingsList) {
   // Sort the data by Rank
+
   const sortedStandings = leagueStandingsList.sort((a, b) => a.Rank - b.Rank);
 
   let standingsHTML = '<div class="row header-row">';
@@ -1007,9 +1008,7 @@ function generateStandingsDiv(leagueStandingsList) {
 function Initialize() {
   console.log("Initialize called");
   const urlParams = new URLSearchParams(window.location.search);
-
-
-
+  console.log(clubs.length);
     // Get the teamID parameter and set it as targetTeamID
     targetTeamID = parseInt(urlParams.get('teamID'));
     standings = getTeamStandings(targetTeamID);
@@ -1018,9 +1017,12 @@ function Initialize() {
     if (!standings || standings.length === 0) {
     console.log('Standings are not available for the selected team.');
     // You can display a message or take any other action here.
-    return;
+
   }
+  else {
     generateStandingsDiv(standings);
+
+  }
     console.log(typeof targetTeamID);  // Should be 'number'
     console.log(typeof clubs[0].clubID); // Should also be 'number'
     console.log("targetTeamID set to:", targetTeamID);
@@ -1031,10 +1033,10 @@ function Initialize() {
 
   // Assuming targetTeamID is available globally or you have obtained it somehow
   const currentClub = clubs.find(club => club.clubID === targetTeamID.toString());
-
+  console.log(currentClub);
   const currentFixture = allFixtures.find(fixture => fixture.homeTeam.homeID === targetTeamID || fixture.awayTeam.awayID === targetTeamID);
   console.log(currentClub);
-  if (currentClub && currentFixture) {
+  if (currentClub) {
     const stadiumImageElement = document.getElementById('stadiumImage');
     const clubImageElement = document.getElementById('clubImage');
 
