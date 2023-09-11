@@ -13,6 +13,11 @@
 
 
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 
 body {
@@ -255,6 +260,31 @@ border-radius: 25px;
 
 }
 
+#content {
+  text-align: center;
+}
+
+#teamName {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+#swipeContainer {
+  overflow: hidden;
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+#teamLogo, #stadiumImage {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  transition: all 0.3s ease;
+}
+
+
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -270,7 +300,13 @@ border-radius: 25px;
   <button id="goToMatches" class="goToMatches-button">  <span class="material-symbols-outlined">
         arrow_back
     </span></button>
-
+    <div id="content">
+        <h1 id="teamName"></h1>
+        <div id="swipeContainer">
+          <img id="teamLogo" src="" alt="Team Logo">
+          <img id="stadiumImage" src="" alt="Stadium Image">
+        </div>
+      </div>
 <nav class="nav">
     <a href="index.html" class="nav__link">
         <span class="material-symbols-outlined">
@@ -437,50 +473,8 @@ function initializePage() {
   }
 
   function displayMatches(matches) {
-    const matchContainer = document.getElementById('matchContainer');
-    matchContainer.innerHTML = '';
-    const leagueDiv = document.createElement('div');
-      leagueDiv.className = 'league';
-    matches.forEach(match => {
-      // Create and set up the leagueDiv to show only the teamName
 
-
-      console.log(TargetfixtureID);
-      const teamName = document.createElement('h2')
-      const teamLogo = document.createElement('img');
-      if (match.homeTeam.homeID ===TargetfixtureID) {
-      teamLogo.src = match.homeTeam.clubImageName;
-      teamName.textContent = match.homeTeam.clubName;
-    } else if (match.awayTeam.awayID === TargetfixtureID) {
-      teamLogo.src = match.awayTeam.clubImageName;
-      teamName.textContent = match.awayTeam.clubName;
-    } else {
-      // If ID does not match either, you can choose to do nothing or set a default
-      teamLogo.src = 'default_image.jpg';
-      teamName.textContent = 'Unknown Team';
-    }
-      teamLogo.className = 'teamLogo';
-      leagueDiv.appendChild(teamLogo);
-
-      
-      leagueDiv.appendChild(teamName);
-      const matchDiv = document.createElement('div');
-      matchDiv.className = 'match';
-
-      // Create and append the team logo to matchDiv
-
-
-      // ... rest of your matchDiv related elements like homeLogo, awayLogo, timeDiv, etc.
-        matchContainer.appendChild(leagueDiv);
-      // Add matchDiv to matchContainer
-      matchContainer.appendChild(matchDiv);
-      // Add leagueDiv to matchContainer
-
-
-      // Create and set up the matchDiv
-
-    });
-  }
+}
 
 
 
@@ -494,9 +488,37 @@ function initializePage() {
   const goToMatchesButton = document.getElementById('goToMatches');
 
   goToMatchesButton.addEventListener('click', function() {
-    window.location.href = 'matches.html';
+    window.history.back();
   });
-});
+
+  // Retrieve the teamID from the URL
+  const teamID = parseInt(new URLSearchParams(window.location.search).get("teamID"), 10);
+
+  // Search for the team's information based on the teamID
+  const teamInfo = allFixtures.find(fixture =>
+    fixture.homeTeam.homeID === teamID ||
+    fixture.awayTeam.awayID === teamID
+  );
+
+  if (teamInfo) {
+    // Determine if the team is playing at home or away
+    const homeOrAway = teamInfo.homeTeam.homeID === teamID ? "home" : "away";
+
+    // Get the appropriate team's data
+    const teamData = teamInfo[`${homeOrAway}Team`];
+
+    // Populate the HTML
+    document.getElementById("teamName").textContent = teamData.clubName;
+    document.getElementById("teamLogo").src = teamData.clubImageName;
+
+    // Populate the stadium image
+    // Use Home_Stadium for home games and Away_Stadium for away games
+    // Assuming you have the stadium image in the fixture
+    // Your code here to populate the stadium image
+
+  }
+}); // Fixed the missing closing parentheses and curly brace here
+
 
 
 

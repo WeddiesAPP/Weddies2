@@ -10,6 +10,11 @@
 <style>
 
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 
 
@@ -224,7 +229,7 @@ border-radius: 25px;
 .matchDetails {
   font-size: 14px;
   color: #ffffff; /* White text */
-  text-align: center;
+  text-align: left;
   margin-bottom: 3vh;
   padding: 10px;  /* Padding around text */
   background-color: #333333; /* Dark background for white text */
@@ -469,9 +474,25 @@ initializePage();
     awayName.className = 'awayName';
     awayName.textContent = match.awayTeam.clubName;
 
-
+    if (match.statusShort === 'FT') {
+    timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort}`;
+  } else if (['1H', '2H', 'LIVE', 'BT', 'INT'].includes(match.statusShort)) {
+    timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort}`;
+  } else {
+    try {
+      const timeWithoutSeconds = match.startingAt.slice(0, -3);
+      const fullDateTime = `${match.date}T${timeWithoutSeconds}Z`;
+      const dateInUTC = new Date(fullDateTime);
+      const options = { hour: '2-digit', minute: '2-digit' };
+      const localTime = new Intl.DateTimeFormat('default', options).format(dateInUTC);
+      timeDiv.textContent = `${localTime} ${match.statusShort}`;
+    } catch (error) {
+      console.log('An error occurred while creating the Date object:', error);
+    }
+  }
 
       matchDiv.appendChild(homeName);
+      matchDiv.appendChild(timeDiv);
     matchDiv.appendChild(homeLogo);
     matchDiv.appendChild(timeDiv);
     matchDiv.appendChild(awayLogo);
@@ -495,7 +516,7 @@ initializePage();
      console.log(match.homeTeam.stadiumName);
 
      detailsDiv.innerHTML = `
-     <span class="material-symbols-outlined">event</span> ${formattedDate}
+     <span class="material-symbols-outlined">event</span> ${formattedDate} <br>
      <span class="material-symbols-outlined">stadium</span> ${stadium}
    `;
 
