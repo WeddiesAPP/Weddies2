@@ -7,6 +7,7 @@
   <meta name="description" content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
   <link rel="icon" href="Weddies-bg.png" type="image/x-icon">
   <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
 <style>
 
 
@@ -23,6 +24,7 @@
 body {
   background-color: black;
   margin-bottom: 10vh;
+
 }
 
 /* Navigation */
@@ -146,7 +148,21 @@ word-wrap: break-word;
   padding: 0em;
   background-color: #292929;
 border-radius: 25px;
-  border: 3px solid white;}
+  border: 3px solid white;
+  @media screen and (min-width: 768px) {
+          margin-left: 25vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 50vw;
+    padding: 0em;
+    background-color: #292929;
+  border-radius: 25px;
+    border: 3px solid white;
+  }
+}
+
+
+
 
 
 .league h2 {
@@ -161,7 +177,7 @@ border-radius: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white; border-radius: 25px;
+  background-color: white; border-radius: 5px;
   border: 2px solid white;}
 
 .leagueLogo {
@@ -176,8 +192,8 @@ border-radius: 25px;
   top: 1.25em;
   left: 1.25em;
   z-index: 2;
-  width: 4em;
-  height: 4em;
+  width: auto;
+  height: 10vh;
   margin-bottom: 3vh;
 }
 
@@ -259,31 +275,149 @@ border-radius: 25px;
   font-size: 16px;
 
 }
-
-#content {
-  text-align: center;
-}
-
-#teamName {
-  font-size: 2em;
-  margin-bottom: 20px;
-}
-
-#swipeContainer {
-  overflow: hidden;
+#swipeBox {
+  display: flex;
+  overflow: hidden; /* Disable scroll */
+  white-space: nowrap;
+  width: 100%;
   position: relative;
-  width: 300px;
-  height: 300px;
-  margin: 0 auto;
+    margin-bottom: 3vh;
 }
 
-#teamLogo, #stadiumImage {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  transition: all 0.3s ease;
+.image-container {
+  width: 100%;
+  text-align: center;
+  flex: none; /* Prevent flex items from shrinking */
+
 }
 
+#stadiumImage {
+  width: auto;
+  height: 25vh;
+}
+
+#clubImage {
+  width: auto;
+    height: 25vh;
+}
+
+#bubbleContainer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.bubble {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: lightgray;
+  border-radius: 50%;
+  margin: 0 5px;
+}
+
+.bubble.active {
+  background-color: darkgray;
+}
+
+.wrapper-div {
+
+  background-color: black;
+  border-radius: 15px;
+  padding: 1px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3vh;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  text-align: center;
+  @media screen and (min-width: 768px) {
+    background-color: black;
+    border-radius: 15px;
+    padding: 1px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3vh;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    text-align: center;  /* Increase font size for larger viewports */
+   }
+}
+#title {
+  color: white;
+  font-weight: bold;
+}
+
+.standings-container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    border-radius: 15px;
+    margin-top: 2vh;
+    @media screen and (min-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      width: 50vw;
+      border-radius: 15px;
+      margin-left: 25vw;
+ }
+  }
+
+
+
+.cell {
+  text-align: center;
+  padding: 5px;
+  width: 80px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+    color: white;
+}
+
+.position-cell {
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 15px;
+
+  @media screen and (min-width: 768px) {
+    justify-content: left;
+    align-items: flex-start;
+   font-size: 14px; /* Increase font size for larger viewports */
+   width: 50%;
+ }
+}
+
+.row {
+  display: flex;
+
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  background-color: #292929;
+}
+.bold-row {
+  display: flex;
+
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  background-color: #292929;
+  font-weight: bold;
+}
+
+
+.header-row {
+  background-color: #292929;
+  color: black;
+}
+
+.team-logo {
+  width: 20px;
+  height: auto;
+}
+
+.team-name {
+
+}
 
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -297,16 +431,29 @@ border-radius: 25px;
     <title>Matches info</title>
 </head>
 <body>
+  <img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
   <button id="goToMatches" class="goToMatches-button">  <span class="material-symbols-outlined">
         arrow_back
     </span></button>
-    <div id="content">
-        <h1 id="teamName"></h1>
-        <div id="swipeContainer">
-          <img id="teamLogo" src="" alt="Team Logo">
-          <img id="stadiumImage" src="" alt="Stadium Image">
-        </div>
-      </div>
+    <div id="swipeBox">
+    <div class="image-container" id="clubContainer">
+      <img id="clubImage" src="" alt="Club">
+
+    </div>
+    <div class="image-container" id="stadiumContainer">
+      <img id="stadiumImage" src="" alt="Stadium">
+
+    </div>
+  </div>
+  <div id="bubbleContainer">
+    <div class="bubble" id="bubble1"></div>
+    <div class="bubble" id="bubble2"></div>
+  </div>
+
+
+
+
+
 <nav class="nav">
     <a href="index.html" class="nav__link">
         <span class="material-symbols-outlined">
@@ -324,85 +471,109 @@ border-radius: 25px;
         </span>
     </a>
 </nav>
-<img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
 
 
- <div id="matchContainer">
-    <!-- Match divs will be populated by JavaScript -->
+<div class="wrapper-div">
+<!-- Match divs and other content will be populated by JavaScript -->
+<p id = "title">Upcoming Match</p>
+
+ <div id="matchContainerUpcoming">
+
   </div>
+  </div>
+  <div class="wrapper-div">
+  <!-- Match divs and other content will be populated by JavaScript -->
+  <p id = "title">Form </p>
+  <div id="matchContainerLastMatches">
+
+   </div>
+
+</div>
+
+<div class="wrapper-div">
+<!-- Match divs and other content will be populated by JavaScript -->
+<p id = "title">Standings</p>
+<div id="standingsDiv" class="standings-container">
+    <!-- Standings Table will be generated here -->
+  </div>
+</div>
 </body>
 <script>
 let clubs = [];
 let allFixtures = [];
-// Fetch the CSV file
-/*
-fetch('teams.csv')
-  .then((response) => response.text())
-  .then((csvString) => {
-    // Parse the CSV string
-    Papa.parse(csvString, {
-      header: true,
-      dynamicTyping: false,
-      skipEmptyLines: true,
-      delimiter: ';', // Note: the example uses semicolon as delimiter
-      complete: function (results) {
-        clubs = results.data.map((row) => {
-          return {
-            leagueID: row.leagueID,
-            leagueName: row.leagueName,
-            leagueImage: row.leagueImage,
-            clubID: row.clubID,
-            clubName: row.clubName,
-            clubCode: row.clubCode,
-            country: row.country,
-            founded: row.founded,
-            national: row.national === "True" ? true : false,
-            clubImageName: row.clubImageName,
-            stadiumID: row.stadiumID,
-            stadiumName: row.stadiumName,
-            stadiumAddress: row.stadiumAddress,
-            cityName: row.cityName,
-            capacity: row.capacity,
-            surface: row.surface,
-            stadiumImageName: row.stadiumImageName,
-            latitude: parseFloat(row.latitude),
-            longitude: parseFloat(row.longitude),
-          };
-        });
-        // Call your existing functions with the new data
-        loadFixtures();
-        console.log(clubs);
-      },
-    });
-  })
-  .catch((error) => {
-    console.error('An error occurred while fetching the CSV file:', error);
-  });
-
-*/
-let TargetfixtureID;  // Declare it here as a global variable
-
-
-document.addEventListener("DOMContentLoaded", initializePage);
-
-function initializePage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    TargetfixtureID = parseInt(urlParams.get('teamID')); // Assign the value here
-    updateMatchesForDate(TargetfixtureID);
-}
-
+let targetTeamID;  // Declare it here as a global variable
+let leagueStandings = [];
 
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+  function loadTeams()
+  {
+    return new Promise((resolve, reject) => {
+    console.log("loadTeams called");
+    fetch('teams.csv')
+     .then(response => response.text())
+     .then(csvString => {
+       // Parse the CSV string
+       Papa.parse(csvString, {
+         header: true,
+         dynamicTyping: false,
+         skipEmptyLines: true,
+         complete: function (results) {
+           clubs = results.data.map(row => {
+            return {
+              leagueID: row.leagueID,
+              countryID: row.countryID,
+              leagueName: row.leagueName,
+
+              leagueImage: row.leagueImage,
+
+
+
+
+
+              clubID: row.clubID,
+              clubName: row.clubName,
+              clubImageName: row.clubImageName,
+              clubFounded: row.Founded,
+              clubCode: row.clubCode,
+
+              stadiumID: row.stadiumID,
+              stadiumName: row.stadiumName,
+              stadiumCity: row.cityName,
+              stadiumAdress: row.stadiumAdress,
+
+              latitude: parseFloat(row.latitude.replace(',', '.')),
+             longitude: parseFloat(row.longitude.replace(',', '.')),
+              stadiumSurface: row.surface,
+              stadiumCapacity: row.capacity,
+              stadiumImageName: row.stadiumImageName
+            };
+
+          });
+                  resolve();
+
+        },
+      });
+    })
+    .catch(error => {
+       console.error('An error occurred while fetching the CSV file:', error);
+       reject(error);
+    });
+  });
+}
+
+
 
   function loadFixtures() {
+  return new Promise((resolve, reject) => {
+    console.log("loadFixtures called");
     fetch('fixtures.csv')
       .then(response => response.text())
       .then(csvString => {
         // Parse the CSV string
         Papa.parse(csvString, {
           header: true,
-          delimiter: ';', // Specify the field delimiter as a semi-colon
+          delimiter: ';',
           skipEmptyLines: true,
           complete: function (results) {
             allFixtures = results.data.map(row => {
@@ -442,21 +613,45 @@ function initializePage() {
                 fulltimeAway: parseFloat(row.Score_Fulltime_Away),
               };
             });
+            resolve(); // resolve the promise here
 
-              initializePage();
             // Call your existing function to update the matches with the parsed data
           },
         });
       })
-      .catch(error => console.error('An error occurred while fetching fixtures.csv:', error));
+      .catch(error => {
+         console.error('An error occurred while fetching fixtures.csv:', error);
+         reject(error); // Correct placement inside catch
+       });
+   });
+ }
+  // Don't forget to actually call loadFixtures at some point
+  function loadLeagueStandings() {
+    return new Promise((resolve, reject) => {
+      console.log("loadLeagueStandings called");
+      fetch('league_standings.csv')
+        .then(response => response.text())
+        .then(csvString => {
+          // Parse the CSV string
+          Papa.parse(csvString, {
+            header: true,
+            dynamicTyping: true, // Automatically type-cast numbers
+            skipEmptyLines: true,
+            complete: function (results) {
+              leagueStandings = results.data;
+              resolve();
+            },
+          });
+        })
+        .catch(error => {
+          console.error('An error occurred while fetching the CSV file:', error);
+          reject(error);
+        });
+    });
   }
 
-  // Don't forget to actually call loadFixtures at some point
-  loadFixtures();
-
-
   function updateMatchesForDate(TargetID) {
-    const matchesDisplay = document.getElementById("matchContainer");
+    const matchesDisplay = document.getElementById("matchContainerUpcoming");
 
     // Clear previous matches
     matchesDisplay.innerHTML = "";
@@ -471,56 +666,392 @@ function initializePage() {
       console.log("No matches found for the provided fixtureID");
     }
   }
+  function displayLastMatches(matches) {
+    // Replace with the actual value you are targeting.
+    const matchContainer = document.getElementById('matchContainerLastMatches');
+    matchContainer.innerHTML = '';
 
-  function displayMatches(matches) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Reset time part to compare just the date
+
+    const filteredByTeam = matches
+      .filter(match => match.homeTeam.homeID === targetTeamID || match.awayTeam.awayID === targetTeamID);
+
+    const filteredByTeamAndDate = filteredByTeam.filter(match => {
+      const matchDate = new Date(match.date);
+      matchDate.setHours(0, 0, 0, 0);  // Reset time part to compare just the date
+      return matchDate < today;
+    });
+
+    const lastMatches = filteredByTeamAndDate.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+    console.log("Filtered by Team and Last 5 Matches: ", lastMatches);
+
+    lastMatches.forEach(lastMatch => {
+      // Create elements and append to matchContainer
+      const leagueDiv = document.createElement('div');
+      leagueDiv.className = 'league';
+
+      const matchDiv = document.createElement('div');
+      matchDiv.className = 'match';
+      matchDiv.addEventListener('click', function() {
+        const fixtureID = lastMatch.fixtureID; // Assuming the 'match' object has a property called 'fixtureID'
+    window.location.href = `matchinfo.html?fixtureID=${fixtureID}`;
+
+                });
+
+
+
+      const homeLogo = document.createElement('img');
+      homeLogo.src = lastMatch.homeTeam.clubImageName;
+      homeLogo.className = 'homeLogo';
+      homeLogo.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = lastMatch.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
+
+      const awayLogo = document.createElement('img');
+      awayLogo.src = lastMatch.awayTeam.clubImageName;
+      awayLogo.className = 'awayLogo';
+      awayLogo.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = lastMatch.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
+
+      const timeDiv = document.createElement('div');
+      timeDiv.className = 'matchTime';
+      if (lastMatch.homeTeam.homeID === targetTeamID) {
+     timeDiv.style.backgroundColor = lastMatch.goalsHome > lastMatch.goalsAway ? 'green' : 'red';
+   } else {
+     timeDiv.style.backgroundColor = lastMatch.goalsAway > lastMatch.goalsHome ? 'green' : 'red';
+   }
+      timeDiv.innerHTML = `${lastMatch.goalsHome}&nbsp;-&nbsp;${lastMatch.goalsAway}`;
+
+      const homeName = document.createElement('div');
+      homeName.className = 'homeName';
+      homeName.textContent = lastMatch.homeTeam.clubName;
+      homeName.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = lastMatch.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
+      const awayName = document.createElement('div');
+      awayName.className = 'awayName';
+      awayName.textContent = lastMatch.awayTeam.clubName;
+      awayName.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = lastMatch.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+  console.log(match.awayTeam.awayID);
+});
+      matchDiv.appendChild(homeName);
+      matchDiv.appendChild(homeLogo);
+      matchDiv.appendChild(timeDiv);
+      matchDiv.appendChild(awayLogo);
+      matchDiv.appendChild(awayName);
+
+      leagueDiv.appendChild(matchDiv);
+      matchContainer.appendChild(leagueDiv);
+    });
+  }
+
+
+  function displayUpcomingMatch(matches) {
+     // Replace with the actual value you are targeting.
+    const matchContainer = document.getElementById('matchContainerUpcoming');
+    matchContainer.innerHTML = '';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Reset time part to compare just the date
+    const filteredByTeam = matches
+       .filter(match => match.homeTeam.homeID === targetTeamID || match.awayTeam.awayID === targetTeamID);
+    const filteredByTeamAndDate = filteredByTeam.filter(match => {
+      const matchDate = new Date(match.date);
+      matchDate.setHours(0, 0, 0, 0);  // Reset time part to compare just the date
+      return matchDate >= today;
+}   );
+
+console.log("Filtered by Team and Date: ", filteredByTeamAndDate);
+    firstUpcomingMatch = filteredByTeamAndDate[0];
+    if (firstUpcomingMatch) {
+      const leagueDiv = document.createElement('div');
+      leagueDiv.className = 'league';
+
+      const leagueInfo = document.createElement('div');
+      leagueInfo.className = 'leagueInfo';
+
+      const leagueLogo = document.createElement('img');
+      leagueLogo.src = firstUpcomingMatch.leagueLogo;
+      leagueLogo.className = 'leagueLogo';
+
+      const leagueName = document.createElement('h2');
+      leagueName.textContent = firstUpcomingMatch.leagueName;
+
+      leagueInfo.appendChild(leagueLogo);
+      leagueInfo.appendChild(leagueName);
+      leagueDiv.appendChild(leagueInfo);
+
+      const matchDiv = document.createElement('div');
+      matchDiv.className = 'match';
+      matchDiv.addEventListener('click', function() {
+        const fixtureID = firstUpcomingMatch.fixtureID; // Assuming the 'match' object has a property called 'fixtureID'
+    window.location.href = `matchinfo.html?fixtureID=${fixtureID}`;
+});
+      const homeLogo = document.createElement('img');
+      homeLogo.src = firstUpcomingMatch.homeTeam.clubImageName;
+      homeLogo.className = 'homeLogo';
+      homeLogo.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = firstUpcomingMatch.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
+
+      const awayLogo = document.createElement('img');
+      awayLogo.src = firstUpcomingMatch.awayTeam.clubImageName;
+      awayLogo.className = 'awayLogo';
+      awayLogo.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = firstUpcomingMatch.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
+
+      const timeDiv = document.createElement('div');
+    timeDiv.className = 'matchTime';
+
+    if (firstUpcomingMatch.statusShort === 'FT') {
+      timeDiv.textContent = `${firstUpcomingMatch.goalsHome} - ${firstUpcomingMatch.goalsAway}`;
+    } else if (['1H', '2H', 'LIVE', 'BT', 'INT'].includes(firstUpcomingMatch.statusShort)) {
+      timeDiv.textContent = `${firstUpcomingMatch.goalsHome} - ${firstUpcomingMatch.goalsAway}`;
+    } else {
+      try {
+        const timeWithoutSeconds = firstUpcomingMatch.startingAt.slice(0, -3); // Remove seconds
+        const fullDateTime = `${firstUpcomingMatch.date}T${timeWithoutSeconds}Z`; // Combine date, time, and "Z" for UTC
+
+        const dateInUTC = new Date(fullDateTime); // Create Date object in UTC
+        const options = { hour: '2-digit', minute: '2-digit' };  // Removed timeZoneName: 'short'
+        const localTime = new Intl.DateTimeFormat('default', options).format(dateInUTC);
+
+        const month = (dateInUTC.getUTCMonth() + 1).toString().padStart(2, '0'); // Add 1 because months are zero-based
+        const day = dateInUTC.getUTCDate().toString().padStart(2, '0');
+        const formattedDate = `${month}/${day}`; // MM/DD format
+
+        timeDiv.textContent = `${formattedDate} ${localTime}`;  // Displaying date and time
+      } catch (error) {
+        console.log('An error occurred while creating the Date object:', error);
+      }
+    }
+
+
+
+      const homeName = document.createElement('div');
+      homeName.className = 'homeName';
+      homeName.textContent = firstUpcomingMatch.homeTeam.clubName;
+      homeName.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = firstUpcomingMatch.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+});
+
+      const awayName = document.createElement('div');
+      awayName.className = 'awayName';
+      awayName.textContent = firstUpcomingMatch.awayTeam.clubName;
+      awayName.addEventListener('click', function() {
+         event.stopPropagation();  // Prevent event from bubbling up
+  const teamID = firstUpcomingMatch.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+  window.location.href = `teaminfo.html?teamID=${teamID}`;
+
+});
+
+      matchDiv.appendChild(homeName);
+      matchDiv.appendChild(homeLogo);
+      matchDiv.appendChild(timeDiv);
+      matchDiv.appendChild(awayLogo);
+      matchDiv.appendChild(awayName);
+
+      leagueDiv.appendChild(matchDiv);
+      matchContainer.appendChild(leagueDiv);
+    }
+  }
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Trigger fetching of teams and fixtures
+  Promise.all([loadTeams(), loadLeagueStandings(), loadFixtures()]).then(() => {
+    // After both promises are resolved, initialize the page
+    Initialize();
+  }).catch(error => {
+    console.error('An error occurred:', error);
+  });
+
+  let startX = 0;
+  let currentIndex = 0;
+  const swipeBox = document.getElementById('swipeBox');
+  const bubbles = document.querySelectorAll('.bubble');
+
+  // Function to update the bubble indicator
+  function updateBubbles(index) {
+    bubbles.forEach((bubble, idx) => {
+      bubble.classList.remove('active');
+      if (idx === index) {
+        bubble.classList.add('active');
+      }
+    });
+  }
+
+  // Update bubble initially
+  updateBubbles(1 - currentIndex);
+  function handleSwipe(change) {
+      if (change < 0 && currentIndex > 0) {
+        // Swipe right
+        swipeBox.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+        currentIndex--;
+      } else if (change > 0 && currentIndex < 1) {
+        // Swipe left
+        swipeBox.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+        currentIndex++;
+      }
+
+      // Update bubble indicator
+      updateBubbles(1 - currentIndex);
+    }
+
+    // Touch events for mobile
+    swipeBox.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, false);
+
+    swipeBox.addEventListener('touchmove', (e) => {
+      let touch = e.touches[0];
+      let change = startX - touch.clientX;
+      handleSwipe(change);
+      e.preventDefault();
+    }, false);
+
+    // Mouse events for desktop
+    swipeBox.addEventListener('mousedown', (e) => {
+      startX = e.clientX;
+    }, false);
+
+    swipeBox.addEventListener('mousemove', (e) => {
+      if (e.buttons === 1) { // Check if left button is pressed
+        let change = startX - e.clientX;
+        handleSwipe(change);
+        e.preventDefault();
+      }
+    }, false);
+  });
+  function getTeamStandings(targetTeamID) {
+
+
+    const targetTeamRow = leagueStandings.find(row => row.Team_ID === targetTeamID);
+
+if (!targetTeamRow) {
+  console.log('No team found with the given ID');
+  return;
+}
+
+const targetLeagueID = targetTeamRow.League_ID;
+const leagueStandingsList = leagueStandings.filter(row => row.League_ID === targetLeagueID);
+//const sortedStandings = leagueStandingsList.sort((a, b) => a.Rank - b.Rank);
+//console.log(sortedStandings);
+return leagueStandingsList;
 
 }
 
 
+function generateStandingsDiv(leagueStandingsList) {
+  // Sort the data by Rank
+  const sortedStandings = leagueStandingsList.sort((a, b) => a.Rank - b.Rank);
+
+  let standingsHTML = '<div class="row header-row">';
+  const headers = ['Position', 'Pl', 'W', 'D', 'L', 'GD', 'Pts'];
+  headers.forEach((header, index) => {
+    if (header === 'Position') {
+      standingsHTML += `<div class="cell position-cell">${header}</div>`;
+    } else {
+      standingsHTML += `<div class="cell">${header}</div>`;
+    }
+  });
+  standingsHTML += '</div>';
+
+  sortedStandings.forEach((team, index) => {
+    const teamClub = clubs.find(club => club.clubID === String(team.Team_ID));
+
+    // Check if the current team is the selected team
+    const isTeamSelected = team.Team_ID === targetTeamID;
+
+    // Apply a different CSS class based on whether the team is selected
+    const rowClass = isTeamSelected ? 'row bold-row' : 'row';
+
+    standingsHTML += `<div class="${rowClass}" onclick="window.location.href='teaminfo.html?teamID=${team.Team_ID}'">`
+    standingsHTML += `<div class="cell position-cell"><span class="team-rank">${team.Rank}</span><img class="team-logo" src="${teamClub ? teamClub.clubImageName : ''}" alt="${teamClub ? teamClub.clubName : 'Logo'}"><span class="team-name">${team.Team_Name}</span></div>`;
+    standingsHTML += `<div class="cell">${team.Played}</div>`;
+    standingsHTML += `<div class="cell">${team.Win}</div>`;
+    standingsHTML += `<div class="cell">${team.Draw}</div>`;
+    standingsHTML += `<div class="cell">${team.Lose}</div>`;
+    standingsHTML += `<div class="cell">${team.Goals_Diff}</div>`;
+    standingsHTML += `<div class="cell">${team.Points}</div>`;
+    standingsHTML += '</div>';
+  });
+
+  document.getElementById('standingsDiv').innerHTML = standingsHTML;
+}
 
 
 
+function Initialize() {
+  console.log("Initialize called");
+  const urlParams = new URLSearchParams(window.location.search);
 
 
-  document.addEventListener("DOMContentLoaded", initializePage());
 
-  document.addEventListener("DOMContentLoaded", function() {
+    // Get the teamID parameter and set it as targetTeamID
+    targetTeamID = parseInt(urlParams.get('teamID'));
+    standings = getTeamStandings(targetTeamID);
+    displayUpcomingMatch(allFixtures);
+    displayLastMatches(allFixtures);
+    if (!standings || standings.length === 0) {
+    console.log('Standings are not available for the selected team.');
+    // You can display a message or take any other action here.
+    return;
+  }
+    generateStandingsDiv(standings);
+    console.log(typeof targetTeamID);  // Should be 'number'
+    console.log(typeof clubs[0].clubID); // Should also be 'number'
+    console.log("targetTeamID set to:", targetTeamID);
+    console.log(allFixtures + "test");
+
+
   const goToMatchesButton = document.getElementById('goToMatches');
+
+  // Assuming targetTeamID is available globally or you have obtained it somehow
+  const currentClub = clubs.find(club => club.clubID === targetTeamID.toString());
+
+  const currentFixture = allFixtures.find(fixture => fixture.homeTeam.homeID === targetTeamID || fixture.awayTeam.awayID === targetTeamID);
+  console.log(currentClub);
+  if (currentClub && currentFixture) {
+    const stadiumImageElement = document.getElementById('stadiumImage');
+    const clubImageElement = document.getElementById('clubImage');
+
+    // Debug: Print the src to console
+    console.log("Stadium Image URL:", currentClub.stadiumImageName);
+    console.log("Club Image URL:", currentClub.clubImageName);
+
+    // Assuming you have URLs for the images
+    stadiumImageElement.src = currentClub.stadiumImageName;
+    clubImageElement.src = currentClub.clubImageName;
+  }
 
   goToMatchesButton.addEventListener('click', function() {
     window.history.back();
   });
-
-  // Retrieve the teamID from the URL
-  const teamID = parseInt(new URLSearchParams(window.location.search).get("teamID"), 10);
-
-  // Search for the team's information based on the teamID
-  const teamInfo = allFixtures.find(fixture =>
-    fixture.homeTeam.homeID === teamID ||
-    fixture.awayTeam.awayID === teamID
-  );
-
-  if (teamInfo) {
-    // Determine if the team is playing at home or away
-    const homeOrAway = teamInfo.homeTeam.homeID === teamID ? "home" : "away";
-
-    // Get the appropriate team's data
-    const teamData = teamInfo[`${homeOrAway}Team`];
-
-    // Populate the HTML
-    document.getElementById("teamName").textContent = teamData.clubName;
-    document.getElementById("teamLogo").src = teamData.clubImageName;
-
-    // Populate the stadium image
-    // Use Home_Stadium for home games and Away_Stadium for away games
-    // Assuming you have the stadium image in the fixture
-    // Your code here to populate the stadium image
-
-  }
-}); // Fixed the missing closing parentheses and curly brace here
-
-
-
+}
+  //
 
 
   // Function to calculate straight-line distance
