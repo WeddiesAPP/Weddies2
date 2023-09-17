@@ -985,7 +985,9 @@ function generateStandingsDiv(leagueStandingsList) {
 
     // Check if the current team is the selected team
     const isTeamSelected = team.Team_ID === targetTeamID;
-
+    if (isTeamSelected) {
+      document.title = `Weddies - ${team.Team_Name}`;
+    }
     // Apply a different CSS class based on whether the team is selected
     const rowClass = isTeamSelected ? 'row bold-row' : 'row';
 
@@ -999,7 +1001,7 @@ function generateStandingsDiv(leagueStandingsList) {
     standingsHTML += `<div class="cell">${team.Points}</div>`;
     standingsHTML += '</div>';
   });
-
+  
   document.getElementById('standingsDiv').innerHTML = standingsHTML;
 }
 
