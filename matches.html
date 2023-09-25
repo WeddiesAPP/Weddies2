@@ -24,6 +24,71 @@ body {
   background-color: black;
   margin-bottom: 10vh;
 }
+/* Header */
+header {
+  background-color:  #161616;; /* Set Background to Black */
+  padding: 10px 0;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+}
+
+.logo-container .logo {
+  width: 100px;
+  height: auto;
+}
+
+.search-container {
+  flex-grow: 2;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  color: #fff; /* Set Text Color to White */
+  background-color: #000; /* Set Background to Black */
+}
+
+.search-button, .filter-button {
+  background: none;
+  border: none;
+  color: #fff; /* Set Icon Color to White */
+  cursor: pointer;
+  font-size: 24px; /* Set Icon Size */
+  padding: 5px;
+}
+
+.filter-button {
+  padding: 5px 10px;
+}
+
+@media (max-width: 768px) {
+  .search-input {
+    display: none;
+  }
+
+  .search-button {
+    display: block;
+  }
+  .header-container {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: left;
+  justify-content: space-between;
+}
+}
 
 /* Navigation */
 .nav {
@@ -32,7 +97,7 @@ body {
   width: 100%;
   height: 10vh;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  background-color: #ffffff;
+  background-color: #161616;
   overflow-x: auto;
   z-index: 9999;
 }
@@ -54,7 +119,7 @@ body {
 }
 
 .nav__link:hover {
-  background-color: #eeeeee;
+  background-color: rgb(29, 28, 28);
 }
 
 .nav__link--active {
@@ -67,8 +132,10 @@ body {
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 72;
-  color: black;
+  color: white;
 }
+
+
 
 .nav__link--active .material-symbols-outlined {
   color: #009578;
@@ -85,7 +152,8 @@ body {
   margin: 1vh;
   background-color: #292929;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
+  border-radius: 25px;
+  border: 3px #292929;
 
 
 
@@ -98,10 +166,19 @@ body {
 .homeLogo, .awayLogo {
   flex: 0 0 auto;  /* Do not grow, do not shrink, use automatic basis */
   /*margin: 0.5rem;*/ /* Added margin for better spacing */
+width: 3vw;
+
+  height: 3vh;
+  object-fit: contain;
+  @media (max-width: 768px) {
+    flex: 0 0 auto;  /* Do not grow, do not shrink, use automatic basis */
+  /*margin: 0.5rem;*/ /* Added margin for better spacing */
 width: 5vw;
 
   height: 5vh;
   object-fit: contain;
+  }
+
 }
 
 .homeName {
@@ -149,7 +226,17 @@ word-wrap: break-word;
   padding: 0em;
   background-color: #292929;
 border-radius: 25px;
-  border: 3px solid white;}
+  border: 3px #292929;
+  @media screen and (min-width: 768px) {
+          margin-left: 35vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 30vw;
+    padding: 0em;
+    background-color: #292929;
+    border-radius: 25px;
+  border: 3px #292929;
+  }}
 
 
 .league h2 {
@@ -157,38 +244,25 @@ border-radius: 25px;
   margin: 0;
   padding: 0em;
   background-color: transparent;
-  color:black;
+  color:white;
 }
 
 .leagueInfo {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white; border-radius: 25px;
-  border: 2px solid white;}
+  background-color: #292929; border-radius: 25px;
+  }
 
 .leagueLogo {
-  max-width: 6vw;
-  max-height: 6vh;
+  max-width: 4vw;
+  max-height: 4vh;
   margin-right: 1vw;
 }
 
-.date-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5vh; margin-bottom: 5vh;
-  background-color: transparent;
-  cursor: pointer;
-color: white;}
 
-.date-arrow {
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-size: 1.125em;
-  margin: 0 0.625em;
- color: white;}
+
+
 
 .logo-weddies-bg {
   position: absolute;
@@ -198,12 +272,41 @@ color: white;}
   width: 4em;
   height: 4em;
 }
+.date-container {
+  display: flex;
+  flex-direction: column; /* stack children vertically */
+  align-items: center;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  background-color: #292929;
+  color: white;
+  border-radius: 25px;
+  border: 3px #292929;
 
-.filter-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  @media screen and (min-width: 768px) {
+          margin-left: 35vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    width: 30vw;
+    padding: 0em;
+    background-color: #292929;
+    border-radius: 25px;
+  border: 3px #292929;
+  }
 }
+
+.arrows-and-date {
+  display: flex; /* to arrange the arrows and date in a single line */
+  align-items: center; /* align items vertically center */
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* spacing between child elements */
+  margin-top: 1em; /* space above filter container */
+}
+
 
 /* Modal */
 .modal {
@@ -279,6 +382,83 @@ color: white;}
   text-decoration: none;
   cursor: pointer;
 }
+
+footer {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 20px 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer-container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* allows the items to wrap to the next line on small screens */
+}
+
+.logo-container .logo {
+  width: 100px;
+  height: auto;
+}
+
+.copyright-container p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+
+.links-container .footer-link {
+  margin-right: 20px;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  display: inline-block; /* Needed for the positioning of the ::after pseudo-element */
+}
+
+.links-container .footer-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px; /* The height of the underline */
+  background-color: white; /* The color of the underline */
+  transition: width 0.3s ease; /* For a smooth transition effect */
+}
+
+.links-container .footer-link:hover::after {
+  width: 100%; /* Makes the underline appear under the whole text on hover */
+}
+
+.links-container .footer-link:last-child {
+  margin-right: 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .footer-container {
+    width: 95%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logo-container,
+  .copyright-container,
+  .links-container {
+    margin-bottom: 20px;
+    width: 100%; /* allows the content to take the full width of its container */
+    text-align: center; /* centers the content */
+  }
+
+  .links-container .footer-link {
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -291,7 +471,19 @@ color: white;}
     <title>Matches Page</title>
 </head>
 <body>
-
+  <header>
+    <div class="header-container">
+      <div class="logo-container">
+        <img src="Weddies-bg.png" alt="Logo" class="logo"/>
+      </div>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search"/>
+        <button class="search-button">🔍</button>
+      </div>
+      
+    </div>
+  </header>
+  
 <nav class="nav">
     <a href="index.html" class="nav__link">
         <span class="material-symbols-outlined">
@@ -309,17 +501,7 @@ color: white;}
         </span>
     </a>
 </nav>
-<img src="Weddies-bg.png" alt="Logo" class="logo-weddies-bg"></div>
-<div id="date-container" class="date-container">
-  <button id="prev-day" class="date-arrow">&#9664;</button> <!-- Left arrow -->
-  <span id="date-display">Today</span>
-  <input type="date" id="hidden-date-picker" style="display: none;">
-  <button id="next-day" class="date-arrow">&#9654;</button> <!-- Right arrow -->
-</div>
-<!-- Filter Button -->
-<button id="filterButton" class="filter-button">Filter</button>
 
-<!-- Filter Modal -->
 <div id="filterModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -345,10 +527,46 @@ color: white;}
   </div>
 </div>
 
+<div id="date-container" class="date-container">
+  <div class="arrows-and-date">
+    <button id="prev-day" class="date-arrow">&#9664;</button> <!-- Left arrow -->
+    <span id="date-display">Today</span>
+    <button id="next-day" class="date-arrow">&#9654;</button> <!-- Right arrow -->
+  </div>
+  <input type="date" id="hidden-date-picker" style="display: none;">
+  <div class="filter-container">
+    <select id="league-select">
+        <!-- Options will be populated by JavaScript -->
+    </select>
+    <label for="radius-slider">Radius: </label>
+    <input type="range" id="radius-slider" min="0" max="2000" value="2000">
+    <span id="radius-value">2000</span> 
+    <input type="checkbox" id="radius-all" value="all"> <label for="radius-all">All</label>
+  </div>
+</div>
+
+
 
  <div id="matchContainer">
     <!-- Match divs will be populated by JavaScript -->
   </div>
+
+  <footer>
+    <div class="footer-container">
+      <div class="logo-container">
+        <img src="Weddies-bg.png" alt="Weddies Logo" class="logo" />
+      </div>
+      <div class="copyright-container">
+        <p>&copy; 2023 Weddies. All Rights Reserved.</p>
+        <p>Based in the Netherlands</p>
+      </div>
+      <div class="links-container">
+        <a href="#" class="footer-link">FAQ</a>
+        <a href="#" class="footer-link">Contact Us</a>
+        <a href="#" class="footer-link">About Us</a>
+      </div>
+    </div>
+  </footer>
 </body>
 <script>
 let clubs = [];
@@ -518,11 +736,9 @@ let radiusFilter = 1000000;
 
 
 
-  const applyFilterBtn = document.getElementById('applyFilter');  // Make sure you have an element with id="applyFilterBtn" in your HTML
-  const leaguesSelect = document.getElementById('leaguesSelect');    // id="leaguesSelect"
-  const countriesSelect = document.getElementById('countriesSelect');// id="countriesSelect"
-  const radiusInput = document.getElementById('radiusInput');        // id="radiusInput"
-  const filterModal = document.getElementById('filterModal');        // id="filterModal"
+
+  const radiusInput = document.getElementById('radius-slider');        // id="radiusInput"
+ 
 
   dateContainer.addEventListener('click', function(event) {
     if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
@@ -758,75 +974,47 @@ function displayMatches(matches) {
 
 
 
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
 
-    const filterButton = document.getElementById("filterButton");
-    const filterModal = document.getElementById("filterModal");
-    const closeButton = document.querySelector(".close");
+const radiusInput = document.getElementById("radius-slider");
+const radiusAllCheckbox = document.getElementById("radius-all");
+const radiusValueDisplay = document.getElementById("radius-value");
+const hiddenDatePicker = document.getElementById("hidden-date-picker");
+let debounceTimer;
 
-    // Add definitions for these, or make sure they're defined somewhere
-    const leaguesSelect = document.getElementById("leagues");
-    const countriesSelect = document.getElementById("countries");
-    const radiusInput = document.getElementById("radius");
-    const hiddenDatePicker = document.getElementById("hidden-date-picker");
+// Update matches on page load
+getUserLocation().then(location => {
+    userLocation = location;
+    updateMatchesForDate(hiddenDatePicker.value);
+}).catch(error => {
+    console.error('An error occurred while fetching the user\'s location:', error);
+});
 
-    // Select all options for leagues and countries by default
-    const modal2 = document.getElementById("myModal");
-    const closeBtn = document.getElementsByClassName("close2")[0];
+radiusInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    
+    const value = parseFloat(radiusInput.value);
+    radiusValueDisplay.innerText = value;
+    
+    debounceTimer = setTimeout(function() {
+        if(radiusAllCheckbox.checked || value >= 10000) {
+            radiusFilter = Infinity; // If 'All' is checked or value is maximum, set filter to Infinity
+        } else {
+            radiusFilter = value;
+        }
+        updateMatchesForDate(hiddenDatePicker.value);
+    }, 2000);
+});
 
-    // When the user clicks on <span> (x), close the modal
-    if (closeBtn) {
-      closeBtn.addEventListener('click', function() {
-        modal2.style.display = "none";
-        document.body.style.overflow = 'visible';
-
-      });
+radiusAllCheckbox.addEventListener('change', function() {
+    if(radiusAllCheckbox.checked) {
+        radiusFilter = Infinity;
+    } else {
+        radiusFilter = parseFloat(radiusInput.value);
     }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.addEventListener('click', function(event) {
-      if (event.target === modal2) {
-        modal2.style.display = "none";
-      }
-    });
-
-    if (filterButton) {
-      filterButton.addEventListener("click", function() {
-        filterModal.style.display = "block";
-      });
-    }
-
-
-    const applyFilterBtn = document.getElementById("applyFilter");
-
-    if (applyFilterBtn) {
-    applyFilterBtn.addEventListener('click', async () => {
-      const selectedLeagues = Array.from(leaguesSelect.selectedOptions).map(option => option.value);
-      const selectedCountries = Array.from(countriesSelect.selectedOptions).map(option => option.value);
-
-      if (selectedLeagues.length > 0) {
-      leagueFilter = new Set(selectedLeagues);
-    }
-    if (selectedCountries.length > 0) {
-      countryFilter = new Set(selectedCountries);
-    }
-
-    if(parseFloat(radiusInput.value) > 0) {
-      radiusFilter = parseFloat(radiusInput.value);
-}
-      filterModal.style.display = 'none'; // Close the modal
-
-      try {
-        userLocation = await getUserLocation(); // Update the global variable with the user's location
-      } catch (error) {
-        console.error('An error occurred while fetching the user\'s location:', error);
-      }
-
-      updateMatchesForDate(hiddenDatePicker.value); // Refresh the matches
-    });
-  }
-  });
-
+    updateMatchesForDate(hiddenDatePicker.value);
+});
+});
 
   // Function to calculate straight-line distance
   function distanceFromUser(lat1, lon1, lat2, lon2) {
@@ -839,7 +1027,7 @@ function displayMatches(matches) {
               Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
-    console.log(d);
+
     return d;
   }
 
