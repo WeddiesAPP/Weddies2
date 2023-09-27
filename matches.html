@@ -31,64 +31,63 @@ header {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 .header-container {
-  width: 80%;
-  margin: 0 auto;
+  position: relative; /* Set to relative so the absolute positioned search input is relative to this container */
   display: flex;
-  align-items: left;
   justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #161616;
+  
 }
 
-.logo-container .logo {
-  width: 100px;
-  height: auto;
+.logoheader-container, .placeholder {
+  flex: 1;
 }
 
-.search-container {
-  flex-grow: 2;
+.logo-header {
+  height: 12vh;
+}
+
+.search-container-header {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
-.search-input {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-  color: #fff; /* Set Text Color to White */
-  background-color: #000; /* Set Background to Black */
-}
-
-.search-button, .filter-button {
-  background: none;
+.search-input-header {
+  display: none;
   border: none;
-  color: #fff; /* Set Icon Color to White */
+  padding: 10px;
+  border-radius: 15px;
+  width: 100%;
+  background: #FFF; /* To ensure that it covers content behind it */
+  box-sizing: border-box; /* Ensures padding is included in width */
+  
+}
+
+.search-btn-header {
+  background-color: transparent;
+  border: none;
   cursor: pointer;
-  font-size: 24px; /* Set Icon Size */
-  padding: 5px;
 }
 
-.filter-button {
-  padding: 5px 10px;
-}
-
-@media (max-width: 768px) {
-  .search-input {
+@media(min-width: 600px) {
+  .search-input-header {
+    display: block;
+    margin-left: 1vw;
+    width: 30vw; /* or any preferred fixed width */
+  }
+  .logo-header {height: 9vh;}
+  .search-btn-header {
     display: none;
   }
+}
 
-  .search-button {
-    display: block;
-  }
-  .header-container {
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  align-items: left;
-  justify-content: space-between;
-}
-}
+
+
+
 
 /* Navigation */
 .nav {
@@ -290,14 +289,22 @@ border-radius: 25px;
     width: 30vw;
     padding: 0em;
     background-color: #292929;
+  
     border-radius: 25px;
   border: 3px #292929;
   }
 }
-
+.date-arrow{
+background-color: transparent;
+background: none;
+border: none;
+margin: 20px;
+}
 .arrows-and-date {
   display: flex; /* to arrange the arrows and date in a single line */
   align-items: center; /* align items vertically center */
+  background: none;
+  border: none;
 }
 
 .filter-container {
@@ -473,14 +480,18 @@ footer {
 <body>
   <header>
     <div class="header-container">
-      <div class="logo-container">
-        <img src="Weddies-bg.png" alt="Logo" class="logo"/>
+      <div class="logoheader-container">
+        <img src="Weddies-bg.png" alt="Logo" class="logo-header"/>
       </div>
-      <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search"/>
-        <button class="search-button">🔍</button>
+      <div class="search-container-header">
+        <button id="search-btn-header" class="search-btn-header">
+          <span class="material-symbols-outlined">
+            search
+        </span>
+        </button>
+        <input type="text" id="search-input-header" class="search-input-header" placeholder="Search">
       </div>
-      
+      <div class="placeholder"></div>
     </div>
   </header>
   
@@ -502,36 +513,15 @@ footer {
     </a>
 </nav>
 
-<div id="filterModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2>Filter Options</h2>
-
-    <label for="leagues">Select League:</label>
-    <select id="leagues"  multiple></select>
-
-    <label for="countries">Select Country:</label>
-    <select id="countries"  multiple></select>
-
-    <label for="radius">Select Radius (in km):</label>
-    <input type="number" id="radius" min="0" />
-
-    <button id="applyFilter">Apply Filter</button>
-  </div>
-</div>
-
-<div id="myModal" class="modal2">
-  <div class="modal2-content">
-    <span class="close2">&times;</span>
-    <p id="modalText">Some text in the Modal..</p>
-  </div>
-</div>
-
 <div id="date-container" class="date-container">
   <div class="arrows-and-date">
-    <button id="prev-day" class="date-arrow">&#9664;</button> <!-- Left arrow -->
+    <button id="prev-day" class="date-arrow"><span class="material-symbols-outlined">
+      arrow_left
+  </span></button> <!-- Left arrow -->
     <span id="date-display">Today</span>
-    <button id="next-day" class="date-arrow">&#9654;</button> <!-- Right arrow -->
+    <button id="next-day" class="date-arrow"><span class="material-symbols-outlined">
+      arrow_right
+  </span></button> <!-- Right arrow -->
   </div>
   <input type="date" id="hidden-date-picker" style="display: none;">
   <div class="filter-container">
@@ -618,8 +608,7 @@ fetch('teams.csv')
 
 */
 
-let leagueFilter = new Set();
-let countryFilter = new Set();
+
 let userLocation = null;
 let radiusFilter = 1000000;
   let today = new Date();
@@ -712,26 +701,8 @@ let radiusFilter = 1000000;
         }
       });
 
-      leagues.forEach(league => {
-        const option = new Option(league, league);
-        leaguesSelect.add(option);
-      });
+    
 
-      countries.forEach(country => {
-        const option = new Option(country, country);
-        countriesSelect.add(option);
-      });
-
-      // If leagueFilter or countryFilter are empty, populate them
-      if (!leagueFilter || leagueFilter.size === 0) {
-        leagueFilter = new Set(leagues);
-      }
-
-      if (!countryFilter || countryFilter.size === 0) {
-        countryFilter = new Set(countries);
-      }
-      console.log(leaguesSelect);
-      console.log(countriesSelect);
     }
 
 
@@ -769,42 +740,14 @@ let radiusFilter = 1000000;
     const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     hiddenDatePicker.value = newDate;
     dateDisplay.textContent = newDate === formattedToday ? 'Today' : newDate;
-    const leaguesSelect = document.getElementById("leagues");
-    const countriesSelect = document.getElementById("countries");
-    const leagues = new Set();
-    const countries = new Set();
-    leagueFilter.clear();
-    countryFilter.clear();
-    allFixtures.forEach(fixture => {
-      if (fixture.date === newDate) {
-        leagues.add(fixture.leagueName);
-        countries.add(fixture.leagueCountry);
-      }
-    });
+   
+   
 
-    leagues.forEach(league => {
-      const option = new Option(league, league);
-      leaguesSelect.add(option);
-      leagueFilter.add(league);
-    });
 
-    countries.forEach(country => {
-      const option = new Option(country, country);
-      countriesSelect.add(option);
-      countryFilter.add(country);
-    });
 
-    // If leagueFilter or countryFilter are empty, populate them
-    if (!leagueFilter || leagueFilter.size === 0) {
-      leagueFilter = new Set(leagues);
-    }
-
-    if (!countryFilter || countryFilter.size === 0) {
-      countryFilter = new Set(countries);
-    }
-
+   
     updateMatchesForDate(newDate);
-    console.log(leagueFilter);
+
   }
 
   function updateMatchesForDate(date) {
@@ -824,7 +767,7 @@ let radiusFilter = 1000000;
     //console.log(withinRadius);
     // Filter by date and other existing filters
     return match.date === date &&
-      (leagueFilter.has(match.leagueName) || countryFilter.has(match.leagueCountry)) &&
+       
       withinRadius;  // Add the new radius filter
   });
 
@@ -980,6 +923,24 @@ const radiusInput = document.getElementById("radius-slider");
 const radiusAllCheckbox = document.getElementById("radius-all");
 const radiusValueDisplay = document.getElementById("radius-value");
 const hiddenDatePicker = document.getElementById("hidden-date-picker");
+const searchBtn = document.getElementById('search-btn-header');
+  const searchInput = document.getElementById('search-input-header');
+  
+  searchBtn.addEventListener('click', () => {
+    searchInput.style.display = 'block';
+    searchInput.style.width = '50vw';
+    searchInput.style.position = 'absolute'; // Position it absolute
+    searchInput.style.top = '0'; // Align to the top of the header container
+    searchInput.style.left = '0'; // Align to the left of the header container
+    searchInput.style.zIndex = '1000'; // To ensure it appears above all other elements
+    searchInput.focus();
+  });
+
+  searchInput.addEventListener('blur', () => {
+    if(window.innerWidth < 600) {
+      searchInput.style.display = 'none';
+    }
+  });
 let debounceTimer;
 
 // Update matches on page load
