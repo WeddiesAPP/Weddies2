@@ -256,10 +256,10 @@ border-radius: 25px;
   color:white !important;
 }
 
-.leagueInfo {
+.card-header.leagueInfo {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
   background-color: #292929 !important;
   }
 
@@ -383,28 +383,6 @@ border: none;
   /* Add any additional styling you prefer for the league logos */
 }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-  background-color: #fff;
-  margin: auto;
-  padding: 20px;
-  width: 50%;
-}
-
-.close {
-  cursor: pointer;
-}
-
 
 
 .match-container {
@@ -412,14 +390,24 @@ border: none;
   max-height: 1000px;  /* or any large number */
   transition: max-height 0.2s ease-in-out;
 }
-
-.collapseButton {
-  max-height: 5vh;
-  max-width: 5vw; /* Fix typo from "max width" to "max-width" */
-  background-color: transparent;
-  border-color: transparent; /* Fix typo from "border.color" to "border-color" */
-  font-size: 10px;
+.button-wrapper {
+  display: flex;
+  align-items: center;
 }
+
+.match-count {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; /* Makes it circular */
+  background-color: rgb(22, 122, 1); /* Example color */
+  color: #fff; /* Text color */
+  display: flex;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+  font-size: 12px;
+  margin-right: 5px; /* Space between the circle and the collapse button */
+}
+
 .modal2 {
   display: none;
   position: fixed;
@@ -532,7 +520,15 @@ footer {
     display: block;
     margin-bottom: 10px;
   }
+
 }
+
+.choices__list--multiple {
+    max-height: 100px !important;
+    overflow-y: auto !important;
+}
+
+
 
 </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -624,15 +620,15 @@ footer {
       <div class="row gy-2 gx-3 align-items-center">
         <div class="col-sm-6">
           <select id="leagues-select" class="form-select">
-            <option value="All" disabled selected>League</option>
+            <option value="All" selected>All Leagues</option>
           </select>
         </div>
-        <div class="col-sm-6">
+        <!--<div class="col-sm-6">
           <select id="countries-select" class="form-select">
-            <option value="All" disabled selected>Country</option>
+            <option value="All" selected>All Countries</option>
           </select>
         </div>
-        
+      -->
         <div class="col-sm-12 mt-3">
           <label for="radius-slider" class="form-label">Radius:</label>
           <input type="range" class="form-range" id="radius-slider" min="0" max="2000" value="2000">
@@ -815,55 +811,87 @@ let radiusFilter = 1000000;
 
     // Inside your populateDropdowns function
     function populateDropdowns() {
-      
-      const leaguesSelect = document.getElementById("leagues-select");
-      const countriesSelect = document.getElementById("countries-select");
-      const leagueOptionsSort = Array.from(leagueOptions).sort();
-      const countryOptionsSort = Array.from(countryOptions).sort();
-      countryOptionsSort.forEach((optionText) => {
-    const option = document.createElement("option");
-    option.value = optionText;
-    option.text = optionText;
-        countriesSelect.appendChild(option)
-      });
-      leagueOptionsSort.forEach((optionText) => {
-    const option = document.createElement("option");
-    option.value = optionText;
+    const leaguesSelect = document.getElementById("leagues-select");
+    leaguesSelect.setAttribute('multiple', '');
 
-    const fixtureWithLogo = allFixtures.find(fixture => fixture.leagueName === optionText);
+    const leaguesMap = new Map();
+    allFixtures.forEach(fixture => {
+        leaguesMap.set(fixture.leagueID, {
+            name: fixture.leagueName,
+            logo: fixture.leagueLogo
+        });
+    });
 
-    if (fixtureWithLogo) {
-        // Create a container to hold the logo and the text
+    const sortedLeagues = Array.from(leaguesMap.keys()).sort((a, b) => {
+        return leaguesMap.get(a).name.localeCompare(leaguesMap.get(b).name);
+    });
+
+    sortedLeagues.forEach((leagueID) => {
+        const league = leaguesMap.get(leagueID);
+        const option = document.createElement("option");
+        option.value = leagueID;
+        option.textContent = league.name;
+        option.hidden = true;
+        option.style = '-moz/webkit-appearance: none'
+
         const container = document.createElement("span");
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
 
-        // Create an <img> element for the logo
-        const logo = document.createElement("img");
-        logo.src = fixtureWithLogo.leagueLogo;
-        logo.alt = optionText + " Logo";
-        logo.classList.add("league-logo-dropdown");
+        if (league.logo) {
+            const logo = document.createElement("img");
+            logo.src = league.logo;
+            logo.alt = league.name + " Logo";
+            logo.loading = 'lazy';
+            logo.classList.add("league-logo-dropdown");
+            container.appendChild(logo);
+        }
 
-        // Create a text node for the league name
-        const textNode = document.createTextNode(optionText);
+        
 
-        // Append the logo and text node to the container
-        container.appendChild(logo);
-        container.appendChild(textNode);
-
-        // Append the container to the "Leagues" dropdown option
         option.appendChild(container);
         leaguesSelect.appendChild(option);
-    } else {
-        // Handle the case where the league logo is not found
-        console.warn(`League logo not found for ${optionText}`);
-        option.text = optionText;
-        leaguesSelect.appendChild(option);
+    });
+
+    const choices = new Choices("#leagues-select", {
+        removeItemButton: true,
+        shouldSort: false,
+        searchResultLimit: 30,
+    });
+    const hiddenDatePicker = document.getElementById("hidden-date-picker");
+    // Handling the change event
+    leaguesSelect.addEventListener('change', function () {
+    const selectedOptions = Array.from(this.selectedOptions);
+    
+    // Log the values of the selected options
+    console.log(selectedOptions.map(option => option.value));
+    
+    const allLeaguesOption = selectedOptions.find(option => option.value === "All");
+    
+    if (allLeaguesOption && selectedOptions.length > 1) {
+    console.log('"All" should be deselected');
+    choices.removeActiveItemsByValue("All");
+}
+ else if (selectedOptions.length === 0) {
+        console.log('"All" should be selected');
+        choices.setChoiceByValue("All", true);
     }
+    updateMatchesForDate(hiddenDatePicker.value);
 });
 
-  new Choices("#leagues-select", { removeItemButton: true, shouldSort: false });
-  new Choices("#countries-select", { removeItemButton: true, shouldSort: false });
 
-    }
+    
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -911,33 +939,32 @@ let radiusFilter = 1000000;
   }
 
   function updateMatchesForDate(date) {
-  const matchesDisplay = document.getElementById("matchContainer");
-
-  // Clear previous matches
-  matchesDisplay.innerHTML = "";
-
-  // Get selected league and country options
-  const selectedLeague = document.getElementById("leagues-select").value;
-  const selectedCountry = document.getElementById("countries-select").value;
-
-  // Filtering
-  let filteredMatches = allFixtures.filter(match => {
-    const withinRadius = userLocation ? distanceFromUser(
-      userLocation.latitude,
-      userLocation.longitude,
-      match.homeTeam.latitude,
-      match.homeTeam.longitude
-    ) <= radiusFilter : true;  // If userLocation is null, keep all matches
-
-    // Filter by date, selected league, selected country, and radius
-    return match.date === date &&
-      (selectedLeague === "All" || match.leagueName === selectedLeague) &&
-      (selectedCountry === "All" || match.leagueCountry === selectedCountry) &&
-      withinRadius;
-  });
-
-  // Render the filtered matches (you can customize this part)
-
+    const matchesDisplay = document.getElementById("matchContainer");
+    matchesDisplay.innerHTML = "";
+    
+    const leaguesSelect = document.getElementById("leagues-select");
+   
+    const selectedLeagues = Array.from(leaguesSelect.options)
+                                .filter(option => option.selected)
+                                .map(option => option.value);
+    console.log(selectedLeagues);
+    
+    
+    let filteredMatches = allFixtures.filter(match => {
+        const withinRadius = userLocation ? distanceFromUser(
+          userLocation.latitude,
+          userLocation.longitude,
+          match.homeTeam.latitude,
+          match.homeTeam.longitude
+        ) <= radiusFilter : true;
+        
+        return match.date === date &&
+          (selectedLeagues.includes("All") || selectedLeagues.includes(String(match.leagueID))) &&
+          
+          withinRadius;
+    });
+    console.log(filteredMatches);
+    // Continue with the rest of your logic, e.g. displaying the filtered matches.
 
 
 
@@ -983,16 +1010,31 @@ leagueHeader.className = 'card-header leagueInfo d-flex justify-content-between 
     const leagueLogoImg = document.createElement('img');
     leagueLogoImg.className = 'leagueLogo'; // use appropriate class names
     leagueLogoImg.src = leagueMatches[0].leagueLogo; // use actual key
+    leagueLogoImg.loading = 'lazy';
     leagueHeader.appendChild(leagueLogoImg);
     leagueHeader.appendChild(leagueNameDiv);
+
+    const countDiv = document.createElement('div');
+   countDiv.className = 'match-count'; // 
+   countDiv.textContent = leagueMatches.length; // Set the text to the number of matches
     
     const collapseButton = document.createElement('button');
 collapseButton.className = 'btn btn-link';
 collapseButton.setAttribute('data-bs-toggle', 'collapse');
 collapseButton.setAttribute('data-bs-target', `#matchList${leagueID}`);
 collapseButton.innerHTML = '<span class="material-symbols-outlined">keyboard_arrow_down</span>';
-leagueHeader.appendChild(collapseButton);
 
+
+
+    const buttonWrapDiv = document.createElement('div');
+    buttonWrapDiv.className = 'button-wrapper'; // You can style this wrapper as needed
+    buttonWrapDiv.appendChild(countDiv);
+    buttonWrapDiv.appendChild(collapseButton);
+
+// Append the wrapper div instead of individual elements
+  leagueHeader.appendChild(buttonWrapDiv);
+
+    
   const matchListDiv = document.createElement('div');
   matchListDiv.className = 'list-group match-container collapse';
   matchListDiv.id = `matchList${leagueID}`;
@@ -1014,11 +1056,12 @@ leagueHeader.appendChild(collapseButton);
   const homeLogo = document.createElement('img');
   homeLogo.src = match.homeTeam.clubImageName;
   homeLogo.className = 'mr-3 homeLogo';
-  
+  homeLogo.loading = 'lazy';
   // Away Team Logo
   const awayLogo = document.createElement('img');
   awayLogo.src = match.awayTeam.clubImageName;
   awayLogo.className = 'ml-3 awayLogo';
+  awayLogo.loading = 'lazy';
   
   // Match Time
   const timeDiv = document.createElement('div');
@@ -1076,24 +1119,12 @@ const searchBtn = document.getElementById('search-btn-header');
   
 const filterContainer = document.getElementById("filter-container");
 const filterToggleContent = document.getElementById("filter-toggle-content");
-const leaguesSelect = document.getElementById("leagues-select");
-const countriesSelect = document.getElementById("countries-select");
 
 
-leaguesSelect.addEventListener('change', function () {
-  const selectedLeague = leaguesSelect.value;
-  // You can perform any necessary actions when the league selection changes
-  // For example, you can update the matches based on the selected league.
-  updateMatchesForDate(hiddenDatePicker.value);
-});
+
+
 
 // Event listener for country options change
-countriesSelect.addEventListener('change', function () {
-  const selectedCountry = countriesSelect.value;
-  // You can perform any necessary actions when the country selection changes
-  // For example, you can update the matches based on the selected country.
-  updateMatchesForDate(hiddenDatePicker.value);
-});
   
 document.getElementById('date-display').addEventListener('click', function() {
     // Triggering a click event on the hidden date picker when the date-display is clicked
