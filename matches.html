@@ -1,705 +1,892 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weddies - Fixtures </title>
-  <meta name="description" content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
+  <meta name="description"
+    content="Find and discover clubs using Weddies, the ultimate club search engine. Search by club name, league, and date.">
   <link rel="icon" href="Weddies-bg.png" type="image/x-icon">
   <link rel="shortcut icon" href="Weddies.png" type="image/x-icon">
-<style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/choices.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/scripts/choices.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Include Select2 CSS and JS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+
+
+    body {
+      background-color: black !important;
+      margin-bottom: 10vh;
+    }
+
+    .page-container {
+      min-height: calc(100vh - 50vh);
+      /* Subtracting the height of the nav */
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Header */
+    header {
+      background-color: #161616 !important;
+      /* Set Background to Black */
+      padding: 10px 0;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .choices__item--selectable {
+      color: #000000;
+      /* Or any other color that contrasts with the background */
+    }
+
+    .choices__list--dropdown .choices__item {
+      color: #000000;
+      /* Or any other color that contrasts with the background */
+    }
+
+    .header-container {
+      position: relative;
+      /* Set to relative so the absolute positioned search input is relative to this container */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #161616;
+
+    }
+
+    .logoheader-container,
+    .placeholder {
+      flex: 1;
+    }
+
+    .logo-header {
+      height: 12vh;
+    }
+
+    .search-container-header {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .search-input-header {
+      display: none;
+      border: none;
+      padding: 10px;
+      border-radius: 15px;
+      width: 100%;
+      background: #FFF;
+      /* To ensure that it covers content behind it */
+      box-sizing: border-box;
+      /* Ensures padding is included in width */
+
+    }
+
+    .search-btn-header {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    @media(min-width: 600px) {
+      .search-input-header {
+        display: block;
+        margin-left: 1vw;
+        width: 30vw;
+        /* or any preferred fixed width */
+      }
+
+      .logo-header {
+        height: 9vh;
+      }
+
+      .search-btn-header {
+        display: none;
+      }
+    }
 
 
 
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 10vh;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+      background-color: #161616;
+      overflow-x: auto;
+      z-index: 9999;
+    }
+
+    .nav__link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      min-width: 50px;
+      overflow: hidden;
+      white-space: nowrap;
+      font-family: sans-serif;
+      font-size: 1rem;
+      color: #444444;
+      text-decoration: none;
+      transition: background-color 0.1s ease-in-out;
+    }
+
+    .nav__link:hover {
+      background-color: rgb(29, 28, 28);
+    }
+
+    .nav__link--active {
+      color: #009578;
+    }
+
+    .nav__icon {
+      font-size: 1.2rem;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 72;
+      color: white;
+    }
 
 
 
-body {
-  background-color: black;
-  margin-bottom: 10vh;
-}
-/* Header */
-header {
-  background-color:  #161616;; /* Set Background to Black */
-  padding: 10px 0;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .nav__link--active .material-symbols-outlined {
+      color: #009578;
+    }
 
-
-.header-container {
-  position: relative; /* Set to relative so the absolute positioned search input is relative to this container */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #161616;
-  
-}
-
-.logoheader-container, .placeholder {
-  flex: 1;
-}
-
-.logo-header {
-  height: 12vh;
-}
-
-.search-container-header {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.search-input-header {
-  display: none;
-  border: none;
-  padding: 10px;
-  border-radius: 15px;
-  width: 100%;
-  background: #FFF; /* To ensure that it covers content behind it */
-  box-sizing: border-box; /* Ensures padding is included in width */
-  
-}
-
-.search-btn-header {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-@media(min-width: 600px) {
-  .search-input-header {
-    display: block;
-    margin-left: 1vw;
-    width: 30vw; /* or any preferred fixed width */
-  }
-  .logo-header {height: 9vh;}
-  .search-btn-header {
-    display: none;
-  }
-}
-
-
-
-
-
-/* Navigation */
-.nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 10vh;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  background-color: #161616;
-  overflow-x: auto;
-  z-index: 9999;
-}
-
-.nav__link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  min-width: 50px;
-  overflow: hidden;
-  white-space: nowrap;
-  font-family: sans-serif;
-  font-size: 1rem;
-  color: #444444;
-  text-decoration: none;
-  transition: background-color 0.1s ease-in-out;
-}
-
-.nav__link:hover {
-  background-color: rgb(29, 28, 28);
-}
-
-.nav__link--active {
-  color: #009578;
-}
-
-.nav__icon {
-  font-size: 1.2rem;
-}
-
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 1, 'wght' 700, 'GRAD' 0, 'opsz' 72;
-  color: white;
-}
-
-
-
-.nav__link--active .material-symbols-outlined {
-  color: #009578;
-}
-
-/* Matches */
-.match {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0em;
-  /*border: 1px solid #ccc;
+    /* Matches */
+    .match {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0em;
+      /*border: 1px solid #ccc;
   border-radius: 10px;*/
-  margin: 1vh;
-  background-color: #292929;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 25px;
-  border: 3px #292929;
+      margin: 1vh;
+      background-color: #292929 !important;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border: none !important;
 
 
 
-}
-.match:hover {
-  background-color: gray;  /* Change this to the color you want */
-}
+    }
+
+    .match:hover {
+      background-color: gray;
+      /* Change this to the color you want */
+    }
 
 
-.homeLogo, .awayLogo {
-  flex: 0 0 auto;  /* Do not grow, do not shrink, use automatic basis */
-  /*margin: 0.5rem;*/ /* Added margin for better spacing */
-width: 3vw;
+    .homeLogo,
+    .awayLogo {
+      flex: 0 0 auto;
+      /* Do not grow, do not shrink, use automatic basis */
+      /*margin: 0.5rem;*/
+      /* Added margin for better spacing */
+      width: 3vw;
 
-  height: 3vh;
-  object-fit: contain;
-  @media (max-width: 768px) {
-    flex: 0 0 auto;  /* Do not grow, do not shrink, use automatic basis */
-  /*margin: 0.5rem;*/ /* Added margin for better spacing */
-width: 5vw;
+      height: 3vh;
+      object-fit: contain;
 
-  height: 5vh;
-  object-fit: contain;
-  }
+      @media (max-width: 768px) {
+        flex: 0 0 auto;
+        /* Do not grow, do not shrink, use automatic basis */
+        /*margin: 0.5rem;*/
+        /* Added margin for better spacing */
+        width: 5vw;
 
-}
+        height: 5vh;
+        object-fit: contain;
+      }
 
-.homeName {
-  flex: 0 0 calc(30% - 1rem); /* Adjust percentage as needed; -1rem is for padding */
-  text-align: right;
-  font-size: 1rem;
-  color:white;
-  padding: 0 0.5rem;  /* Add some padding to avoid text touching the edge */
-  overflow: hidden; /* Hide overflow */
-  white-space: normal;
-  text-overflow: clip; /* Add ellipsis for overflow */
-  word-wrap: break-word;
+    }
 
-
-
-}
-.awayName{
-flex: 0 0 calc(30% - 1rem); /* Adjust percentage as needed; -1rem is for padding */
-text-align: left;
-font-size: 1rem;
-color:white;
-padding: 0 0.5rem;  /* Add some padding to avoid text touching the edge */
-overflow: hidden; /* Hide overflow */
-white-space: normal;
-text-overflow: clip; /* Add ellipsis for overflow */
-word-wrap: break-word;
-
-}
-
-.matchTime {
-  flex: 0 0 auto;
-  flex-basis: 10%;  /* Allocating 20% of available space */
-  text-align: center;
-  font-size: 1rem;
-  color:white;
-  white-space: normal;
-  text-overflow: clip; /* Add ellipsis for overflow */
-  word-wrap: break-word;
-}
-
-/* League */
-.league {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
-  padding: 0em;
-  background-color: #292929;
-border-radius: 25px;
-  border: 3px #292929;
-  @media screen and (min-width: 768px) {
-          margin-left: 35vw;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    width: 30vw;
-    padding: 0em;
-    background-color: #292929;
-    border-radius: 25px;
-  border: 3px #292929;
-  }}
-
-
-.league h2 {
- font-size: 1rem;
-  margin: 0;
-  padding: 0em;
-  background-color: transparent;
-  color:white;
-}
-
-.leagueInfo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #292929; border-radius: 25px;
-  }
-
-.leagueLogo {
-  max-width: 4vw;
-  max-height: 4vh;
-  margin-right: 1vw;
-}
+    .homeName {
+      flex: 0 0 calc(30% - 1rem);
+      /* Adjust percentage as needed; -1rem is for padding */
+      text-align: right;
+      font-size: 0.7rem;
+      color: white;
+      padding: 0 0.5rem;
+      /* Add some padding to avoid text touching the edge */
+      overflow: hidden;
+      /* Hide overflow */
+      white-space: normal;
+      text-overflow: clip;
+      /* Add ellipsis for overflow */
+      word-wrap: break-word;
 
 
 
+    }
+
+    .awayName {
+      flex: 0 0 calc(30% - 1rem);
+      /* Adjust percentage as needed; -1rem is for padding */
+      text-align: left;
+      font-size: 0.7rem;
+      color: white;
+      padding: 0 0.5rem;
+      /* Add some padding to avoid text touching the edge */
+      overflow: hidden;
+      /* Hide overflow */
+      white-space: normal;
+      text-overflow: clip;
+      /* Add ellipsis for overflow */
+      word-wrap: break-word;
+
+    }
+
+    .matchTime {
+      flex: 0 0 auto;
+      flex-basis: 10%;
+      /* Allocating 20% of available space */
+      text-align: center;
+      font-size: 0.7rem;
+      color: white;
+      white-space: normal;
+      text-overflow: clip;
+      /* Add ellipsis for overflow */
+      word-wrap: break-word;
+    }
+
+    /* League */
+    .league {
+      margin-top: 2vh;
+      margin-bottom: 2vh;
+      padding: 0em;
+      background-color: #292929 !important;
+      border-radius: 25px;
+      border: 3px #292929;
+
+      @media screen and (min-width: 768px) {
+        margin-left: 35vw;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+        width: 30vw;
+        padding: 0em;
+        background-color: #292929;
+        border-radius: 25px;
+        border: 3px #292929;
+      }
+    }
 
 
-.logo-weddies-bg {
-  position: absolute;
-  top: 1.25em;
-  left: 1.25em;
-  z-index: 2;
-  width: 4em;
-  height: 4em;
-}
-.date-container {
-  display: flex;
-  flex-direction: column; /* stack children vertically */
-  align-items: center;
-  margin-top: 5vh;
-  margin-bottom: 5vh;
-  background-color: #292929;
-  color: white;
-  border-radius: 25px;
-  border: 3px #292929;
- 
+    .league h2 {
+      font-size: 1rem;
+      margin: 0;
+      padding: 0em;
+      background-color: transparent;
+      color: white !important;
+    }
 
-  @media screen and (min-width: 768px) {
-          margin-left: 35vw;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    width: 30vw;
-    padding: 0em;
-    background-color: #292929;
-  
-    border-radius: 25px;
-  border: 3px #292929;
-  }
-}
-.date-arrow{
-background-color: transparent;
-background: none;
-border: none;
+    .card-header.leagueInfo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #292929 !important;
+    }
 
-}
-.arrows-and-date {
-  display: flex; /* to arrange the arrows and date in a single line */
-  align-items: center; /* align items vertically center */
-  background: none;
-  border: none;
-}
-
-.filter-container {
-  display: flex; /* Use flexbox to arrange elements horizontally */
-  flex-wrap: wrap; /* Allow wrapping of elements if the screen is narrow */
-  gap: 20px; /* Adjust the gap as needed */
-}
-
-/* Style for each filter group */
-.filter-group {
-  flex: 1; /* Allow the filter groups to grow and occupy equal space */
-   /* Background color for the filter groups */
-  border-radius: 10px; /* Rounded corners */
-   /* Add padding for spacing */
-}
-.filter-toggle-button {
-  background-color: transparent;
-  color: white; /* Added for better contrast and readability */
-  border: none; /* 'border-none' is invalid, use 'border: none;' instead */
-  
-  margin-bottom: 3vh;
-  cursor: pointer; /* Changes the cursor to a hand when hovered over the button */
-   /* Added for better appearance and user experience */
-  transition: background-color 0.3s ease; /* Added for smooth color transition */
-  outline: none; /* Removes the default outline/focus border */
-  text-align: center; /* Centers the text inside the button */
-  width: 5vw;
-  height: 5vh;
-  display: inline-block; /* Allows setting of width and height */
-}
-
-
-.row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px; /* Adjust the margin as needed */
-}
-
-.checkbox-container {
-  margin-right: 20px; /* Adjust the margin as needed */
-}
-
-.slider-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.select-dropdown {
-  background-color: #161616; /* Set the background color to black */
-  color: white; /* Set the text color to white */
-  /* Add any additional styling you prefer for the dropdowns */
-}
-
-/* Style for the options within the dropdown */
-.select-dropdown option {
-  background-color: #161616; /* Set the background color to black */
-  color: white; /* Set the text color to white */
-  /* Add any additional styling you prefer for the dropdown options */
-}
-
-.league-logo-dropdown {
-  width: 20px; /* Adjust the width as needed */
-  height: 20px; /* Adjust the height as needed */
-  margin-right: 5px; /* Adjust the margin as needed */
-  vertical-align: middle; /* Align the logo vertically */
-  /* Add any additional styling you prefer for the league logos */
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-  background-color: #fff;
-  margin: auto;
-  padding: 20px;
-  width: 50%;
-}
-
-.close {
-  cursor: pointer;
-}
+    .leagueLogo {
+      max-width: 4vw;
+      max-height: 4vh;
+      margin-right: 1vw;
+    }
 
 
 
-.match-container {
-  overflow: hidden;
-  max-height: 1000px;  /* or any large number */
-  transition: max-height 0.2s ease-in-out;
-}
-
-.collapseButton {
-  max-height: 5vh;
-  max-width: 5vw; /* Fix typo from "max width" to "max-width" */
-  background-color: transparent;
-  border-color: transparent; /* Fix typo from "border.color" to "border-color" */
-  font-size: 10px;
-}
-.modal2 {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-/* Modal Content */
-.modal2-content {
-  position: fixed;
-  z-index: 5;
-  transform: translate(-50%, -50%);
-  background-color: #fefefe;
- top: 50%;
- left: 50%;
-  width: 100%;
-  height: 100%;
-}
-
-/* The Close Button */
-.close2 {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close2:hover,
-.close2:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-footer {
-  background-color: #000000;
-  color: #ffffff;
-  padding: 20px 0;
-  font-family: 'Arial', sans-serif;
-}
-
-.footer-container {
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap; /* allows the items to wrap to the next line on small screens */
-}
-
-.logo-container .logo {
-  width: 100px;
-  height: auto;
-}
-
-.copyright-container p {
-  margin: 0;
-  line-height: 1.6;
-}
 
 
-.links-container .footer-link {
-  margin-right: 20px;
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  display: inline-block; /* Needed for the positioning of the ::after pseudo-element */
-}
+    .logo-weddies-bg {
+      position: absolute;
+      top: 1.25em;
+      left: 1.25em;
+      z-index: 2;
+      width: 4em;
+      height: 4em;
+    }
 
-.links-container .footer-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px; /* The height of the underline */
-  background-color: white; /* The color of the underline */
-  transition: width 0.3s ease; /* For a smooth transition effect */
-}
+    .date-container {
+      display: flex;
+      flex-direction: column;
+      /* stack children vertically */
+      align-items: center;
 
-.links-container .footer-link:hover::after {
-  width: 100%; /* Makes the underline appear under the whole text on hover */
-}
+      background-color: #292929;
+      color: white;
 
-.links-container .footer-link:last-child {
-  margin-right: 0;
-}
+      @media screen and (min-width: 768px) {
+        margin-left: 37vw;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+        width: 30vw !important;
+        padding: 0em;
+        background-color: #292929;
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .footer-container {
-    width: 95%;
-    flex-direction: column;
-    align-items: flex-start;
-  }
 
-  .logo-container,
-  .copyright-container,
-  .links-container {
-    margin-bottom: 20px;
-    width: 100%; /* allows the content to take the full width of its container */
-    text-align: center; /* centers the content */
-  }
+      }
 
-  .links-container .footer-link {
-    display: block;
-    margin-bottom: 10px;
-  }
-}
 
-</style>
+
+
+    }
+
+    .date-arrow {
+      background-color: transparent;
+      background: none;
+      border: none;
+
+    }
+
+    .arrows-and-date {
+      display: flex;
+      /* to arrange the arrows and date in a single line */
+      align-items: center;
+      /* align items vertically center */
+      background: none;
+      border: none;
+    }
+
+    .filter-container {
+      display: flex;
+      /* Use flexbox to arrange elements horizontally */
+      flex-wrap: wrap;
+      /* Allow wrapping of elements if the screen is narrow */
+      gap: 20px;
+      /* Adjust the gap as needed */
+    }
+
+    /* Style for each filter group */
+    .filter-group {
+      flex: 1;
+      /* Allow the filter groups to grow and occupy equal space */
+      /* Background color for the filter groups */
+      border-radius: 10px;
+      /* Rounded corners */
+      /* Add padding for spacing */
+    }
+
+    .filter-toggle-button {
+      background-color: transparent;
+      color: white;
+      /* Added for better contrast and readability */
+      border: none;
+      /* 'border-none' is invalid, use 'border: none;' instead */
+
+      margin-bottom: 3vh;
+      cursor: pointer;
+      /* Changes the cursor to a hand when hovered over the button */
+      /* Added for better appearance and user experience */
+      transition: background-color 0.3s ease;
+      /* Added for smooth color transition */
+      outline: none;
+      /* Removes the default outline/focus border */
+      text-align: center;
+      /* Centers the text inside the button */
+      width: 5vw;
+      height: 5vh;
+      display: inline-block;
+      /* Allows setting of width and height */
+    }
+
+    .centered-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #radius-value.form-label {
+      color: white;
+    }
+
+    /* If you want to add 'km' to the radius value, you should probably do it using JavaScript, as it seems to be a dynamic value. */
+
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+      /* Adjust the margin as needed */
+    }
+
+    .checkbox-container {
+      margin-right: 20px;
+      /* Adjust the margin as needed */
+    }
+
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .select-dropdown {
+      background-color: #161616;
+      /* Set the background color to black */
+      color: white;
+      /* Set the text color to white */
+      /* Add any additional styling you prefer for the dropdowns */
+    }
+
+    /* Style for the options within the dropdown */
+    .select-dropdown option {
+      background-color: #161616;
+      /* Set the background color to black */
+      color: white;
+      /* Set the text color to white */
+      /* Add any additional styling you prefer for the dropdown options */
+    }
+
+    .league-logo-dropdown {
+      width: 20px;
+      /* Adjust the width as needed */
+      height: 20px;
+      /* Adjust the height as needed */
+      margin-right: 5px;
+      /* Adjust the margin as needed */
+      vertical-align: middle;
+      /* Align the logo vertically */
+      /* Add any additional styling you prefer for the league logos */
+    }
+
+
+
+    .match-container {
+      overflow: hidden;
+      max-height: 1000px;
+      /* or any large number */
+      transition: max-height 0.2s ease-in-out;
+    }
+
+    .button-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .match-count {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      /* Makes it circular */
+      background-color: rgb(22, 122, 1);
+      /* Example color */
+      color: #fff;
+      /* Text color */
+      display: flex;
+      align-items: center;
+      /* Center text vertically */
+      justify-content: center;
+      /* Center text horizontally */
+      font-size: 12px;
+      margin-right: 5px;
+      /* Space between the circle and the collapse button */
+    }
+
+
+
+
+
+
+
+    .logo-container .logo {
+      width: 100px;
+      height: auto;
+    }
+
+    .copyright-container p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+
+    .links-container .footer-link {
+      margin-right: 20px;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      display: inline-block;
+      /* Needed for the positioning of the ::after pseudo-element */
+    }
+
+    .links-container .footer-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      /* The height of the underline */
+      background-color: white;
+      /* The color of the underline */
+      transition: width 0.3s ease;
+      /* For a smooth transition effect */
+    }
+
+    .links-container .footer-link:hover::after {
+      width: 100%;
+      /* Makes the underline appear under the whole text on hover */
+    }
+
+    .links-container .footer-link:last-child {
+      margin-right: 0;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .footer-container {
+        width: 95%;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo-container,
+      .copyright-container,
+      .links-container {
+        margin-bottom: 20px;
+        width: 100%;
+        /* allows the content to take the full width of its container */
+        text-align: center;
+        /* centers the content */
+      }
+
+      .links-container .footer-link {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+    }
+
+    .select2-container .select2-results__option--highlighted[aria-selected] {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      border-color: #ffffff;
+    }
+
+    .select2-container .select2-results__option {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+    }
+
+    .select2-container--default .select2-selection--multiple {
+      background-color: rgb(255, 254, 254);
+      color: white;
+      /* The background color of the dropdown button */
+    }
+
+    footer {
+      margin-bottom: 10vh;
+    }
+
+    .btn-floating {
+      margin: 0 !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .social-media-section {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <title>Matches Page</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+  <title>Matches Page</title>
 </head>
+
 <body>
   <header>
-    <div class="header-container">
-      <div class="logoheader-container">
-        <img src="Weddies-bg.png" alt="Logo" class="logo-header"/>
-      </div>
-      <div class="search-container-header">
-        <button id="search-btn-header" class="search-btn-header">
-          <span class="material-symbols-outlined">
-            search
-        </span>
+    <nav class="navbar navbar-expand-lg header">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="Weddies-bg.png" alt="Logo" class="d-inline-block align-top logo-header" />
+        </a>
+
+        <!-- Trigger/Search Icon -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch"
+          aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="material-symbols-outlined">search</span>
         </button>
-        <input type="text" id="search-input-header" class="search-input-header" placeholder="Search">
+
+        <!-- Collapsible Search Bar -->
+        <div class="collapse navbar-collapse" id="navbarSearch">
+          <form class="d-flex ms-auto">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+              id="search-input-header">
+
+          </form>
+        </div>
       </div>
-      <div class="placeholder"></div>
-    </div>
+    </nav>
   </header>
-  
-<nav class="nav">
+  <div class="page-container">
+
+    <div id="date-container" class="date-container container py-3">
+      <div class="row align-items-center mb-3">
+        <div class="col">
+          <div class="btn-group" role="group" aria-label="Date navigation">
+            <!-- Arrows and Date -->
+            <button id="prev-day" class="btn btn-outline-secondary">
+              <span class="material-symbols-outlined">arrow_left</span>
+            </button>
+            <button id="date-display" class="date-button px-3">Today</button>
+            <button id="next-day" class="btn btn-outline-secondary">
+              <span class="material-symbols-outlined">arrow_right</span>
+            </button>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="col">
+            <input type="date" id="hidden-date-picker" class="form-control d-none">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row align-items-center"> <!-- Row for Filter Toggle Button -->
+        <div class="col-auto ms-auto">
+          <button id="filter-toggle" class="btn btn-outline-secondary" data-bs-toggle="collapse"
+            data-bs-target="#filter-container">
+            <span class="material-symbols-outlined">tune</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Container -->
+      <div class="col-12 collapse" id="filter-container">
+        <div class="row gy-2 gx-3 align-items-center">
+          <div class="col-sm-6">
+            <select id="leagues-select" class="form-select" multiple='multiple'>
+              <option value="All" selected>All Leagues</option>
+            </select>
+          </div>
+          <!--<div class="col-sm-6">
+<select id="countries-select" class="form-select">
+<option value="All" selected>All Countries</option>
+</select>
+</div>
+-->
+
+          <label for="radius-slider" class="form-label">
+            <div class="centered-container">
+              <span class="material-symbols-outlined">distance</span>
+              <input type="range" class="form-range" id="radius-slider" min="0" max="2000" value="2000">
+              <span id="radius-value" class="form-label">2000 km.</span>
+            </div>
+          </label>
+
+
+
+
+        </div>
+      </div>
+    </div>
+    <div id="matchContainer">
+      <!-- Match divs will be populated by JavaScript -->
+    </div>
+
+    <!-- Footer -->
+    <!-- Footer -->
+  </div>
+  <footer class="footer text-center text-white" style="background-color:#212121;">
+    <!-- Grid container -->
+    <div class="container p-4">
+
+      <!-- Section: Social media -->
+      <section class="mb-4 social-media-section">
+        <!-- Facebook -->
+        <a class="btn btn-primary btn-floating m-1" style="background-color: #3b5998" href="#!" role="button"><i
+            class="fab fa-facebook-f"></i></a>
+
+        <!-- Twitter -->
+        <a class="btn btn-primary btn-floating m-1" style="background-color: #55acee" href="#!" role="button"><i
+            class="fab fa-twitter"></i></a>
+
+
+        <!-- Instagram -->
+        <a class="btn btn-primary btn-floating m-1" style="background-color: #ac2bac" href="#!" role="button"><i
+            class="fab fa-instagram"></i></a>
+
+
+      </section>
+      <!-- Section: Social media -->
+
+
+
+      <!-- Section: Text -->
+      <section class="mb-4">
+        <p>
+          Weddies. Your favorite football search engine for finding fixtures nearby!
+        </p>
+      </section>
+      <!-- Section: Text -->
+
+
+      <!-- Section: Links -->
+      <section class="">
+        <!--Grid row-->
+        <div class="row">
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Links</h5>
+
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-white">Link 1</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 2</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 3</a>
+              </li>
+              <li>
+                <a href="#!" class="text-white">Link 4</a>
+              </li>
+            </ul>
+          </div>
+          <!--Grid column-->
+
+
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </section>
+      <!-- Section: Links -->
+
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2); padding-bottom: 30vh;">
+      © 2023 Copyright:
+      <a class="text-white" href="#">Weddies</a>
+    </div>
+    <!-- Copyright -->
+
+  </footer>
+  <!-- Footer -->
+
+  <nav class="nav">
     <a href="index.html" class="nav__link">
-        <span class="material-symbols-outlined">
-            pin_drop
-        </span>
+      <span class="material-symbols-outlined">
+        pin_drop
+      </span>
     </a>
     <a href="#" class="nav__link">
-        <span class="material-symbols-outlined">
-            person
-        </span>
+      <span class="material-symbols-outlined">
+        person
+      </span>
     </a>
     <a href="matches.html" class="nav__link nav__link--active">
-        <span class="material-symbols-outlined">
-            table_rows
-        </span>
+      <span class="material-symbols-outlined">
+        table_rows
+      </span>
     </a>
-</nav>
-
-<div id="date-container" class="date-container">
-  <div class="arrows-and-date">
-    <button id="prev-day" class="date-arrow"><span class="material-symbols-outlined">
-      arrow_left
-    </span></button> <!-- Left arrow -->
-    <span id="date-display">Today</span>
-    <button id="next-day" class="date-arrow"><span class="material-symbols-outlined">
-      arrow_right
-    </span></button> <!-- Right arrow -->
-  </div>
-  <input type="date" id="hidden-date-picker" style="display: none;">
-  
-  <button id="filter-toggle" class="filter-toggle-button"><span class="material-symbols-outlined">
-    tune
-  </span></button>
-
-  <div class="filter-container" id="filter-container" style="display: none;">
-    <div class="filter-group">
-      <select id="leagues-select"  class="select-dropdown">
-        <option value="All" disabled selected>League</option>
-        <!-- Options will be populated by JavaScript -->
-      </select>
-    </div>
-    <div class="filter-group">
-      <select id="countries-select" class="select-dropdown">
-        <option value="All" disabled selected>Country</option>
-        <!-- Options for countries go here -->
-      </select>
-    </div>
-  </div>
-
-  <div class="filter-toggle-content" id="filter-toggle-content" style="display: none;">
-    <div class="row">
-      <div class="checkbox-container">
-        <input type="checkbox" id="radius-all" value="all"> <label for="radius-all">All</label>
-      </div>
-      <div class="slider-container">
-        <label for="radius-slider">Radius:</label>
-        <input type="range" id="radius-slider" min="0" max="2000" value="2000">
-        <span id="radius-value">2000</span> 
-      </div>
-    </div>
-  </div>
-</div>
+  </nav>
 
 
-
-
-
-
-
-
- <div id="matchContainer">
-    <!-- Match divs will be populated by JavaScript -->
-  </div>
-
-  <footer>
-    <div class="footer-container">
-      <div class="logo-container">
-        <img src="Weddies-bg.png" alt="Weddies Logo" class="logo" />
-      </div>
-      <div class="copyright-container">
-        <p>&copy; 2023 Weddies. All Rights Reserved.</p>
-        <p>Based in the Netherlands</p>
-      </div>
-      <div class="links-container">
-        <a href="#" class="footer-link">FAQ</a>
-        <a href="#" class="footer-link">Contact Us</a>
-        <a href="#" class="footer-link">About Us</a>
-      </div>
-    </div>
-  </footer>
 </body>
 <script>
-let clubs = [];
-let allFixtures = [];
-// Fetch the CSV file
-/*
-fetch('teams.csv')
-  .then((response) => response.text())
-  .then((csvString) => {
-    // Parse the CSV string
-    Papa.parse(csvString, {
-      header: true,
-      dynamicTyping: false,
-      skipEmptyLines: true,
-      delimiter: ';', // Note: the example uses semicolon as delimiter
-      complete: function (results) {
-        clubs = results.data.map((row) => {
-          return {
-            leagueID: row.leagueID,
-            leagueName: row.leagueName,
-            leagueImage: row.leagueImage,
-            clubID: row.clubID,
-            clubName: row.clubName,
-            clubCode: row.clubCode,
-            country: row.country,
-            founded: row.founded,
-            national: row.national === "True" ? true : false,
-            clubImageName: row.clubImageName,
-            stadiumID: row.stadiumID,
-            stadiumName: row.stadiumName,
-            stadiumAddress: row.stadiumAddress,
-            cityName: row.cityName,
-            capacity: row.capacity,
-            surface: row.surface,
-            stadiumImageName: row.stadiumImageName,
-            latitude: parseFloat(row.latitude),
-            longitude: parseFloat(row.longitude),
-          };
-        });
-        // Call your existing functions with the new data
-        loadFixtures();
-        console.log(clubs);
-      },
+  let clubs = [];
+  let allFixtures = [];
+  // Fetch the CSV file
+  /*
+  fetch('teams.csv')
+    .then((response) => response.text())
+    .then((csvString) => {
+      // Parse the CSV string
+      Papa.parse(csvString, {
+        header: true,
+        dynamicTyping: false,
+        skipEmptyLines: true,
+        delimiter: ';', // Note: the example uses semicolon as delimiter
+        complete: function (results) {
+          clubs = results.data.map((row) => {
+            return {
+              leagueID: row.leagueID,
+              leagueName: row.leagueName,
+              leagueImage: row.leagueImage,
+              clubID: row.clubID,
+              clubName: row.clubName,
+              clubCode: row.clubCode,
+              country: row.country,
+              founded: row.founded,
+              national: row.national === "True" ? true : false,
+              clubImageName: row.clubImageName,
+              stadiumID: row.stadiumID,
+              stadiumName: row.stadiumName,
+              stadiumAddress: row.stadiumAddress,
+              cityName: row.cityName,
+              capacity: row.capacity,
+              surface: row.surface,
+              stadiumImageName: row.stadiumImageName,
+              latitude: parseFloat(row.latitude),
+              longitude: parseFloat(row.longitude),
+            };
+          });
+          // Call your existing functions with the new data
+          loadFixtures();
+          console.log(clubs);
+        },
+      });
+    })
+    .catch((error) => {
+      console.error('An error occurred while fetching the CSV file:', error);
     });
-  })
-  .catch((error) => {
-    console.error('An error occurred while fetching the CSV file:', error);
-  });
+  
+  */
 
-*/
-
-const leagueOptions = new Set();
-const countryOptions = new Set();
-let userLocation = null;
-let radiusFilter = 1000000;
+  const leagueOptions = new Set();
+  const countryOptions = new Set();
+  let userLocation = null;
+  let radiusFilter = 1000000;
   let today = new Date();
   const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
@@ -734,21 +921,21 @@ let radiusFilter = 1000000;
                 statusElapsed: parseFloat(row.Status_Elapsed),
                 leagueID: parseInt(row.League_ID),
                 leagueName: row.League_Name,
-                
+
                 leagueCountry: row.League_Country,
                 leagueLogo: row.League_Logo,
                 homeTeam: {
-       clubImageName: row.Home_Logo,
-       clubName: row.Home_Name,
-       latitude: latitude,
-       longitude: longitude,
-       homeID: parseInt(row.Home_ID) // Adding the HomeID
-     },
-     awayTeam: {
-       clubImageName: row.Away_Logo,
-       clubName: row.Away_Name,
-       awayID: parseInt(row.Away_ID) // Adding the AwayID
-     },
+                  clubImageName: row.Home_Logo,
+                  clubName: row.Home_Name,
+                  latitude: latitude,
+                  longitude: longitude,
+                  homeID: parseInt(row.Home_ID) // Adding the HomeID
+                },
+                awayTeam: {
+                  clubImageName: row.Away_Logo,
+                  clubName: row.Away_Name,
+                  awayID: parseInt(row.Away_ID) // Adding the AwayID
+                },
                 awayWinner: row.Away_Winner === "True",
                 goalsHome: parseFloat(row.Goals_Home),
                 goalsAway: parseFloat(row.Goals_Away),
@@ -758,10 +945,10 @@ let radiusFilter = 1000000;
                 fulltimeAway: parseFloat(row.Score_Fulltime_Away),
               };
             });
-            
+
             console.log(allFixtures); // Check if the data is parsed correctly
             allFixtures.forEach(fixture => {
-            leagueOptions.add(fixture.leagueName);
+              leagueOptions.add(fixture.leagueName);
             });
             allFixtures.forEach(fixture => {
               countryOptions.add(fixture.leagueCountry);
@@ -769,9 +956,9 @@ let radiusFilter = 1000000;
 
             // Call your existing function to update the matches with the parsed data
 
-            populateDropdowns();
 
-              updateMatchesForDate(formattedToday);
+            populateDropdowns();
+            updateMatchesForDate(formattedToday);
 
           },
         });
@@ -783,52 +970,89 @@ let radiusFilter = 1000000;
   loadFixtures();
 
 
-    // Inside your populateDropdowns function
-    function populateDropdowns() {
-      
-      const leaguesSelect = document.getElementById("leagues-select");
-      const countriesSelect = document.getElementById("countries-select");
-      const leagueOptionsSort = Array.from(leagueOptions).sort();
-      const countryOptionsSort = Array.from(countryOptions).sort();
-      countryOptionsSort.forEach((optionText) => {
-    const option = document.createElement("option");
-    option.value = optionText;
-    option.text = optionText;
-        countriesSelect.appendChild(option)
+  // Inside your populateDropdowns function
+  function populateDropdowns() {
+    const leaguesSelect = $('#leagues-select'); // jQuery selector
+
+    // Preparing an array of options.
+    const options = [{ id: 'All', text: 'All Leagues', html: 'All Leagues' }];
+
+    const leaguesMap = new Map();
+    allFixtures.forEach(fixture => {
+      leaguesMap.set(fixture.leagueID, {
+        name: fixture.leagueName,
+        logo: fixture.leagueLogo
       });
-      leagueOptionsSort.forEach((optionText) => {
-    const option = document.createElement("option");
-    option.value = optionText;
-    option.text = optionText;
-    
-    const fixtureWithLogo = allFixtures.find(fixture => fixture.leagueName === optionText);
+    });
 
-    if (fixtureWithLogo) {
-      // Create an <img> element for the logo
-      const logo = document.createElement("img");
-      logo.src = fixtureWithLogo.leagueLogo;
-      logo.alt = optionText + " Logo";
-      logo.classList.add("league-logo-dropdown");
+    const sortedLeagues = Array.from(leaguesMap.keys()).sort((a, b) => {
+      return leaguesMap.get(a).name.localeCompare(leaguesMap.get(b).name);
+    });
 
-      // Append the logo and option to the "Leagues" dropdown
-      option.appendChild(logo);
-      leaguesSelect.appendChild(option);
-    } else {
-      // Handle the case where the league logo is not found
-      console.warn(`League logo not found for ${optionText}`);
-    }
-  });
+    sortedLeagues.forEach((leagueID) => {
+      const league = leaguesMap.get(leagueID);
+      options.push({
+        id: leagueID,
+        text: league.name,
+        html: `<img src="${league.logo}" alt="${league.name} Logo" class="league-logo-dropdown" loading="lazy"><span>${league.name}</span>`
+      });
+    });
+
+    // Initialize Select2 with prepared options.
+    leaguesSelect.select2({
+      data: options,
+      width: '100%',
+
+      escapeMarkup: function (markup) { return markup; }, // Let HTML be rendered
+      templateResult: function (data) {
+        return data.html || data.text; // Use html if available, otherwise use text
+      },
+      templateSelection: function (data) {
+        return data.html || data.text; // Use html if available, otherwise use text
+      }
+
+    });
 
 
-    }
+
+    const hiddenDatePicker = $('#hidden-date-picker');
+
+    // Handling the change event
+    leaguesSelect.on('change', function () {
+      const selectedValues = $(this).val();
+
+      // Log the values of the selected options
+      console.log(selectedValues);
+
+      if (selectedValues.includes("All") && selectedValues.length > 1) {
+        console.log('"All" should be deselected');
+        $(this).val(selectedValues.filter(value => value !== "All")).trigger('change');
+      } else if (selectedValues.length === 0) {
+        console.log('"All" should be selected');
+        $(this).val(["All"]).trigger('change');
+      }
+      updateMatchesForDate(hiddenDatePicker.val());
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
   const radiusInput = document.getElementById('radius-slider');        // id="radiusInput"
- 
 
-  dateContainer.addEventListener('click', function(event) {
+
+  dateContainer.addEventListener('click', function (event) {
     if (event.target.id !== 'prev-day' && event.target.id !== 'next-day') {
       hiddenDatePicker.focus();
       hiddenDatePicker.click();
@@ -836,8 +1060,9 @@ let radiusFilter = 1000000;
   });
 
 
-  hiddenDatePicker.addEventListener('change', function() {
+  hiddenDatePicker.addEventListener('change', function () {
     const selectedDate = this.value;
+
     dateDisplay.textContent = selectedDate === formattedToday ? 'Today' : selectedDate;
     updateMatchesForDate(selectedDate);
   });
@@ -857,280 +1082,259 @@ let radiusFilter = 1000000;
     const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     hiddenDatePicker.value = newDate;
     dateDisplay.textContent = newDate === formattedToday ? 'Today' : newDate;
-   
-   
 
 
 
-   
+
+
+
     updateMatchesForDate(newDate);
 
   }
 
   function updateMatchesForDate(date) {
-  const matchesDisplay = document.getElementById("matchContainer");
+    const matchesDisplay = document.getElementById("matchContainer");
+    matchesDisplay.innerHTML = "";
 
-  // Clear previous matches
-  matchesDisplay.innerHTML = "";
+    const leaguesSelect = document.getElementById("leagues-select");
 
-  // Get selected league and country options
-  const selectedLeague = document.getElementById("leagues-select").value;
-  const selectedCountry = document.getElementById("countries-select").value;
-
-  // Filtering
-  let filteredMatches = allFixtures.filter(match => {
-    const withinRadius = userLocation ? distanceFromUser(
-      userLocation.latitude,
-      userLocation.longitude,
-      match.homeTeam.latitude,
-      match.homeTeam.longitude
-    ) <= radiusFilter : true;  // If userLocation is null, keep all matches
-
-    // Filter by date, selected league, selected country, and radius
-    return match.date === date &&
-      (selectedLeague === "All" || match.leagueName === selectedLeague) &&
-      (selectedCountry === "All" || match.leagueCountry === selectedCountry) &&
-      withinRadius;
-  });
-
-  // Render the filtered matches (you can customize this part)
+    const selectedLeagues = Array.from(leaguesSelect.options)
+      .filter(option => option.selected)
+      .map(option => option.value);
+    console.log(selectedLeagues);
 
 
+    let filteredMatches = allFixtures.filter(match => {
+      const withinRadius = userLocation ? distanceFromUser(
+        userLocation.latitude,
+        userLocation.longitude,
+        match.homeTeam.latitude,
+        match.homeTeam.longitude
+      ) <= radiusFilter : true;
+
+      return match.date === date &&
+        (selectedLeagues.includes("All") || selectedLeagues.includes(String(match.leagueID))) &&
+
+        withinRadius;
+    });
+    console.log(filteredMatches);
+    // Continue with the rest of your logic, e.g. displaying the filtered matches.
 
 
 
-  // Continue the rest of the logic
-  displayMatches(filteredMatches);
-}
 
-
-
-function displayMatches(matches) {
-  
-  const matchContainer = document.getElementById('matchContainer');
-  matchContainer.innerHTML = '';
-  
-  const matchesByLeague = {};
-  matches.forEach(match => {
-    const leagueID = match.leagueID;
-    if (!matchesByLeague[leagueID]) {
-      matchesByLeague[leagueID] = [];
-    }
-    matchesByLeague[leagueID].push(match);
-  });
-  
-  for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
-    const leagueDiv = document.createElement('div');
-    leagueDiv.className = 'league';
-
-    const leagueInfo = document.createElement('div');
-    leagueInfo.className = 'leagueInfo';
-
-    const leagueLogo = document.createElement('img');
-    leagueLogo.src = leagueMatches[0].leagueLogo;
-    leagueLogo.className = 'leagueLogo';
-
-    const leagueName = document.createElement('h2');
-    leagueName.textContent = leagueMatches[0].leagueName;
-
-    const collapseButton = document.createElement('collapseButton' );
-
-    collapseButton.innerHTML = '<span class="material-symbols-outlined">keyboard_arrow_up</span>';
-
- collapseButton.className = 'collapse-button';
-
- // Add this event listener to the collapseButton
- collapseButton.addEventListener('click', function() {
-  const matchDivs = this.closest('.league').querySelectorAll('.match');
-  matchDivs.forEach((matchDiv) => {
-    if (matchDiv.style.display === 'none') {
-      matchDiv.style.display = 'flex';
-      this.innerHTML = '<span class="material-symbols-outlined">keyboard_arrow_up</span>'; // Assuming flex is the default display property
-    } else {
-      matchDiv.style.display = 'none';
-      this.innerHTML = '<span class="material-symbols-outlined">keyboard_arrow_down</span>';
-    }
-  });
-});
-
-
-    const matchContainerDiv = document.createElement('div');
-    matchContainerDiv.className = 'match-container';
-    leagueInfo.appendChild(collapseButton);
-    leagueDiv.appendChild(matchContainerDiv);
-
-
-
-    leagueInfo.appendChild(leagueLogo);
-    leagueInfo.appendChild(leagueName);
-    leagueDiv.appendChild(leagueInfo);
-
-    leagueMatches.forEach(match => {
-      const matchDiv = document.createElement('div');
-      matchDiv.className = 'match';
-      matchDiv.addEventListener('click', function() {
-        const fixtureID = match.fixtureID; // Assuming the 'match' object has a property called 'fixtureID'
-    window.location.href = `matchinfo.html?fixtureID=${fixtureID}`;
-
-                });
-
-      const homeLogo = document.createElement('img');
-      homeLogo.src = match.homeTeam.clubImageName;
-      homeLogo.className = 'homeLogo';
-      homeLogo.addEventListener('click', function() {
-         event.stopPropagation();  // Prevent event from bubbling up
-  const teamID = match.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
-  window.location.href = `teaminfo.html?teamID=${teamID}`;
-});
-      const awayLogo = document.createElement('img');
-      awayLogo.src = match.awayTeam.clubImageName;
-      awayLogo.className = 'awayLogo';
-      awayLogo.addEventListener('click', function() {
-         event.stopPropagation();  // Prevent event from bubbling up
-  const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
-  window.location.href = `teaminfo.html?teamID=${teamID}`;
-});
-      const timeDiv = document.createElement('div');
-  timeDiv.className = 'matchTime';
-
-  if (match.statusShort === 'FT') {
-    timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort}`;
-  } else if (['1H', '2H', 'LIVE', 'BT', 'INT'].includes(match.statusShort)) {
-    timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort}`;
-  } else {
-    try {
-      const timeWithoutSeconds = match.startingAt.slice(0, -3); // Remove seconds
-      const fullDateTime = `${match.date}T${timeWithoutSeconds}Z`; // Combine date, time, and "Z" for UTC
-
-      const dateInUTC = new Date(fullDateTime); // Create Date object in UTC
-      const options = { hour: '2-digit', minute: '2-digit' };  // Removed timeZoneName: 'short'
-      const localTime = new Intl.DateTimeFormat('default', options).format(dateInUTC);
-
-      timeDiv.textContent = `${localTime} ${match.statusShort}`;  // Including match status
-    } catch (error) {
-      console.log('An error occurred while creating the Date object:', error);
-    }
+    // Continue the rest of the logic
+    displayMatches(filteredMatches);
   }
-      const homeName = document.createElement('div');
-      homeName.className = 'homeName';
-      homeName.textContent = match.homeTeam.clubName;
-      homeName.addEventListener('click', function() {
-         event.stopPropagation();  // Prevent event from bubbling up
-  const teamID = match.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
-  window.location.href = `teaminfo.html?teamID=${teamID}`;
-});
-      const awayName = document.createElement('div');
-      awayName.className = 'awayName';
-      awayName.textContent = match.awayTeam.clubName;
-      awayName.addEventListener('click', function() {
-         event.stopPropagation();  // Prevent event from bubbling up
-  const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
-  window.location.href = `teaminfo.html?teamID=${teamID}`;
-  console.log(match.awayTeam.awayID);
-});
 
-      matchContainerDiv.appendChild(matchDiv);
-      matchDiv.appendChild(homeName);
-      matchDiv.appendChild(homeLogo);
-      matchDiv.appendChild(timeDiv);
-      matchDiv.appendChild(awayLogo);
-      matchDiv.appendChild(awayName);
-      leagueDiv.appendChild(matchDiv);
+
+
+  function displayMatches(matches) {
+
+    const matchContainer = document.getElementById('matchContainer');
+    matchContainer.innerHTML = '';
+
+    const matchesByLeague = {};
+    // Grouping matches by league
+    matches.forEach(match => {
+      const leagueID = match.leagueID;
+      if (!matchesByLeague[leagueID]) {
+        matchesByLeague[leagueID] = [];
+      }
+      matchesByLeague[leagueID].push(match);
     });
 
-    matchContainer.appendChild(leagueDiv);
-  }
-}
+    for (const [leagueID, leagueMatches] of Object.entries(matchesByLeague)) {
+      const leagueDiv = document.createElement('div');
+      leagueDiv.className = 'card league'; // added 'league' class
+
+
+      const leagueHeader = document.createElement('div');
+      leagueHeader.className = 'card-header leagueInfo d-flex justify-content-between align-items-center';
+
+
+      const leagueNameDiv = document.createElement('div');
+      leagueNameDiv.className = 'h2'; // use appropriate class names
+      leagueNameDiv.style.color = 'white';
+      leagueNameDiv.style.fontSize = '1rem';
+      leagueNameDiv.textContent = leagueMatches[0].leagueName; // use actual key
+
+
+      // Create an img element for the league logo
+      const leagueLogoImg = document.createElement('img');
+      leagueLogoImg.className = 'leagueLogo'; // use appropriate class names
+      leagueLogoImg.src = leagueMatches[0].leagueLogo; // use actual key
+      leagueLogoImg.loading = 'lazy';
+      leagueHeader.appendChild(leagueLogoImg);
+      leagueHeader.appendChild(leagueNameDiv);
+
+      const countDiv = document.createElement('div');
+      countDiv.className = 'match-count'; // 
+      countDiv.textContent = leagueMatches.length; // Set the text to the number of matches
+
+      const collapseButton = document.createElement('button');
+      collapseButton.className = 'btn btn-link';
+      collapseButton.setAttribute('data-bs-toggle', 'collapse');
+      collapseButton.setAttribute('data-bs-target', `#matchList${leagueID}`);
+      collapseButton.innerHTML = '<span class="material-symbols-outlined">keyboard_arrow_down</span>';
 
 
 
-document.addEventListener("DOMContentLoaded", function() {
+      const buttonWrapDiv = document.createElement('div');
+      buttonWrapDiv.className = 'button-wrapper'; // You can style this wrapper as needed
+      buttonWrapDiv.appendChild(countDiv);
+      buttonWrapDiv.appendChild(collapseButton);
 
-const radiusInput = document.getElementById("radius-slider");
-const radiusAllCheckbox = document.getElementById("radius-all");
-const radiusValueDisplay = document.getElementById("radius-value");
-const hiddenDatePicker = document.getElementById("hidden-date-picker");
-const searchBtn = document.getElementById('search-btn-header');
-  const searchInput = document.getElementById('search-input-header');
-  const filterToggleBtn = document.getElementById("filter-toggle");
-const filterContainer = document.getElementById("filter-container");
-const filterToggleContent = document.getElementById("filter-toggle-content");
-const leaguesSelect = document.getElementById("leagues-select");
-const countriesSelect = document.getElementById("countries-select");
+      // Append the wrapper div instead of individual elements
+      leagueHeader.appendChild(buttonWrapDiv);
 
-filterToggleBtn.addEventListener("click", () => {
-  if (filterContainer.style.display === "none") {
-    filterContainer.style.display = "block";
-    filterToggleContent.style.display = "block";
-  } else {
-    filterContainer.style.display = "none";
-    filterToggleContent.style.display = "none";
-  }
-});
-leaguesSelect.addEventListener('change', function () {
-  const selectedLeague = leaguesSelect.value;
-  // You can perform any necessary actions when the league selection changes
-  // For example, you can update the matches based on the selected league.
-  updateMatchesForDate(hiddenDatePicker.value);
-});
 
-// Event listener for country options change
-countriesSelect.addEventListener('change', function () {
-  const selectedCountry = countriesSelect.value;
-  // You can perform any necessary actions when the country selection changes
-  // For example, you can update the matches based on the selected country.
-  updateMatchesForDate(hiddenDatePicker.value);
-});
-  searchBtn.addEventListener('click', () => {
-    searchInput.style.display = 'block';
-    searchInput.style.width = '50vw';
-    searchInput.style.position = 'absolute'; // Position it absolute
-    searchInput.style.top = '0'; // Align to the top of the header container
-    searchInput.style.left = '0'; // Align to the left of the header container
-    searchInput.style.zIndex = '1000'; // To ensure it appears above all other elements
-    searchInput.focus();
-  });
+      const matchListDiv = document.createElement('div');
+      matchListDiv.className = 'list-group match-container collapse';
+      matchListDiv.id = `matchList${leagueID}`;
+      leagueDiv.appendChild(leagueHeader);
+      leagueDiv.appendChild(matchListDiv);
 
-  searchInput.addEventListener('blur', () => {
-    if(window.innerWidth < 600) {
-      searchInput.style.display = 'none';
-    }
-  });
-let debounceTimer;
 
-// Update matches on page load
-getUserLocation().then(location => {
-    userLocation = location;
-    updateMatchesForDate(hiddenDatePicker.value);
-}).catch(error => {
-    console.error('An error occurred while fetching the user\'s location:', error);
-});
 
-radiusInput.addEventListener('input', function() {
-    clearTimeout(debounceTimer);
-    
-    const value = parseFloat(radiusInput.value);
-    radiusValueDisplay.innerText = value;
-    
-    debounceTimer = setTimeout(function() {
-        if(radiusAllCheckbox.checked || value >= 10000) {
-            radiusFilter = Infinity; // If 'All' is checked or value is maximum, set filter to Infinity
+      leagueMatches.forEach(match => {
+        const matchDiv = document.createElement('a');
+        matchDiv.className = 'list-group-item list-group-item-action d-flex align-items-center match'; // Bootstrap list group item
+        matchDiv.href = `#`; // Just a placeholder, update appropriately
+        matchDiv.addEventListener('click', function (e) {
+          e.preventDefault();
+          window.location.href = `matchinfo.html?fixtureID=${match.fixtureID}`;
+        });
+
+        // Home Team Logo
+        const homeLogo = document.createElement('img');
+        homeLogo.src = match.homeTeam.clubImageName;
+        homeLogo.className = 'mr-3 homeLogo';
+        homeLogo.loading = 'lazy';
+        homeLogo.addEventListener('click', function () {
+          event.stopPropagation();  // Prevent event from bubbling up
+          const teamID = match.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+          window.location.href = `teaminfo.html?teamID=${teamID}`;
+        });
+        // Away Team Logo
+        const awayLogo = document.createElement('img');
+        awayLogo.src = match.awayTeam.clubImageName;
+        awayLogo.className = 'ml-3 awayLogo';
+        awayLogo.loading = 'lazy';
+        awayLogo.addEventListener('click', function () {
+          event.stopPropagation();  // Prevent event from bubbling up
+          const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+          window.location.href = `teaminfo.html?teamID=${teamID}`;
+        });
+
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'flex-grow-1 text-center matchTime';
+
+        if (match.statusShort === 'FT') {
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort}`;
+        } else if (['1H', '2H', 'LIVE', 'BT', 'INT'].includes(match.statusShort)) {
+          timeDiv.textContent = `${match.goalsHome} - ${match.goalsAway} ${match.statusShort}`;
         } else {
-            radiusFilter = value;
-        }
-        updateMatchesForDate(hiddenDatePicker.value);
-    }, 2000);
-});
+          try {
+            const timeWithoutSeconds = match.startingAt.slice(0, -3); // Remove seconds
+            const fullDateTime = `${match.date}T${timeWithoutSeconds}Z`; // Combine date, time, and "Z" for UTC
 
-radiusAllCheckbox.addEventListener('change', function() {
-    if(radiusAllCheckbox.checked) {
-        radiusFilter = Infinity;
-    } else {
-        radiusFilter = parseFloat(radiusInput.value);
+            const dateInUTC = new Date(fullDateTime); // Create Date object in UTC
+            const options = { hour: '2-digit', minute: '2-digit' };  // Removed timeZoneName: 'short'
+            const localTime = new Intl.DateTimeFormat('default', options).format(dateInUTC);
+
+            timeDiv.textContent = `${localTime} ${match.statusShort}`;  // Including match status
+          } catch (error) {
+            console.log('An error occurred while creating the Date object:', error);
+          }
+        }
+        const homeName = document.createElement('div');
+        homeName.className = 'mr-auto awayName'; // Use Bootstrap's margin or spacing classes as needed
+        homeName.textContent = match.homeTeam.clubName;
+        homeName.addEventListener('click', function () {
+          event.stopPropagation();  // Prevent event from bubbling up
+          const teamID = match.homeTeam.homeID;  // Assuming the 'match.homeTeam' object has a property called 'teamID'
+          window.location.href = `teaminfo.html?teamID=${teamID}`;
+        });
+        const awayName = document.createElement('div');
+        awayName.className = 'ml-auto homeName'; // Use Bootstrap's margin or spacing classes as needed
+        awayName.textContent = match.awayTeam.clubName;
+        awayName.addEventListener('click', function () {
+          event.stopPropagation();  // Prevent event from bubbling up
+          const teamID = match.awayTeam.awayID;  // Assuming the 'match.awayTeam' object has a property called 'teamID'
+          window.location.href = `teaminfo.html?teamID=${teamID}`;
+          console.log(match.awayTeam.awayID);
+        });
+        // Append elements to matchDiv
+        matchDiv.appendChild(homeLogo);
+        matchDiv.appendChild(homeName);
+        matchDiv.appendChild(timeDiv);
+        matchDiv.appendChild(awayName);
+        matchDiv.appendChild(awayLogo);
+
+        // Append matchDiv to matchContainerDiv or appropriate container
+        matchListDiv.appendChild(matchDiv);
+      });
+
+      matchContainer.appendChild(leagueDiv); // Corrected here
     }
-    updateMatchesForDate(hiddenDatePicker.value);
-});
-});
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const radiusInput = document.getElementById("radius-slider");
+    const radiusAllCheckbox = document.getElementById("radius-all");
+    const radiusValueDisplay = document.getElementById("radius-value");
+    const hiddenDatePicker = document.getElementById("hidden-date-picker");
+    const searchBtn = document.getElementById('search-btn-header');
+    const searchInput = document.getElementById('search-input-header');
+
+    const filterContainer = document.getElementById("filter-container");
+    const filterToggleContent = document.getElementById("filter-toggle-content");
+
+
+
+
+
+    // Event listener for country options change
+
+    document.getElementById('date-display').addEventListener('click', function () {
+      // Triggering a click event on the hidden date picker when the date-display is clicked
+      document.getElementById('hidden-date-picker').click();
+    });
+
+    // If you want to immediately show the selected date to the user after picking a date, you can do the following:
+    document.getElementById('hidden-date-picker').addEventListener('change', function () {
+      document.getElementById('date-display').textContent = this.value; // Or format as you prefer
+    });
+
+
+    let debounceTimer;
+
+    // Update matches on page load
+    getUserLocation().then(location => {
+      userLocation = location;
+      updateMatchesForDate(hiddenDatePicker.value);
+    }).catch(error => {
+      console.error('An error occurred while fetching the user\'s location:', error);
+    });
+
+    radiusInput.addEventListener('input', function () {
+      clearTimeout(debounceTimer);
+
+      const value = parseFloat(radiusInput.value);
+      radiusValueDisplay.innerText = `${value} km.`;
+
+      debounceTimer = setTimeout(function () {
+
+        radiusFilter = value;
+
+        updateMatchesForDate(hiddenDatePicker.value);
+      }, 2000);
+    });
+
+
+  });
 
   // Function to calculate straight-line distance
   function distanceFromUser(lat1, lon1, lat2, lon2) {
@@ -1139,48 +1343,48 @@ radiusAllCheckbox.addEventListener('change', function() {
     const dLon = (lon2 - lon1) * Math.PI / 180;
 
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c;
 
     return d;
   }
 
- var navBar = document.querySelector(".nav");
+  var navBar = document.querySelector(".nav");
   navBar.style.display = "flex";
   const navigation_items_elms = document.querySelectorAll(
-  ".navigation-bar .list-items .item"
-);
-const navigation_pointer = document.querySelector(".navigation-bar .pointer");
+    ".navigation-bar .list-items .item"
+  );
+  const navigation_pointer = document.querySelector(".navigation-bar .pointer");
 
-navigation_items_elms.forEach((item, index) => {
-  item.addEventListener("click", (e) => {
-    e.preventDefault();
-    navigation_items_elms.forEach((itm) => itm.classList.remove("active"));
-    item.classList.add("active");
+  navigation_items_elms.forEach((item, index) => {
+    item.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigation_items_elms.forEach((itm) => itm.classList.remove("active"));
+      item.classList.add("active");
 
-    const parentWidth = item.parentElement.clientWidth;
-    const lefPercent = (parentWidth / navigation_items_elms.length) * index;
-    navigation_pointer.style.left = lefPercent + "px";
+      const parentWidth = item.parentElement.clientWidth;
+      const lefPercent = (parentWidth / navigation_items_elms.length) * index;
+      navigation_pointer.style.left = lefPercent + "px";
+    });
   });
-});
-function getUserLocation() {
-  return new Promise((resolve, reject) => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+  function getUserLocation() {
+    return new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        }, (error) => {
+          reject(error);
         });
-      }, (error) => {
-        reject(error);
-      });
-    } else {
-      reject(new Error("Geolocation is not supported by this browser."));
-    }
-  });
-}
+      } else {
+        reject(new Error("Geolocation is not supported by this browser."));
+      }
+    });
+  }
 
 
 </script>
